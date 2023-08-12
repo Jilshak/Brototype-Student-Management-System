@@ -6,6 +6,9 @@ export default {
   ],
   theme: {
     extend: {
+      screens: {
+        'xs': '480px',
+      },
       gridTemplateColumns: {
         'sidebar-main': '500px 1fr',
       }

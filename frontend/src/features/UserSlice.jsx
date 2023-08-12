@@ -1,8 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 import axios from "axios"
-import { useNavigate } from "react-router-dom"
 
-let navigate = useNavigate
 
 export const Register = createAsyncThunk('register',
     async (credentials) => {
@@ -51,7 +49,6 @@ export const Login = createAsyncThunk('login',
         const request = await axios.post('http://127.0.0.1:8000/token/', credentials)
         const response = await request.data
         if (request.status === 200) {
-            console.log(response)
             localStorage.setItem('authToken', JSON.stringify(response.access))
             console.log("The user has been authenticated and can login")
         } else {
