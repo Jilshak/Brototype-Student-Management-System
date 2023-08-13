@@ -39,7 +39,7 @@ function Components() {
                     <Route path='schedule_time' element={<SceduleTime />} />
                     <Route path='update_week' element={<UpdateWeekPage />} />
                     <Route path='assign_time' element={<AssignMyTimePage />} />
-                    <Route path='batch_number' element={<BatchStudentsPage />} />
+                    <Route path='batch_number/:id' element={<BatchStudentsPage />} />
                 </Route>
             </Route>
 
