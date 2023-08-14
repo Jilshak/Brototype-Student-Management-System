@@ -17,8 +17,10 @@ function AssignMyTimePage() {
             <option value='option3'>Friday</option>
             <option value='option3'>Saturday</option>
           </select>
-          <input className='p-2 w-[200px] bg-[#303443] text-white rounded-md outline-none' placeholder='DD/MM/YY' />
-          <input className='p-2 my-3 w-[100px] bg-[#303443] text-white rounded-md outline-none' placeholder='Time' />
+          <input className='p-2 w-[200px] bg-[#303443] text-white rounded-md outline-none' type='date' placeholder='DD/MM/YY' />
+          <input className='p-2 my-3 w-[100px] bg-[#303443] text-white rounded-md outline-none' type='time' placeholder='Time' />
+          <p>to</p>
+          <input className='p-2 my-3 w-[100px] bg-[#303443] text-white rounded-md outline-none' type='time' placeholder='Time' />
           <button className='p-2 mx-3 w-[70px] bg-[#303443] text-white rounded-md outline-none'>
             ADD
           </button>

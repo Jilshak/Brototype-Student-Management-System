@@ -26,6 +26,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         token['is_advisor'] = user.is_advisor
         token['is_reviewer'] = user.is_reviewer
         token['is_user'] = user.is_user
+        token['authenticated'] = user.authenticated
         
 
         return token

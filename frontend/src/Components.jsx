@@ -16,6 +16,8 @@ import BatchPage from './Pages/BatchPage'
 import AdvisorsPage from './Pages/AdvisorsPage'
 import ReviewersPage from './Pages/ReviewersPage'
 import BatchStudentsPage from './Pages/BatchStudentsPage'
+import AuthorizePage from './Pages/AuthorizePage'
+import ChatPage from './Pages/ChatPage'
 
 function Components() {
 
@@ -27,9 +29,10 @@ function Components() {
             <Route path='/signup_staff' element={<SignUpPageStaff />} />
 
             <Route element={<ProtectedRoutes />}>
-                <Route path='/' element={<HomePage />}>                    
+                <Route path='/' element={<HomePage />}>
                     <Route index element={<Profile />} />
-                    <Route path='dashboard'  element={<DashboardPage />} />
+                    <Route path='dashboard' element={<DashboardPage />} />
+                    <Route path='authorize' element={<AuthorizePage />} />
                     <Route path='weeks' element={<WeeksPage />} />
                     <Route path='batch' element={<BatchPage />} />
                     <Route path='advisors' element={<AdvisorsPage />} />
@@ -40,6 +43,7 @@ function Components() {
                     <Route path='update_week' element={<UpdateWeekPage />} />
                     <Route path='assign_time' element={<AssignMyTimePage />} />
                     <Route path='batch_number/:id' element={<BatchStudentsPage />} />
+                    <Route path='chat' element={<ChatPage />} />
                 </Route>
             </Route>
 

@@ -22,9 +22,24 @@ function BatchStudentsPage() {
 
     useEffect(() => {
         if (Interns.state.length > 0) {
-            setList(Interns.state)
+            return setList(Interns.state)
         }
+        setList()
     }, [Interns.state])
+
+
+    //Search option
+    const [find, setFind] = useState()
+    const searchItem = async (e) => {
+        setFind(list)
+        if (e.target.value === '') {
+            return setList(find)
+        } else {
+            setList(await list.filter((item) => {
+                return item.username.startsWith(e.target.value)
+            }))
+        }
+    }
 
     //delete user
     const delete_user = (id) => {
@@ -48,7 +63,7 @@ function BatchStudentsPage() {
     const [guardiansnumber, setGuardiansNumber] = useState(null)
     const [aadharnumber, setAadharNumber] = useState(null)
     const [educationalqualification, setEducationalQualification] = useState(null)
-    const[batch, setBatch] = useState(null)
+    const [batch, setBatch] = useState(null)
 
 
     const edit_user = () => {
@@ -70,10 +85,6 @@ function BatchStudentsPage() {
         dispatch(editUser(credentials))
     }
 
-    useEffect(() => {
-
-    },[edit_user, dispatch])
-
     return (
         <div className='h-screen grid grid-rows-16'>
             <div className=''>
@@ -92,16 +103,12 @@ function BatchStudentsPage() {
                     </div>
                     <div className='flex justify-center items-center '>
                         <span className='bg-[#303443] w-[40px] lg:ms-[70px] me-3 h-10 justify-center items-center flex rounded-full'>
-                            0
+                            {list ? list.length : 0}
                         </span>
-                        <span className='bg-[#303443] w-[70px] lg:ms-[70px] md:ms-[40px] sm:ms-[20px] rounded-3xl h-10 flex  justify-center items-center '>
-                            <h1 className='text-md font-semibold'>ADD+</h1>
-                        </span>
-
                     </div>
                 </div>
                 <div className='flex items-center relative  justify-center my-5'>
-                    <input className='bg-[#131620]  me-10 outline-none lg:min-w-[700px] md:min-w-[500px] sm:min-w-[350px] xs:min-w-[350px]  py-2 rounded-xl pl-5' type="text" placeholder='Search....' />
+                    <input onChange={searchItem} className='bg-[#131620]  me-10 outline-none lg:min-w-[700px] md:min-w-[500px] sm:min-w-[350px] xs:min-w-[350px]  py-2 rounded-xl pl-5' type="text" placeholder='Search....' />
                     <img className='h-[23px]  opacity-60 relative right-20 cursor-pointer' src={search} alt="" />
                 </div>
             </div>

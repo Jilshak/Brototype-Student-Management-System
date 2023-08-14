@@ -67,11 +67,53 @@ export const InternList = createAsyncThunk('intern_list',
 
             const filterData = data.filter(user => {
                 return (
+                    user.batch == id &&
                     user.is_user &&
                     !user.is_superuser &&
                     !user.is_advisor &&
-                    !user.is_reviewer &&
-                    user.batch == id
+                    !user.is_reviewer
+                )
+            })
+            return filterData
+        } catch (error) {
+            console.log('Error: ', error)
+        }
+    }
+)
+export const AdvisorList = createAsyncThunk('advisor_list',
+    async (id) => {
+        try {
+            const request = await axios.get('http://127.0.0.1:8000/users/')
+            let data = await request.data
+
+            const filterData = data.filter(user => {
+                return (
+                    user.is_user &&
+                    user.is_advisor &&
+                    !user.is_superuser &&
+                    !user.is_reviewer
+                )
+            })
+            return filterData
+        } catch (error) {
+            console.log('Error: ', error)
+        }
+    }
+)
+
+
+export const ReviewerList = createAsyncThunk('reviewer_list',
+    async (id) => {
+        try {
+            const request = await axios.get('http://127.0.0.1:8000/users/')
+            let data = await request.data
+
+            const filterData = data.filter(user => {
+                return (
+                    user.is_user &&
+                    user.is_reviewer &&
+                    !user.is_advisor &&
+                    !user.is_superuser
                 )
             })
             return filterData
@@ -84,9 +126,10 @@ export const InternList = createAsyncThunk('intern_list',
 
 export const deleteUser = createAsyncThunk('delete_user',
     async (id) => {
+        console.log(id)
         try {
             const request = axios.delete(`http://127.0.0.1:8000/users/${id}/`)
-            if ((await request).status === 200) {
+            if ((await request).status === 204) {
                 console.log("The user has been deleted")
             } else {
                 console.log("Something went wrong while deleting the user")
@@ -100,33 +143,51 @@ export const deleteUser = createAsyncThunk('delete_user',
 
 export const editUser = createAsyncThunk('edit_user',
     async (credentials) => {
-
-
-        //finding the batch id for the user entered batch_number
-        const batchAssign = await axios.get("http://127.0.0.1:8000/batches/").then(res => {
-            const matchingBatch = res.data.find(x => x.batch_number === credentials.batch);
-            if (matchingBatch) {
-                return matchingBatch.id;
-            } else {
-                return null;
-            }
-        });
-
-        //assigning the batch
-        credentials.batch = batchAssign
-
-        //to filter out null fields from the credentials
-        const filteredCredentials = Object.fromEntries(
-            Object.entries(credentials).filter(([_, value]) => value !== null)
-        );
-
-        const request = axios.patch(`http://127.0.0.1:8000/users/${credentials.id}/`, filteredCredentials)
-        const response = await request.data
-        if ((await request).status === 200) {
-            console.log("The user has been edited")
+        if (credentials.batch) {
+            //finding the batch id for the user entered batch_number
+            const batchAssign = await axios.get("http://127.0.0.1:8000/batches/").then(res => {
+                const matchingBatch = res.data.find(x => x.batch_number === credentials.batch);
+                if (matchingBatch) {
+                    return matchingBatch.id;
+                } else {
+                    return null;
+                }
+            });
+            //assigning the batch
+            credentials.batch = batchAssign
         } else {
-            console.log("The use has not been edited something went wrong while the process")
+            //to filter out null fields from the credentials
+            const filteredCredentials = Object.fromEntries(
+                Object.entries(credentials).filter(([_, value]) => value !== null)
+            );
+
+            const request = axios.patch(`http://127.0.0.1:8000/users/${credentials.id}/`, filteredCredentials)
+            const response = await request.data
+            if ((await request).status === 200) {
+                console.log("The user has been edited")
+            } else {
+                console.log("The use has not been edited something went wrong while the process")
+            }
         }
+
+    }
+)
+
+export const ProfileDetails = createAsyncThunk('profile_details',
+    async (id) => {
+        try {
+            const request = axios.get(`http://127.0.0.1:8000/users/${id}/`)
+            const response = (await request).data
+
+            if ((await request).status === 200){
+                return response
+            }else{
+                console.log("Something wrong occured while fetching the users data from the endpoint")
+            }
+        }catch(error){
+            console.log(error)
+        }
+
     }
 )
 
@@ -192,7 +253,55 @@ const UserSlice = createSlice({
         [InternList.rejected]: (state) => {
             state.isLoading = false
             state.msg = "Something happended and its not working"
-        }
+        },
+
+        [AdvisorList.pending]: (state) => {
+            state.isLoading = true
+            state.state = []
+            state.msg = "It is still loading"
+        },
+        [AdvisorList.fulfilled]: (state, action) => {
+            state.isLoading = false
+            state.state = action.payload
+            state.msg = "The advisors list is loaded"
+        },
+        [AdvisorList.rejected]: (state) => {
+            state.isLoading = false
+            state.state = []
+            state.msg = "Something went wrong while loading the advisors list"
+        },
+
+        [ReviewerList.pending]: (state) => {
+            state.isLoading = true
+            state.state = []
+            state.msg = "It is still loading"
+        },
+        [ReviewerList.fulfilled]: (state, action) => {
+            state.isLoading = false
+            state.state = action.payload
+            state.msg = "The reviewers list is loaded"
+        },
+        [ReviewerList.rejected]: (state) => {
+            state.isLoading = false
+            state.state = []
+            state.msg = "Something went wrong while loading the reviewers list"
+        },
+
+        [ProfileDetails.pending]: (state) => {
+            state.isLoading = true
+            state.state = []
+            state.msg = "It is still loading"
+        },
+        [ProfileDetails.fulfilled]: (state, action) => {
+            state.isLoading = false
+            state.state = action.payload
+            state.msg = "The profile list is loaded"
+        },
+        [ProfileDetails.rejected]: (state) => {
+            state.isLoading = false
+            state.state = []
+            state.msg = "Something went wrong while loading the profile list"
+        },
     }
 })
 

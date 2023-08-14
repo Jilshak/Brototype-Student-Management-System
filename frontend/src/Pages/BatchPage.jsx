@@ -22,15 +22,15 @@ function BatchPage() {
         }
     }
 
-    const addBatch = () => {
+    const addBatch = async () => {
         if (num === undefined) {
             return alert("The batch field is empty")
         } else {
             let credentials = {
                 batch_number: num
             }
-            dispatch(createBatch(credentials))
-            setAppear(false)
+            await dispatch(createBatch(credentials))
+            await setAppear(false)
             return
         }
     }
