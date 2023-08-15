@@ -18,6 +18,7 @@ import ReviewersPage from './Pages/ReviewersPage'
 import BatchStudentsPage from './Pages/BatchStudentsPage'
 import AuthorizePage from './Pages/AuthorizePage'
 import ChatPage from './Pages/ChatPage'
+import WeekDetailPage from './Pages/WeekDetailPage'
 
 function Components() {
 
@@ -33,7 +34,7 @@ function Components() {
                     <Route index element={<Profile />} />
                     <Route path='dashboard' element={<DashboardPage />} />
                     <Route path='authorize' element={<AuthorizePage />} />
-                    <Route path='weeks' element={<WeeksPage />} />
+                    <Route path='weeks/:id?' element={<WeeksPage />} />
                     <Route path='batch' element={<BatchPage />} />
                     <Route path='advisors' element={<AdvisorsPage />} />
                     <Route path='reviewers' element={<ReviewersPage />} />
@@ -44,6 +45,7 @@ function Components() {
                     <Route path='assign_time' element={<AssignMyTimePage />} />
                     <Route path='batch_number/:id' element={<BatchStudentsPage />} />
                     <Route path='chat' element={<ChatPage />} />
+                    <Route path='week_detail' element={<WeekDetailPage />} />
                 </Route>
             </Route>
 

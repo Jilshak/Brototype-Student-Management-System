@@ -1,13 +1,36 @@
 import React from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import jwtDecode from 'jwt-decode';
+import adminleftarrow from '../icons/adminleftarrow.png'
+
+let token = localStorage.getItem("authToken")
+let decode = jwtDecode(token)
 
 function WeeksPage() {
+
+  const navigate = useNavigate()
+
+  const goBack = () => {
+    navigate(-1)
+  }
+
   return (
     <>
+      {
+        decode.is_superuser ?
+          <span className='h-[150px bg-[#22242F] absolute flex max-w-[50px] mx-[20px] top-[330px] py-10 px-2'>
+            <button onClick={(e) => goBack()} className=''>
+              <img className='h-[40px] opacity-70' src={adminleftarrow} alt="" />
+            </button>
+          </span> : null
+      }
       <div className='mx-[100px] bg-[#303443] opacity-70 my-[20px] rounded-2xl'>
         <div className='grid lg:mx-[50px] lg:grid-cols-6 md:grid-cols-3 gap-1.5 sm:grid-cols-3 xs:grid-cols-2'>
-          <div className='flex lg:lg:w-[110px] xs:w-[70px]items-center justify-center py-4 my-4 mx-6 rounded-xl bg-green-500 text-white'>
-            <h1>Week 1</h1>
-          </div>
+          <Link to='/week_detail'>
+            <div className='flex lg:lg:w-[110px] xs:w-[70px]items-center justify-center py-4 my-4 mx-6 rounded-xl bg-green-500 text-white'>
+              <h1>Week 1</h1>
+            </div>
+          </Link>
           <div className='flex lg:w-[110px] xs:w-[70px] items-center justify-center py-4 my-4 mx-6 rounded-xl bg-green-500 text-white'>
             <h1>Week 2</h1>
           </div>
@@ -129,7 +152,7 @@ function WeeksPage() {
             <div className='bg-blue-500 h-5 w-5 mx-4 my-1 rounded-full'></div>
             <p>Week Repeat</p>
           </span>
-         
+
         </div>
       </div>
     </>

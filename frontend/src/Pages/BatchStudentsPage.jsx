@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import leftarrow from '../icons/leftarrow.png'
 import search from '../icons/search.png'
 import remove from '../icons/remove.png'
@@ -10,6 +10,8 @@ import { InternList, deleteUser, editUser } from '../features/UserSlice'
 function BatchStudentsPage() {
 
     const { id } = useParams()
+
+    const navigate = useNavigate()
 
     const Interns = useSelector((state) => state.Users)
     const [list, setList] = useState()
@@ -152,28 +154,30 @@ function BatchStudentsPage() {
                             {
                                 list.map((intern) => {
                                     return (
-                                        <div className='flex bg-[#23283B]  my-5 p-2 rounded-3xl opacity-80 lg:min-w-[900px] md:min-w-[500px] sm:min-w-[350px] xs:min-w-[350px]'>
-                                            <span className='rounded-full flex items-center justify-center min-w-[33px] h-8 bg-[#2E313D] '>
-                                                {intern.id}
-                                            </span>
-                                            <span className='rounded-lg flex items-center justify-start mx-5 min-w-[150px] h-8 bg-[#2E313D] '>
-                                                <p className='ms-5'>{intern.username}</p>
-                                            </span>
-                                            <span className='rounded-lg xs:hidden sm:block flex items-center justify-start mx-5 w-[150px] h-8 bg-[#2E313D] '>
-                                                <p className='ms-5 mt-1'>{intern.phone ? intern.phone : "Not provided"}</p>
-                                            </span>
-                                            <span className='flex items-center justify-end w-[500px]'>
-                                                <img onClick={(e) => {
-                                                    e.preventDefault()
-                                                    setEdit(true)
-                                                    setUserId(intern.id)
-                                                }} className='h-[14px] cursor-pointer mx-3' src={edit1} alt="" />
-                                                <img onClick={(e) => {
-                                                    e.preventDefault()
-                                                    delete_user(intern.id)
-                                                }} className='h-[30px] cursor-pointer' src={remove} alt="" />
-                                            </span>
-                                        </div>
+                                        <Link to={`/weeks/${intern.id}`}>
+                                            <div className='flex bg-[#23283B]  my-5 p-2 rounded-3xl opacity-80 lg:min-w-[900px] md:min-w-[500px] sm:min-w-[350px] xs:min-w-[350px]'>
+                                                <span className='rounded-full flex items-center justify-center min-w-[33px] h-8 bg-[#2E313D] '>
+                                                    {intern.id}
+                                                </span>
+                                                <span className='rounded-lg flex items-center justify-start mx-5 min-w-[150px] h-8 bg-[#2E313D] '>
+                                                    <p className='ms-5'>{intern.username}</p>
+                                                </span>
+                                                <span className='rounded-lg xs:hidden sm:block flex items-center justify-start mx-5 w-[150px] h-8 bg-[#2E313D] '>
+                                                    <p className='ms-5 mt-1'>{intern.phone ? intern.phone : "Not provided"}</p>
+                                                </span>
+                                                <span className='flex items-center justify-end w-[500px]'>
+                                                    <img onClick={(e) => {
+                                                        e.preventDefault()
+                                                        setEdit(true)
+                                                        setUserId(intern.id)
+                                                    }} className='h-[14px] cursor-pointer mx-3' src={edit1} alt="" />
+                                                    <img onClick={(e) => {
+                                                        e.preventDefault()
+                                                        delete_user(intern.id)
+                                                    }} className='h-[30px] cursor-pointer' src={remove} alt="" />
+                                                </span>
+                                            </div>
+                                        </Link>
                                     )
                                 })
                             }
