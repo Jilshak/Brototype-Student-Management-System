@@ -42,8 +42,14 @@ function WeekDetailPage() {
         }
     }, [dispatch, decode])
 
-    
-    
+    useEffect(() => {
+        if (weekDetails.state) {
+            setWeekDetail(weekDetails.state.weeks)
+            console.log(weekDetail)
+        }
+    }, [weekDetails.state])
+
+
     const [Marks, setMarks] = useState()
     const [advisor, setAdvisor] = useState('')
     const [reviewer, setReviewer] = useState('')
@@ -55,17 +61,12 @@ function WeekDetailPage() {
     const [seminar, setSeminar] = useState(false)
     const [progress, setProgress] = useState(false)
     const [feedback, setFeedback] = useState(false)
-    
+
     const [toggle, setToggle] = useState(false)
     const [toggle1, setToggle1] = useState(false)
-    
-    useEffect(() => {
-        if (weekDetails.state) {
-            setWeekDetail(weekDetails.state.weeks)
-            console.log(weekDetail)
-        }
-    }, [weekDetails.state,toggle,toggle1])
-    
+    const [toggle2, setToggle2] = useState(false)
+
+
     const review_edit = () => {
         setToggle(true)
     }
@@ -93,8 +94,6 @@ function WeekDetailPage() {
         await dispatch(WeekDetailsUser(credentials))
 
         setToggle(false)
-
-
     }
 
     const edit2 = async () => {
@@ -109,13 +108,12 @@ function WeekDetailPage() {
             progress: progress,
             feedback: feedback
         }
-
+        console.log(seminar, progress, feedback)
         await dispatch(WeekDetailsUser(credentials))
 
         setToggle1(false)
-
     }
-    
+
 
 
     const edit3 = async () => {
@@ -133,9 +131,9 @@ function WeekDetailPage() {
 
         await dispatch(WeekDetailsUser(credentials))
 
-        setToggle1(false)
+        setToggle2(false)
 
-        
+
     }
 
     return (
@@ -190,21 +188,58 @@ function WeekDetailPage() {
                                             <select onChange={(e) => setSeminar(e.target.value)} className='rounded-2xl mx-[20px] h-[35px] bg-[#262937] px-10 outline-none py-1 '>
                                                 <option selected> Seminar Presentation </option>
                                                 <option value={true}>True</option>
-                                                <option value={false}>False</option>
+                                                <option >False</option>
                                             </select>
                                             <select onChange={(e) => setFeedback(e.target.value)} className='rounded-2xl mx-[20px] h-[35px] bg-[#262937] px-10 outline-none py-1 '>
                                                 <option selected>  FeedBack Session </option>
                                                 <option value={true}>True</option>
-                                                <option value={false}>False</option>
+                                                <option >False</option>
                                             </select>
                                             <select onChange={(e) => setProgress(e.target.value)} className='rounded-2xl mx-[20px] h-[35px] bg-[#262937] px-10 outline-none py-1 '>
                                                 <option selected> Progress Video </option>
+                                                <option value={true}>True</option>
+                                                <option >False</option>
+                                            </select>
+
+                                            <div className='flex justify-center items-center mt-2 mb-5'>
+                                                <button onClick={(e) => edit2()} className='bg-red-500 hover:bg-red-600 px-8 py-2 rounded-xl'>
+                                                    Save
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    :
+                                    null
+                            }
+                            {
+                                toggle2 ?
+
+                                    <div className='flex justify-center '>
+                                        <div className=' absolute min-h-1/3  min-w-[450px] z-50 grid rounded-2xl gap-3 my-10 bg-[#1f212c]'>
+                                            <div className='flex items-center my-3 justify-center'>
+                                                <p className='text-lg '>Edit Personal Task</p>
+                                                <div className='flex justify-end relative left-28'>
+                                                    <img onClick={(e) => setToggle2(false)} className='h-6 cursor-pointer' src={remove} alt="" />
+                                                </div>
+                                            </div>
+                                            <select onChange={(e) => setAudio(e.target.value)} className='rounded-2xl mx-[20px] h-[35px] bg-[#262937] px-10 outline-none py-1 '>
+                                                <option selected> Audio Task </option>
+                                                <option value={true}>True</option>
+                                                <option value={false}>False</option>
+                                            </select>
+                                            <select onChange={(e) => setDescription(e.target.value)} className='rounded-2xl mx-[20px] h-[35px] bg-[#262937] px-10 outline-none py-1 '>
+                                                <option selected>  Descriptions </option>
+                                                <option value={true}>True</option>
+                                                <option value={false}>False</option>
+                                            </select>
+                                            <select onChange={(e) => setTyping(e.target.value)} className='rounded-2xl mx-[20px] h-[35px] bg-[#262937] px-10 outline-none py-1 '>
+                                                <option selected>  Typing </option>
                                                 <option value={true}>True</option>
                                                 <option value={false}>False</option>
                                             </select>
 
                                             <div className='flex justify-center items-center mt-2 mb-5'>
-                                                <button onClick={(e) => edit2()} className='bg-red-500 hover:bg-red-600 px-8 py-2 rounded-xl'>
+                                                <button onClick={(e) => edit3()} className='bg-red-500 hover:bg-red-600 px-8 py-2 rounded-xl'>
                                                     Save
                                                 </button>
                                             </div>
@@ -265,16 +300,16 @@ function WeekDetailPage() {
                                                             return (
                                                                 <>
                                                                     <div className='mx-[30px] py-2 bg-[#1C1E26] mb-3 opacity-70 rounded-lg'>
-                                                                        <span className='mx-5 flex text-white'>Marks Obtained : {item.weekdetails_set[0].Marks ? item.weekdetails_set[0].Marks : <p className='text-gray-500 mx-2'> ______</p>}</span>
+                                                                        <span className='mx-5 flex text-white'>Marks Obtained : {item.weekdetails_set[0].Marks || Marks ? (item.weekdetails_set[0].Marks ? item.weekdetails_set[0].Marks : Marks) : <p className='text-gray-500 mx-2'> ______</p>}</span>
                                                                     </div>
                                                                     <div className='mx-[30px] py-2 mb-3 bg-[#1C1E26] opacity-70 rounded-lg'>
-                                                                        <span className='mx-5 flex text-white'>Advisor : {item.weekdetails_set[0].advisor ? item.weekdetails_set[0].advisor : <p className='text-gray-500 mx-2'> ______</p>}</span>
+                                                                        <span className='mx-5 flex text-white'>Advisor : {item.weekdetails_set[0].advisor || advisor ? (item.weekdetails_set[0].advisor ? item.weekdetails_set[0].advisor : advisor) : <p className='text-gray-500 mx-2'> ______</p>}</span>
                                                                     </div>
                                                                     <div className='mx-[30px] py-2 mb-3 bg-[#1C1E26] opacity-70 rounded-lg'>
-                                                                        <span className='mx-5 flex'>Reviewer : {item.weekdetails_set[0].reviewer ? item.weekdetails_set[0].reviewer : <p className='text-gray-500 mx-2'> ______</p>}</span>
+                                                                        <span className='mx-5 flex'>Reviewer : {item.weekdetails_set[0].reviewer || reviewer ? (item.weekdetails_set[0].reviewer ? item.weekdetails_set[0].reviewer : reviewer) : <p className='text-gray-500 mx-2'> ______</p>}</span>
                                                                     </div>
                                                                     <div className='mx-[30px] py-2 mb-3 bg-[#1C1E26] opacity-70 rounded-lg'>
-                                                                        <span className='mx-5 flex'>Conducted : {item.weekdetails_set[0].conducted_on ? item.weekdetails_set[0].conducted_on : <p className='text-gray-500 mx-2'> _______</p>}</span>
+                                                                        <span className='mx-5 flex'>Conducted : {item.weekdetails_set[0].conducted_on || conducted ? (item.weekdetails_set[0].conducted_on ? item.weekdetails_set[0].conducted_on : conducted) : <p className='text-gray-500 mx-2'> _______</p>}</span>
                                                                     </div>
                                                                 </>
                                                             )
@@ -294,7 +329,7 @@ function WeekDetailPage() {
                                         </span>
                                         {
                                             decode?.is_superuser || decode?.is_advisor ?
-                                                <img className='h-5 my-8 relative opacity-50 lg:left-36 md:left-30 sm:left-20 xs:left-10' src={edit1} alt="" />
+                                                <img onClick={(e) => setToggle2(true)} className='h-5 cursor-pointer my-8 relative opacity-50 lg:left-36 md:left-30 sm:left-20 xs:left-10' src={edit1} alt="" />
                                                 : null
                                         }
                                     </div>
@@ -307,14 +342,14 @@ function WeekDetailPage() {
                                                             return (
                                                                 <>
                                                                     <div className='mx-[30px] py-2 bg-[#1C1E26] mb-3 opacity-70 rounded-lg'>
-                                                                        <span className='mx-5 flex'>Audio Task : {item.weekdetails_set[0].audio_task ? item.weekdetails_set[0].audio_task : <p className='text-gray-500 mx-2'> ______</p>}</span>
+                                                                        <span className='mx-5 flex'>Audio Task : {item.weekdetails_set[0].audio_task || audio === 'true' ? <p className='text-green-500 ms-2'>Completed</p> : <p className='text-gray-500 mx-2'> ______</p>}</span>
 
                                                                     </div>
                                                                     <div className='mx-[30px] py-2 bg-[#1C1E26] mb-3 opacity-70 rounded-lg'>
-                                                                        <span className='mx-5 flex'>Descriptions : {item.weekdetails_set[0].description ? item.weekdetails_set[0].description : <p className='text-gray-500 mx-2'> ______</p>}</span>
+                                                                        <span className='mx-5 flex'>Descriptions : {item.weekdetails_set[0].description || description === 'true' ? <p className='text-green-500 ms-2'>Completed</p> : <p className='text-gray-500 mx-2'> ______</p>}</span>
                                                                     </div>
                                                                     <div className='mx-[30px] py-2 bg-[#1C1E26] mb-3 opacity-70 rounded-lg'>
-                                                                        <span className='mx-5 flex'>Typing : {item.weekdetails_set[0].typing ? item.weekdetails_set[0].typing : <p className='text-gray-500 mx-2'> ______</p>}</span>
+                                                                        <span className='mx-5 flex'>Typing : {item.weekdetails_set[0].typing || typing === 'true' ? <p className='text-green-500 ms-2'>Completed</p> : <p className='text-gray-500 mx-2'> ______</p>}</span>
 
                                                                     </div>
                                                                     <div className='mx-[30px] py-2 bg-[#1C1E26] mb-3 opacity-70 rounded-lg'>
@@ -349,15 +384,15 @@ function WeekDetailPage() {
                                                             return (
                                                                 <>
                                                                     <div className='mx-[30px] py-2 bg-[#1C1E26] mb-3 opacity-70 rounded-lg'>
-                                                                        <span className='mx-5 flex'>Seminar Presentation : {!item.weekdetails_set[0].seminar_presentation == false ? <p className='text-green-500 ms-2'> Added</p> : <p className='text-gray-500 mx-2'> Not Added</p>}</span>
+                                                                        <span className='mx-5 flex'>Seminar Presentation : {item.weekdetails_set[0].seminar_presentation || seminar==="true" ? <p className='text-green-500 ms-2'> Added</p> : <p className='text-gray-500 mx-2'> Not Added</p>}</span>
 
                                                                     </div>
                                                                     <div className='mx-[30px] py-2 bg-[#1C1E26] mb-3 opacity-70 rounded-lg'>
-                                                                        <span className='mx-5 flex'>Feedback Session : {!item.weekdetails_set[0].feedback == false ? <p className='text-green-500 ms-2'>Added</p> : <p className='text-gray-500 mx-2'> Not Added</p>}</span>
-
+                                                                        <span className='mx-5 flex'>Feedback Session : {item.weekdetails_set[0].feedback || feedback==="true" ? <p className='text-green-500 ms-2'>Added</p> : <p className='text-gray-500 mx-2'> Not Added</p>}</span>
+                                                                        {console.log(feedback, item.weekdetails_set[0].feedback)}
                                                                     </div>
                                                                     <div className='mx-[30px] py-2 bg-[#1C1E26] mb-3 opacity-70 rounded-lg'>
-                                                                        <span className='mx-5 flex'>Progress Video : {!item.weekdetails_set[0].progress == false ? <p className='text-green-500 ms-2'>Added</p> : <p className='text-gray-500 mx-2'> Not Added</p>}</span>
+                                                                        <span className='mx-5 flex'>Progress Video : {item.weekdetails_set[0].progress || progress==="true" ? <p className='text-green-500 ms-2'>Added</p> : <p className='text-gray-500 mx-2'> Not Added</p>}</span>
                                                                     </div>
                                                                 </>
                                                             )

@@ -2,7 +2,9 @@ import { configureStore } from '@reduxjs/toolkit'
 import UserSlice from '../features/UserSlice'
 import BatchSlice from '../features/BatchSlice'
 import AuthorizeSlice from '../features/AuthorizeSlice'
-import WeekDetailsSlice  from '../features/WeekDetails'
+import WeekDetailsSlice from '../features/WeekDetails'
+import AssignTimeSlice from '../features/AssignTimeSlice'
+import ScheduleTime from '../features/ScheduleTimeSlice'
 
 
 export const store = configureStore({
@@ -10,6 +12,8 @@ export const store = configureStore({
         Users: UserSlice,
         Batches: BatchSlice,
         Authorize: AuthorizeSlice,
-        WeekDetails: WeekDetailsSlice
+        WeekDetails: WeekDetailsSlice,
+        Booking: AssignTimeSlice,
+        Schedule: ScheduleTime
     }
 })

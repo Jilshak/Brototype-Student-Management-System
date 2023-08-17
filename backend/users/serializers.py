@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import User, Batch, Week, WeekDetails
+from .models import User, Batch, Week, WeekDetails, Booking, TimeSlot
 
 
 class BatchSerializer(serializers.ModelSerializer):
@@ -35,3 +35,16 @@ class UserSerializer(serializers.ModelSerializer):
             instance.set_password(password)
         instance.save()
         return instance
+
+class TimeSlotSerializer(serializers.ModelSerializer):
+    class Meta:
+        fields = '__all__'
+        model = TimeSlot
+
+class BookingSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        fields = '__all__'
+        model = Booking
+        
+    

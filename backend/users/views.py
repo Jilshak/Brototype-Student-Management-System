@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework.viewsets import ModelViewSet
-from .serializers import UserSerializer, BatchSerializer, WeekSerializer, WeekDetailsSerializer
-from .models import User, Batch, Week, WeekDetails
+from .serializers import UserSerializer, BatchSerializer, WeekSerializer, WeekDetailsSerializer, BookingSerializer,TimeSlotSerializer
+from .models import User, Batch, Week, WeekDetails, Booking, TimeSlot
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 # Create your views here.
@@ -22,7 +22,14 @@ class WeekViewSet(ModelViewSet):
 class WeekDetailViewSet(ModelViewSet):
     serializer_class = WeekDetailsSerializer
     queryset = WeekDetails.objects.all()
+
+class BookingViewSet(ModelViewSet):
+    serializer_class = BookingSerializer
+    queryset = Booking.objects.all()
     
+class TimeSlotViewSet(ModelViewSet):
+    serializer_class = TimeSlotSerializer
+    queryset = TimeSlot.objects.all()
     
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod

@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from .Managers import UserManager
+from datetime import datetime, date
 
 # Create your models here.
 
@@ -37,7 +38,8 @@ class User(AbstractUser):
 
         super().save(*args, **kwargs)  # Call the original save method
 
-        if is_new and not (self.is_superuser or self.is_advisor or self.is_reviewer):  # Only run this code for newly created users
+        # Only run this code for newly created users
+        if is_new and not (self.is_superuser or self.is_advisor or self.is_reviewer):
             for week_number in range(1, 29):  # Create 28 weeks
                 week = Week.objects.create(user=self, week_number=week_number)
                 # Create WeekDetails for each week
@@ -72,3 +74,30 @@ class WeekDetails(models.Model):
     feedback = models.BooleanField(default=False)
     progress = models.BooleanField(default=False)
     pending_topics = models.TextField(blank=True, null=True)
+
+
+class TimeSlot(models.Model):
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='user_time')
+    day = models.CharField(max_length=250)
+    date = models.DateField()
+    start_time = models.TimeField()
+    end_time = models.TimeField()
+
+    
+
+    def __str__(self):
+        return str(self.user)
+
+
+class Booking(models.Model):
+    intern = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='intern_name')
+    advisor = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='advisor')
+    slot = models.ForeignKey(
+        TimeSlot, on_delete=models.CASCADE, related_name='booked_slot')
+    booked_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return str(self.slot)

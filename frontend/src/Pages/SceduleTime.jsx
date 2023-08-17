@@ -1,6 +1,36 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { ReviewerTimeAssigned, reviewersList } from '../features/ScheduleTimeSlice'
 
 function SceduleTime() {
+
+  let dispatch = useDispatch()
+  const reviewers = useSelector((state) => (state.Schedule))
+  const time = useSelector((state) => (state.Schedule))
+
+  const [rev, setRev] = useState()
+  const [times, setTimes] = useState()
+  const [userid, setUserId] = useState('')
+
+  useEffect(() => {
+    dispatch(reviewersList())
+  }, [dispatch])
+
+  useEffect(() => {
+    if (reviewers.data) {
+      setRev(reviewers.data)
+    }
+  }, [reviewers.data])
+
+
+  useEffect(() => {
+    if (time.data1){
+      setTimes(time.data1)
+    }
+  },[time.data1])
+
+
+
   return (
     <div className='grid lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1 xs:grid-cols-1'>
       <div className='bg-[#111217] min-w-[400px] grid grid-flow-row mt-10 mx-10 rounded-lg'>
@@ -80,21 +110,40 @@ function SceduleTime() {
             </div>
           </span>
         </div>
-        <select className='h-[30px] mx-[30px] w-[300px] bg-[#303443] lg:mb-0 xs:mb-3 text-white rounded-md outline-none '>
-          <option value='option1' selected>Nibhinsha</option>
-          <option value='option2'>Jhon</option>
-          <option value='option3'>Wick</option>
-          <option value='option3'>Hadi</option>
-          <option value='option3'>Emil</option>
-          <option value='option3'>Ashik</option>
+        <select onChange={async (e) => {
+          await dispatch(ReviewerTimeAssigned(e.target.value))
+          // await setTime()
+        }} className='h-[30px] mx-[30px] w-[300px] bg-[#303443] lg:mb-0 xs:mb-3 text-white rounded-md outline-none '>
+          <option selected>Select a user</option>
+          {
+            rev ?
+              <>
+                {
+                  rev.map((item) => {
+                    return (
+                      <option key={item.id} value={item.id}>{item.username}</option>
+                    )
+                  })
+                }
+              </>
+              : null
+          }
         </select>
         <select className='h-[30px] mx-[30px] w-[300px] bg-[#303443] lg:my-3 mb-3 text-white rounded-md outline-none '>
-          <option value='option1' selected>1:00 PM</option>
-          <option value='option2'>3:30 PM</option>
-          <option value='option3'>4:00 PM</option>
-          <option value='option3'>9:00 AM</option>
-          <option value='option3'>11:00 AM</option>
-          <option value='option3'>12:00 PM</option>
+        <option selected>Select the Time</option>
+          {
+            times ?
+              <>
+                {
+                  times.map((item) => {
+                    return (
+                      <option key={item.id} value={item.id}>{item.day} - {item.start_time} - {item.end_time}</option>
+                    )
+                  })
+                }
+              </>
+              : null
+          }
         </select>
       </div>
 
