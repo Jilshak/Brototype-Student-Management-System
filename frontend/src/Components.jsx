@@ -45,7 +45,7 @@ function Components() {
                     <Route path='assign_time' element={<AssignMyTimePage />} />
                     <Route path='batch_number/:id' element={<BatchStudentsPage />} />
                     <Route path='chat' element={<ChatPage />} />
-                    <Route path='week_detail' element={<WeekDetailPage />} />
+                    <Route path='week_detail/:id/:userid?' element={<WeekDetailPage />} />
                 </Route>
             </Route>
 
