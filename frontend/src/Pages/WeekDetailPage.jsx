@@ -67,11 +67,6 @@ function WeekDetailPage() {
     const [toggle2, setToggle2] = useState(false)
 
 
-    const review_edit = () => {
-        setToggle(true)
-    }
-
-
     const edit = async () => {
 
         const week_id = await weekDetail?.find((item) => {
@@ -85,6 +80,7 @@ function WeekDetailPage() {
 
         let credentials = {
             id: week_id.weekdetails_set[0].id,
+            week_id : id,
             Marks: Marks,
             advisor: advisor,
             reviewer: reviewer,

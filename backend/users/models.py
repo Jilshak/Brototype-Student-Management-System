@@ -31,6 +31,7 @@ class User(AbstractUser):
     image = models.ImageField(blank=True, null=True, upload_to='profile')
     review_in = models.IntegerField(blank=True, default=7)
     current_week = models.IntegerField(blank=True, default=1)
+    review_scheduled = models.BooleanField(default=False)
 
     is_reviewer = models.BooleanField(default=False)
     is_advisor = models.BooleanField(default=False)

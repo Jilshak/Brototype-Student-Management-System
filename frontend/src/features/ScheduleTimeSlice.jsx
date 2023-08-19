@@ -41,7 +41,7 @@ export const InternsWithReview = createAsyncThunk('interns_with_review',
             const response = await request.data
             if (request.status === 200){
                 console.log(response)
-                let desired = response.filter((item) => !item.is_superuser && !item.is_advisor && !item.is_reviewer && item.review_in <= 7)
+                let desired = response.filter((item) => !item.is_superuser && !item.is_advisor && !item.is_reviewer && item.review_in <= 7 && !item.review_scheduled)
                 console.log(desired)
                 return desired
             }
@@ -68,6 +68,31 @@ export const Scheduled = createAsyncThunk('scheduled',
     }
 )
 
+export const ScheduledTimeforAdvisor = createAsyncThunk('scheduled_time_for_advisor',
+    async (id) => {
+        try {
+            console.log("This is being called!!!")
+            console.log(id)
+            const request = await axios.get(`http://127.0.0.1:8000/booking/`)
+            const response = await request.data
+            if (request.status === 200){
+                let data = response.filter((item) => item.advisor == id)
+                let value = await data.map(item => item.slot)
+
+                const req = await axios.get(`http://127.0.0.1:8000/timeslot/`)
+                const res = await req.data
+                if (req.status === 200){
+                    let desired = res.filter((item) => value.includes(item.id))
+                    console.log("This is the data that you are looking for: ",data, desired)
+                    return {data, desired}
+                }
+            }
+        } catch (error) {
+            console.log("Error: ", error)
+        }
+    }
+)
+
 
 
 
@@ -76,6 +101,7 @@ const initialState = {
     data1: [],
     Interns: [],
     booked: [],
+    review: [],
     isLoading: true,
     msg: 'is still loading'
 }
@@ -143,9 +169,24 @@ export const ScheduleTime = createSlice({
             state.msg = "The Interns has been loaded"
         },
         [Scheduled.rejected]: (state) => {
-            state.bopked = [],
+            state.booked = [],
             state.isLoading = false,
             state.msg = 'something went wrong while loading the state'
+        },
+        [ScheduledTimeforAdvisor.pending]: (state) => {
+            state.isLoading = true,
+            state.review = [],
+            state.msg = "It is still loading the scheduled data please wait"
+        },
+        [ScheduledTimeforAdvisor.fulfilled]: (state, action) => {
+            state.review = action.payload,
+            state.isLoading = false,
+            state.msg = "The scheduled has been loaded"
+        },
+        [ScheduledTimeforAdvisor.rejected]: (state) => {
+            state.review = [],
+            state.isLoading = false,
+            state.msg = 'something went wrong while loading the scheduled data'
         },
     }
 })

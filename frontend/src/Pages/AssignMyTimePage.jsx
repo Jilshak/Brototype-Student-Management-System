@@ -13,8 +13,13 @@ function AssignMyTimePage() {
   let dispatch = useDispatch()
   const times = useSelector((state) => (state.Booking))
   const booked = useSelector((state) => (state.Booked))
+  const [minDate, setMinDate] = useState(getCurrentDate());
 
   const [time, setTime] = useState()
+
+
+  // Function to get the current date in the format YYYY-MM-DD
+
 
   useEffect(() => {
     dispatch(GetAssignedTime(decode.user_id))
@@ -70,8 +75,27 @@ function AssignMyTimePage() {
   }
 
   const handleDelete = async (id) => {
-    await setTime(prevList => prevList.filter(item => item.id !== id))
-    await dispatch(deleteTime(id))
+    if (time.length > 0) {
+      await setTime(prevList => prevList.filter(item => item.id !== id))
+      await dispatch(deleteTime(id))
+    }   
+  }
+
+  const handleDeleteScheduled = async (id, id2) => {
+    if (item2.length > 0){
+      console.log(id, id2)
+      console.log(item2)
+      await setItem2(prevList => prevList.filter(item => item.slot !== id2))
+      await dispatch(deleteTime(id))
+    } 
+  }
+
+  function getCurrentDate() {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = (today.getMonth() + 1).toString().padStart(2, '0');
+    const day = today.getDate().toString().padStart(2, '0');
+    return `${year}-${month}-${day}`;
   }
 
   useEffect(() => {
@@ -101,7 +125,9 @@ function AssignMyTimePage() {
             <option value='Saturday'>Saturday</option>
             <option value='Sunday'>Sunday</option>
           </select>
-          <input onChange={(e) => setDate(e.target.value)} className='p-2 w-[200px] bg-[#303443] text-white rounded-md outline-none' type='date' placeholder='DD/MM/YY' />
+          <input value={minDate} min={minDate} onChange={(e) => {
+            setDate(e.target.value)
+          }} className='p-2 w-[200px] bg-[#303443] text-white rounded-md outline-none' type='date' placeholder='DD/MM/YY' />
           <input onChange={(e) => setStart(e.target.value)} className='p-2 my-3 w-[100px] bg-[#303443] text-white rounded-md outline-none' type='time' placeholder='Time' />
           <p>to</p>
           <input onChange={(e) => setEnd(e.target.value)} className='p-2 my-3 w-[100px] bg-[#303443] text-white rounded-md outline-none' type='time' placeholder='Time' />
@@ -159,7 +185,7 @@ function AssignMyTimePage() {
             <p className='text-xl text-[#7981A0]'>Fixed Schedule</p>
           </div>
           <div className='grid'>
-            {item && item2 ? (
+            {item2 ? (
               <>
                 {item2.map((val, index) => {
                   let data = null;
@@ -167,10 +193,7 @@ function AssignMyTimePage() {
                   // Using forEach to iterate through the timeslots and find the matching one
                   item.forEach((test) => {
                     if (test.id === val.slot) {
-                      console.log('from item:', test.id, 'from: item2: ', val.slot);
                       data = test;
-                    } else {
-                      console.log("This one is not true");
                     }
                   });
 
@@ -201,7 +224,9 @@ function AssignMyTimePage() {
                         {data?.start_time} - {data?.end_time}
                       </span>
 
-                      <div className=''>
+                      <div onClick={(e) => {
+                        handleDeleteScheduled(val.slot, data.id)
+                      }} className='cursor-pointer'>
                         <img className='h-6 cursor-pointer' src={remove} alt="" />
                       </div>
                     </div>
