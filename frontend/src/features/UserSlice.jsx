@@ -9,8 +9,10 @@ export const Register = createAsyncThunk('register',
         const batchAssign = await axios.get("http://127.0.0.1:8000/batches/").then(res => {
             const matchingBatch = res.data.find(x => x.batch_number === credentials.batch);
             if (matchingBatch) {
+                console.log("This is being called here which means it should work as expected!!!")
                 return matchingBatch.id;
             } else {
+                console.log("its not working as expected something went wrong !!")
                 return null;
             }
         });
@@ -22,6 +24,7 @@ export const Register = createAsyncThunk('register',
         const response = request.data
         console.log(credentials)
         if (request.status === 201) {
+            console.log(response)
             return console.log("The user has been created")
         } else {
             return console.log("Something went wrong!!! And the user has not been created")
@@ -64,8 +67,7 @@ export const InternList = createAsyncThunk('intern_list',
         try {
             const request = await axios.get('http://127.0.0.1:8000/users/')
             let data = await request.data
-
-            const filterData = data.filter(user => {
+            const filterData = await data.filter(user => {
                 return (
                     user.batch == id &&
                     user.is_user &&
@@ -74,12 +76,15 @@ export const InternList = createAsyncThunk('intern_list',
                     !user.is_reviewer
                 )
             })
+            console.log(filterData)
             return filterData
         } catch (error) {
-            console.log('Error: ', error)
+            console.error('Error:', error); 
+            throw error; 
         }
     }
 )
+
 export const AdvisorList = createAsyncThunk('advisor_list',
     async (id) => {
         try {

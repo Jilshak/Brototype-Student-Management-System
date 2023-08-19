@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux'
 import { AddTime, GetAssignedTime, deleteTime } from '../features/AssignTimeSlice';
+import { TimeBooked } from '../features/BookingSlice'
 import jwtDecode from 'jwt-decode';
 import remove from '../icons/remove.png'
 
@@ -11,11 +12,13 @@ function AssignMyTimePage() {
 
   let dispatch = useDispatch()
   const times = useSelector((state) => (state.Booking))
+  const booked = useSelector((state) => (state.Booked))
 
   const [time, setTime] = useState()
 
   useEffect(() => {
     dispatch(GetAssignedTime(decode.user_id))
+    dispatch(TimeBooked(decode.user_id))
   }, [dispatch])
 
   useEffect(() => {
@@ -31,6 +34,9 @@ function AssignMyTimePage() {
   const [start, setStart] = useState('')
   const [end, setEnd] = useState('')
 
+  //states for booked schedule
+  const [item, setItem] = useState()
+  const [item2, setItem2] = useState()
 
   const addTime = async () => {
 
@@ -46,15 +52,15 @@ function AssignMyTimePage() {
       {
         day: day,
         date: date,
-        start_time: start,
-        end_time: end,
+        start_time: start + ':00',
+        end_time: end + ':00',
       }
     ]
 
     if (day && date && start && end) {
       if (time) {
         await setTime(prevTime => [...prevTime, ...local])
-      }else{
+      } else {
         setTime(local)
       }
     } else {
@@ -65,8 +71,18 @@ function AssignMyTimePage() {
 
   const handleDelete = async (id) => {
     await setTime(prevList => prevList.filter(item => item.id !== id))
-    dispatch(deleteTime(id))
+    await dispatch(deleteTime(id))
   }
+
+  useEffect(() => {
+    if (booked.booked) {
+      setItem(booked.booked.slots)
+      setItem2(booked.booked.desired)
+    }
+  }, [booked.booked])
+
+
+
 
   return (
     <>
@@ -140,9 +156,60 @@ function AssignMyTimePage() {
         </div>
         <div className='bg-[#16171D] opacity-70  mx-10 mt-10 rounded-lg'>
           <div className='flex justify-center items-center my-5'>
-            <p className='text-xl text-[#7981A0]'>Notifications</p>
+            <p className='text-xl text-[#7981A0]'>Fixed Schedule</p>
           </div>
           <div className='grid'>
+            {item && item2 ? (
+              <>
+                {item2.map((val, index) => {
+                  let data = null;
+
+                  // Using forEach to iterate through the timeslots and find the matching one
+                  item.forEach((test) => {
+                    if (test.id === val.slot) {
+                      console.log('from item:', test.id, 'from: item2: ', val.slot);
+                      data = test;
+                    } else {
+                      console.log("This one is not true");
+                    }
+                  });
+
+                  return (
+                    <div key={data?.id} className='mx-[30px] relative flex justify-around  items-center py-3 opacity-60 mb-5 bg-[#303443] rounded-lg'>
+                      <span className='mx-3'>
+                        {index + 1}.
+                      </span>
+                      <span className='me-3'>
+                        <div className='grid'>
+                          <span>{data?.day}</span>
+                          <span className='text-xs'><p>{data?.date}</p></span>
+                        </div>
+                      </span>
+                      <span className='me-3'>
+                        <div className='grid'>
+                          <span>{val.intern_username}</span>
+                          <span className='text-xs'>Intern BCK{val.intern_batch.batch_number}</span>
+                        </div>
+                      </span>
+                      <span className='me-3'>
+                        <div className='grid'>
+                          <span>{val.advisor_username}</span>
+                          <span className='text-xs'>Advisor</span>
+                        </div>
+                      </span>
+                      <span className='me-4 xs:hidden lg:block'>
+                        {data?.start_time} - {data?.end_time}
+                      </span>
+
+                      <div className=''>
+                        <img className='h-6 cursor-pointer' src={remove} alt="" />
+                      </div>
+                    </div>
+                  );
+                })}
+              </>
+            ) : null}
+
 
           </div>
         </div>

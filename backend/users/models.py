@@ -7,6 +7,7 @@ from datetime import datetime, date
 
 
 class Batch(models.Model):
+    
     batch_number = models.IntegerField(unique=True, blank=True, null=True)
 
     def __str__(self):
@@ -28,6 +29,8 @@ class User(AbstractUser):
     batch = models.ForeignKey(
         Batch, on_delete=models.CASCADE, null=True, blank=True)
     image = models.ImageField(blank=True, null=True, upload_to='profile')
+    review_in = models.IntegerField(blank=True, default=7)
+    current_week = models.IntegerField(blank=True, default=1)
 
     is_reviewer = models.BooleanField(default=False)
     is_advisor = models.BooleanField(default=False)
@@ -83,11 +86,11 @@ class TimeSlot(models.Model):
     date = models.DateField()
     start_time = models.TimeField()
     end_time = models.TimeField()
-
-    
+    booked = models.BooleanField(default=False)
 
     def __str__(self):
-        return str(self.user)
+        a = f'{self.user} - {self.day} - {self.start_time} - {self.end_time}'
+        return a
 
 
 class Booking(models.Model):
@@ -98,6 +101,16 @@ class Booking(models.Model):
     slot = models.ForeignKey(
         TimeSlot, on_delete=models.CASCADE, related_name='booked_slot')
     booked_at = models.DateTimeField(auto_now_add=True)
+
+    intern_username = models.CharField(max_length=255, blank=True, null=True)
+    intern_batch = models.CharField(max_length=255, blank=True, null=True)
+    advisor_username = models.CharField(max_length=255, blank=True, null=True)
+
+    def save(self, *args, **kwargs):
+        self.intern_username = self.intern.username
+        self.intern_batch = self.intern.batch
+        self.advisor_username = self.advisor.username
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return str(self.slot)

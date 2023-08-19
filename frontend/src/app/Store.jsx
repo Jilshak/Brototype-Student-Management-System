@@ -5,6 +5,7 @@ import AuthorizeSlice from '../features/AuthorizeSlice'
 import WeekDetailsSlice from '../features/WeekDetails'
 import AssignTimeSlice from '../features/AssignTimeSlice'
 import ScheduleTime from '../features/ScheduleTimeSlice'
+import BookingSlice from '../features/BookingSlice'
 
 
 export const store = configureStore({
@@ -14,6 +15,7 @@ export const store = configureStore({
         Authorize: AuthorizeSlice,
         WeekDetails: WeekDetailsSlice,
         Booking: AssignTimeSlice,
-        Schedule: ScheduleTime
+        Schedule: ScheduleTime,
+        Booked: BookingSlice
     }
 })

@@ -9,7 +9,7 @@ export const GetAssignedTime = createAsyncThunk('get_assigned_time',
             const request = axios.get(`http://127.0.0.1:8000/timeslot/`)
             const response = (await request).data
             if ((await request).status === 200) {
-                let time = await response.filter((item) => item.user == id)
+                let time = await response.filter((item) => item.user == id && !item.booked)
                 console.log(time)
                 return time
             }

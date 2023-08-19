@@ -118,18 +118,20 @@ function WeekDetailPage() {
 
     const edit3 = async () => {
 
-        const week_id = await weekDetail?.find((item) => {
+        const week_id = weekDetail?.find((item) => {
             return item.week_number == id
         })
 
-        let credentials = {
+         let credentials = {
             id: week_id.weekdetails_set[0].id,
             audio_task: audio,
             description: description,
             typing: typing,
         }
+        
+        console.log(credentials)
 
-        await dispatch(WeekDetailsUser(credentials))
+        await dispatch(WeekDetailsUser({...credentials}))
 
         setToggle2(false)
 
@@ -300,16 +302,16 @@ function WeekDetailPage() {
                                                             return (
                                                                 <>
                                                                     <div className='mx-[30px] py-2 bg-[#1C1E26] mb-3 opacity-70 rounded-lg'>
-                                                                        <span className='mx-5 flex text-white'>Marks Obtained : {item.weekdetails_set[0].Marks || Marks ? (item.weekdetails_set[0].Marks ? item.weekdetails_set[0].Marks : Marks) : <p className='text-gray-500 mx-2'> ______</p>}</span>
+                                                                        <span className='mx-5 flex text-white'>Marks Obtained : {Marks ? Marks : (item.weekdetails_set[0].Marks || Marks ? (item.weekdetails_set[0].Marks ? item.weekdetails_set[0].Marks : Marks) : <p className='text-gray-500 mx-2'> ______</p>)}</span>
                                                                     </div>
                                                                     <div className='mx-[30px] py-2 mb-3 bg-[#1C1E26] opacity-70 rounded-lg'>
-                                                                        <span className='mx-5 flex text-white'>Advisor : {item.weekdetails_set[0].advisor || advisor ? (item.weekdetails_set[0].advisor ? item.weekdetails_set[0].advisor : advisor) : <p className='text-gray-500 mx-2'> ______</p>}</span>
+                                                                        <span className='mx-5 flex text-white'>Advisor : {advisor ? advisor : (item.weekdetails_set[0].advisor || advisor ? (item.weekdetails_set[0].advisor ? item.weekdetails_set[0].advisor : advisor) : <p className='text-gray-500 mx-2'> ______</p>)}</span>
                                                                     </div>
                                                                     <div className='mx-[30px] py-2 mb-3 bg-[#1C1E26] opacity-70 rounded-lg'>
-                                                                        <span className='mx-5 flex'>Reviewer : {item.weekdetails_set[0].reviewer || reviewer ? (item.weekdetails_set[0].reviewer ? item.weekdetails_set[0].reviewer : reviewer) : <p className='text-gray-500 mx-2'> ______</p>}</span>
+                                                                        <span className='mx-5 flex'>Reviewer : {reviewer ? reviewer : (item.weekdetails_set[0].reviewer || reviewer ? (item.weekdetails_set[0].reviewer ? item.weekdetails_set[0].reviewer : reviewer) : <p className='text-gray-500 mx-2'> ______</p>)}</span>
                                                                     </div>
                                                                     <div className='mx-[30px] py-2 mb-3 bg-[#1C1E26] opacity-70 rounded-lg'>
-                                                                        <span className='mx-5 flex'>Conducted : {item.weekdetails_set[0].conducted_on || conducted ? (item.weekdetails_set[0].conducted_on ? item.weekdetails_set[0].conducted_on : conducted) : <p className='text-gray-500 mx-2'> _______</p>}</span>
+                                                                        <span className='mx-5 flex'>Conducted : {conducted ? conducted : (item.weekdetails_set[0].conducted_on || conducted ? (item.weekdetails_set[0].conducted_on ? item.weekdetails_set[0].conducted_on : conducted) : <p className='text-gray-500 mx-2'> _______</p>)}</span>
                                                                     </div>
                                                                 </>
                                                             )
@@ -342,18 +344,18 @@ function WeekDetailPage() {
                                                             return (
                                                                 <>
                                                                     <div className='mx-[30px] py-2 bg-[#1C1E26] mb-3 opacity-70 rounded-lg'>
-                                                                        <span className='mx-5 flex'>Audio Task : {item.weekdetails_set[0].audio_task || audio === 'true' ? <p className='text-green-500 ms-2'>Completed</p> : <p className='text-gray-500 mx-2'> ______</p>}</span>
+                                                                        <span className='mx-5 flex'>Audio Task : {audio  ? (audio === "true" ? <p className='text-green-500 ms-2'>Added</p> : <p className='text-red-500 ms-2'>Not Added</p> )  : (item.weekdetails_set[0].audio_task ? <p className='text-green-500 ms-2'>Added</p> : <p className='text-red-500 mx-2'> Not Added</p>)}</span>
 
                                                                     </div>
                                                                     <div className='mx-[30px] py-2 bg-[#1C1E26] mb-3 opacity-70 rounded-lg'>
-                                                                        <span className='mx-5 flex'>Descriptions : {item.weekdetails_set[0].description || description === 'true' ? <p className='text-green-500 ms-2'>Completed</p> : <p className='text-gray-500 mx-2'> ______</p>}</span>
+                                                                        <span className='mx-5 flex'>Descriptions : {description  ? (description === "true" ? <p className='text-green-500 ms-2'>Added</p> : <p className='text-red-500 ms-2'>Not Added</p> )  : (item.weekdetails_set[0].description ? <p className='text-green-500 ms-2'>Added</p> : <p className='text-red-500 mx-2'> Not Added</p>)}</span>
                                                                     </div>
                                                                     <div className='mx-[30px] py-2 bg-[#1C1E26] mb-3 opacity-70 rounded-lg'>
-                                                                        <span className='mx-5 flex'>Typing : {item.weekdetails_set[0].typing || typing === 'true' ? <p className='text-green-500 ms-2'>Completed</p> : <p className='text-gray-500 mx-2'> ______</p>}</span>
+                                                                        <span className='mx-5 flex'>Typing : {typing  ? (typing === "true" ? <p className='text-green-500 ms-2'>Added</p> : <p className='text-red-500 ms-2'>Not Added</p> )  : (item.weekdetails_set[0].typing ? <p className='text-green-500 ms-2'>Added</p> : <p className='text-red-500 mx-2'> Not Added</p>)}</span>
 
                                                                     </div>
                                                                     <div className='mx-[30px] py-2 bg-[#1C1E26] mb-3 opacity-70 rounded-lg'>
-                                                                        <span className='mx-5'>Additional Task : ______</span>
+                                                                        <span className='mx-5 flex'>Additional Task : <p className='text-yellow-400 ms-2'>Have None</p></span>
                                                                     </div>
                                                                 </>
                                                             )
@@ -384,15 +386,15 @@ function WeekDetailPage() {
                                                             return (
                                                                 <>
                                                                     <div className='mx-[30px] py-2 bg-[#1C1E26] mb-3 opacity-70 rounded-lg'>
-                                                                        <span className='mx-5 flex'>Seminar Presentation : {item.weekdetails_set[0].seminar_presentation || seminar==="true" ? <p className='text-green-500 ms-2'> Added</p> : <p className='text-gray-500 mx-2'> Not Added</p>}</span>
+                                                                        <span className='mx-5 flex'>Seminar Presentation : {seminar  ? (seminar === "true" ? <p className='text-green-500 ms-2'>Added</p> : <p className='text-red-500 ms-2'>Not Added</p> )  : (item.weekdetails_set[0].seminar_presentation ? <p className='text-green-500 ms-2'>Added</p> : <p className='text-red-500 mx-2'> Not Added</p>)}</span>
 
                                                                     </div>
                                                                     <div className='mx-[30px] py-2 bg-[#1C1E26] mb-3 opacity-70 rounded-lg'>
-                                                                        <span className='mx-5 flex'>Feedback Session : {item.weekdetails_set[0].feedback || feedback==="true" ? <p className='text-green-500 ms-2'>Added</p> : <p className='text-gray-500 mx-2'> Not Added</p>}</span>
-                                                                        {console.log(feedback, item.weekdetails_set[0].feedback)}
+                                                                        <span className='mx-5 flex'>Feedback Session : {feedback  ? (feedback === "true" ? <p className='text-green-500 ms-2'>Added</p> : <p className='text-red-500 ms-2'>Not Added</p> )  : (item.weekdetails_set[0].feedback ? <p className='text-green-500 ms-2'>Added</p> : <p className='text-red-500 mx-2'> Not Added</p>)}</span>
+                                                                        
                                                                     </div>
                                                                     <div className='mx-[30px] py-2 bg-[#1C1E26] mb-3 opacity-70 rounded-lg'>
-                                                                        <span className='mx-5 flex'>Progress Video : {item.weekdetails_set[0].progress || progress==="true" ? <p className='text-green-500 ms-2'>Added</p> : <p className='text-gray-500 mx-2'> Not Added</p>}</span>
+                                                                        <span className='mx-5 flex'>Progress Video : {progress  ? (progress === "true" ? <p className='text-green-500 ms-2'>Added</p> : <p className='text-red-500 ms-2'>Not Added</p> )  : (item.weekdetails_set[0].progress ? <p className='text-green-500 ms-2'>Added</p> : <p className='text-red-500 mx-2'> Not Added</p>)}</span>
                                                                     </div>
                                                                 </>
                                                             )

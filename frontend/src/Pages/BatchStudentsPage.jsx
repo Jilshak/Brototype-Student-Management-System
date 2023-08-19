@@ -11,8 +11,6 @@ function BatchStudentsPage() {
 
     const { id } = useParams()
 
-    const navigate = useNavigate()
-
     const Interns = useSelector((state) => state.Users)
     const [list, setList] = useState([])
     const [loading, setLoading] = useState(true)
@@ -27,7 +25,9 @@ function BatchStudentsPage() {
         if (loading) {
             if (Interns.state) {
                 setList(Interns.state)
+                console.log(list)   
                 if (list?.length > 0) {
+                    console.log('the list is loaded')
                     setLoading(false)
                 }
             } else {
