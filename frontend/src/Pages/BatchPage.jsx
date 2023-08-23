@@ -91,7 +91,7 @@ function BatchPage() {
                 batches ?
                     <div className='grid lg:grid-cols-6 md:grid-cols-4 sm:grid-cols-2 xs:grid-cols-1 mt-10 lg:ms-[100px] md:ms-[40px] sm:ms-[20px]'>
                         {
-                            batches.map((item) => {
+                            [...batches].reverse().map((item) => {
                                 return (
                                     <Link key={item.id} to={`/batch_number/${item.id}`}>
                                         <div className='flex justify-center mb-3 items-center bg-[#303443] h-20 lg:mx-5 md:mx-4 sm:mx-3 xs:mx-10 rounded-xl'>

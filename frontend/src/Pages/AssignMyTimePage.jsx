@@ -4,6 +4,7 @@ import { AddTime, GetAssignedTime, deleteTime } from '../features/AssignTimeSlic
 import { TimeBooked } from '../features/BookingSlice'
 import jwtDecode from 'jwt-decode';
 import remove from '../icons/remove.png'
+import { unSchedule } from '../features/ScheduleTimeSlice';
 
 function AssignMyTimePage() {
 
@@ -81,11 +82,11 @@ function AssignMyTimePage() {
     }   
   }
 
-  const handleDeleteScheduled = async (id, id2) => {
+  const handleDeleteScheduled = async (id, intern) => {
     if (item2.length > 0){
-      console.log(id, id2)
       console.log(item2)
-      await setItem2(prevList => prevList.filter(item => item.slot !== id2))
+      await setItem2(prevList => prevList.filter(item => item.slot !== id))
+      await dispatch(unSchedule(intern))
       await dispatch(deleteTime(id))
     } 
   }
@@ -125,7 +126,7 @@ function AssignMyTimePage() {
             <option value='Saturday'>Saturday</option>
             <option value='Sunday'>Sunday</option>
           </select>
-          <input value={minDate} min={minDate} onChange={(e) => {
+          <input min={minDate} onChange={(e) => {
             setDate(e.target.value)
           }} className='p-2 w-[200px] bg-[#303443] text-white rounded-md outline-none' type='date' placeholder='DD/MM/YY' />
           <input onChange={(e) => setStart(e.target.value)} className='p-2 my-3 w-[100px] bg-[#303443] text-white rounded-md outline-none' type='time' placeholder='Time' />
@@ -225,7 +226,8 @@ function AssignMyTimePage() {
                       </span>
 
                       <div onClick={(e) => {
-                        handleDeleteScheduled(val.slot, data.id)
+                        console.log(val.intern)
+                        handleDeleteScheduled(val.slot, val.intern)
                       }} className='cursor-pointer'>
                         <img className='h-6 cursor-pointer' src={remove} alt="" />
                       </div>

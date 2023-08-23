@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import header from '../images/header.webp'
 import { Link, useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
@@ -9,6 +9,7 @@ function LoginPage() {
     let dispatch = useDispatch()
     let navigate = useNavigate()
 
+    
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
 
@@ -22,6 +23,15 @@ function LoginPage() {
         navigate('/')
         // window.location.reload()
     }
+
+    useEffect(() => {
+        let access = localStorage.getItem('authToken')
+        if (access){
+            navigate('/')
+        }else{
+            navigate('/login')
+        }
+    },[])
 
     return (
 

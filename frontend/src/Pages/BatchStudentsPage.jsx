@@ -12,8 +12,9 @@ function BatchStudentsPage() {
     const { id } = useParams()
 
     const Interns = useSelector((state) => state.Users)
-    const [list, setList] = useState([])
+    const [list, setList] = useState()
     const [loading, setLoading] = useState(true)
+    let navigate = useNavigate()
 
     let dispatch = useDispatch()
 
@@ -25,7 +26,7 @@ function BatchStudentsPage() {
         if (loading) {
             if (Interns.state) {
                 setList(Interns.state)
-                console.log(list)   
+                console.log(list)
                 if (list?.length > 0) {
                     console.log('the list is loaded')
                     setLoading(false)
@@ -34,26 +35,30 @@ function BatchStudentsPage() {
                 setLoading(true)
             }
         }
-    }, [Interns.state, list])
+    }, [Interns.state])
 
 
     //Search option
-    const [find, setFind] = useState()
+    const [find, setFind] = useState();
     const searchItem = async (e) => {
-        setFind(list)
+        if (!find) {
+            setFind(list);
+        }
         if (e.target.value === '') {
-            return setList(find)
+            setList(find);
         } else {
             setList(await list.filter((item) => {
-                return item.username.startsWith(e.target.value)
-            }))
+                return item.username.startsWith(e.target.value);
+            }));
         }
     }
 
+
     //delete user
-    const delete_user = (id) => {
-        dispatch(deleteUser(id))
-        setList(prevList => prevList.filter(intern => intern.id !== id));
+    const delete_user = async (user_id) => {
+        await dispatch(deleteUser(user_id))
+        await dispatch(InternList(id))
+        setList(prevList => prevList.filter(item => item.id !== user_id))
     }
 
     //edit user
@@ -98,7 +103,7 @@ function BatchStudentsPage() {
     return (
         <>
             {
-                loading ?
+                Interns?.isLoading ?
 
                     (
                         <h1>Loading....</h1>
@@ -107,10 +112,10 @@ function BatchStudentsPage() {
                     :
 
                     <>
-                        <div className='h-screen grid grid-rows-16'>
-                            <div className=''>
+                        <div className=' grid grid-rows-16'>
+                            <div className='sticky top-0 z-50'>
                                 <div className='grid grid-cols-3'>
-                                    <Link to='/batch'>
+                                    <Link onClick={(e) => setList([])} to='/batch'>
                                         <button className='lg:w-12 md:w-10 sm:w-10 xs:w-10 lg:h-12 md:h-10 sm:h-10 xs:h-10 lg:ms-[100px] md:ms-[60px] sm:ms-[30px] opacity-70 bg-[#303443] my-7 rounded-full'>
                                             <span className='flex justify-center'>
                                                 <img className='lg:h-[35px] md:h-[25px] sm:h-[20px] xs:h-[20px] ' src={leftarrow} alt="" />
@@ -124,7 +129,7 @@ function BatchStudentsPage() {
                                     </div>
                                     <div className='flex justify-center items-center '>
                                         <span className='bg-[#303443] w-[40px] lg:ms-[70px] me-3 h-10 justify-center items-center flex rounded-full'>
-                                            {Array.isArray(list) ? list.length : 0}
+                                            {Interns.state ? Interns.state.length : (Interns.loading ? 0 : Interns.state.length)}
                                         </span>
                                     </div>
                                 </div>
@@ -167,8 +172,8 @@ function BatchStudentsPage() {
                             }
 
                             {
-                                Array.isArray(list) && list.length > 0 ?
-                                    <div className='overflow-y-auto '>
+                                !Interns.isLoading && list?.length > 0 ?
+                                    <div className='overflow-y-auto max-h-[550px]'>
                                         <div className='grid items-start mx-5 justify-center mt-10'>
                                             {
                                                 list?.map((intern) => {
@@ -182,7 +187,7 @@ function BatchStudentsPage() {
                                                                     <p className='ms-5'>{intern.username}</p>
                                                                 </span>
                                                                 <span className='rounded-lg xs:hidden sm:block flex items-center justify-start mx-5 w-[150px] h-8 bg-[#2E313D] '>
-                                                                    <p className='ms-5 mt-1'>{intern.phone ? intern.phone : "Not provided"}</p>
+                                                                    <p className='ms-5 mt-1 flex items-center'>{intern.phone ? intern.phone : <p className='text-xs mt-1'>Mobile number</p> }</p>
                                                                 </span>
                                                                 <span className='flex items-center justify-end w-[500px]'>
                                                                     <img onClick={(e) => {

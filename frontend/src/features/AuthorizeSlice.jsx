@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import axios from 'axios'
 
-
+//for getting the details of unauthorized intern for the admin
 export const UnauthorizedIntern = createAsyncThunk('unauthorized_intern',
     async () => {
         try {
@@ -18,6 +18,7 @@ export const UnauthorizedIntern = createAsyncThunk('unauthorized_intern',
     }
 )
 
+// for authorizing the intern for the admin so that they can have their functionality
 export const authorize = createAsyncThunk('authorize',
     async (id) => {
         try {

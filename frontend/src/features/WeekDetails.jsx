@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import axios from 'axios'
 
 
-
+//for editing the week details of the user - only for the admin and the advisors
 export const WeekDetailsUser = createAsyncThunk('weekdetails',
     async (credentials) => {
         console.log(credentials)

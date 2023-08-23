@@ -25,7 +25,7 @@ function Profile() {
 
   //edit//
   const [edit, setEdit] = useState(false)
-  const [userid, setUserId] = useState()
+  const [userid, setUserId] = useState(decode.user_id)
 
   //edit User States
   const [username, setUsername] = useState(null)
@@ -40,9 +40,16 @@ function Profile() {
   const [aadharnumber, setAadharNumber] = useState(null)
   const [educationalqualification, setEducationalQualification] = useState(null)
   const [batch, setBatch] = useState(null)
+  const [domain, setDomain] = useState(null)
+  const [address, setAddress] = useState(null)
+  const [village, setVillage] = useState(null)
+  const [taluk, setTaluk] = useState(null)
+  const [mothers_name, setMOthers_name] = useState(null)
+  const [fathers_name, setFathers_name] = useState(null)
 
 
-  const edit_user = () => {
+
+  const edit_user = async () => {
     console.log("This is being clicked")
     let credentials = {
       id: userid,
@@ -55,11 +62,18 @@ function Profile() {
       phone: phone,
       guardians_number: guardiansnumber,
       guardians_name: guardiansname,
-      aadharnumber: aadharnumber,
+      aadhar_number: aadharnumber,
       educational_qualification: educationalqualification,
       batch: parseInt(batch),
+      domain: domain,
+      address: address,
+      village: village,
+      taluk: taluk,
+      mother_name: mothers_name,
+      fathers_name: fathers_name
     }
-    dispatch(editUser(credentials))
+    await dispatch(editUser(credentials))
+    await dispatch(ProfileDetails(decode.user_id))
   }
 
 
@@ -89,13 +103,13 @@ function Profile() {
                 <>
                   {
                     edit ?
-                      <div className=' absolute grid lg:right-[300px] xs:right-0 rounded-3xl z-50 bg-[#303443] min-w-[350px] h-[600px] object-contain md:w-1/3 m-[100px]'>
-                        <div className='grid mx-[100px] grid-flow-row gap-0 relative my-6'>
-                          <div onClick={(e) => setEdit(false)} className='flex items-center justify-end'>
-                            <img className='h-[30px] relative left-14 cursor-pointer' src={remove} alt="" />
-                          </div>
+                      <div className=' absolute grid grid-cols-2 md:grid-cols-2 sm:grid-cols-1 xs:grid-cols-1 lg:right-[300px] xs:right-0 rounded-3xl z-50 bg-[#303443] min-w-[350px] min-h-[600px] object-contain w-1/2 m-[50px]'>
+                        <div className='grid mx-[30px] grid-flow-row gap-0 relative my-6'>
                           <div className='flex justify-center items-center'>
                             <p className='text-xl font-semibold my-3'>Edit User Details</p>
+                          </div>
+                          <div onClick={(e) => setEdit(false)} className='flex h-[30px] items-center justify-end'>
+                            <img className='h-[30px] lg:hidden md:hidden sm:block xs:block relative top-[-40px] cursor-pointer' src={remove} alt="" />
                           </div>
                           <input onChange={(e) => setUsername(e.target.value)} className='h-[35px] outline-none mb-1 bg-[#22242F]  pl-3 text-white rounded-md' type="text" placeholder='Username' />
                           <input onChange={(e) => setFirstName(e.target.value)} className='h-[35px] outline-none mb-1 bg-[#22242F]  pl-3 text-white rounded-md' type="text" placeholder='First Name' />
@@ -109,12 +123,37 @@ function Profile() {
                           <input onChange={(e) => setEducationalQualification(e.target.value)} className='h-[35px] outline-none mb-1 bg-[#22242F]  pl-3 text-white rounded-md' type="text" placeholder='Highest Educational Qualification' />
                           <input onChange={(e) => setAadharNumber(e.target.value)} className='h-[35px] outline-none mb-1 bg-[#22242F]  pl-3 text-white rounded-md' type="number" placeholder='Aadhar Number' />
                           <div className='flex justify-center mb-1 items-center my-2'>
-                            <button onClick={(e) => {
-                              e.preventDefault()
-                              edit_user()
-                              setEdit(false)
-                            }} className='bg-[#272c3e] hover:bg-[#2d334b] opacity-70 px-5 py-2 rounded-lg'>Save Edit</button>
+
                           </div>
+                        </div>
+                        <div className=''>
+                          <div onClick={(e) => setEdit(false)} className='flex h-[30px] items-center justify-end'>
+                            <img className='h-[30px] lg:block md:block sm:hidden xs:hidden relative right-10 top-10 cursor-pointer' src={remove} alt="" />
+                          </div>
+                          <div className='grid mx-[30px] grid-flow-row gap-0 relative my-6 top-6'>
+                            <div className='h-6'></div>
+                            <input onChange={(e) => setDomain(e.target.value)} className='h-[35px] outline-none mb-1 bg-[#22242F]  pl-3 text-white rounded-md' type="text" placeholder='Domain' />
+                            <input onChange={(e) => setAddress(e.target.value)} className='h-[35px] outline-none mb-1 bg-[#22242F]  pl-3 text-white rounded-md' type="text" placeholder='Address' />
+                            <input onChange={(e) => setVillage(e.target.value)} className='h-[35px] outline-none mb-1 bg-[#22242F]  pl-3 text-white rounded-md' type="text" placeholder='Village' />
+                            <input onChange={(e) => setTaluk(e.target.value)} type='email' className='h-[35px] mb-1 outline-none bg-[#22242F]  pl-3 text-white rounded-md' placeholder='Taluk' />
+                            <input onChange={(e) => setMOthers_name(e.target.value)} className='h-[35px] outline-none mb-1 bg-[#22242F]  pl-3 text-white rounded-md' type="text" placeholder='Mothers Name' />
+                            <input onChange={(e) => setFathers_name(e.target.value)} className='h-[35px] outline-none mb-1 bg-[#22242F]  pl-3 text-white rounded-md' type="text" placeholder='Fathers Name' />
+                            <input className='h-[35px] outline-none mb-1 bg-[#22242F]  pl-3 text-white rounded-md' type="number" placeholder='Coming Soon' />
+                            <input className='h-[35px] outline-none mb-1 bg-[#22242F]  pl-3 text-white rounded-md' type="date" name="" id="" />
+                            <input className='h-[35px] outline-none mb-1 bg-[#22242F]  pl-3 text-white rounded-md' type="text" placeholder='Coming soon' />
+                            <input className='h-[35px] outline-none mb-1 bg-[#22242F]  pl-3 text-white rounded-md' type="number" placeholder='Coming Soon' />
+                            <input className='h-[35px] outline-none mb-1 bg-[#22242F]  pl-3 text-white rounded-md' type="text" placeholder='Coming Soon' />
+                            <div className='flex justify-center mb-1 items-center my-2'>
+                            </div>
+                          </div>
+
+                        </div>
+                        <div className='flex justify-center relative lg:left-44 items-center'>
+                          <button onClick={(e) => {
+                            e.preventDefault()
+                            edit_user()
+                            setEdit(false)
+                          }} className='bg-[#272c3e] hover:bg-[#2d334b] opacity-70 px-12 py-2 mb-4 rounded-lg'>Save Edit</button>
                         </div>
                       </div>
                       : null
@@ -213,7 +252,7 @@ function Profile() {
               <>
                 <label className='text-xs opacity-30 mx-[35px] mb-1'>Highest Educational Qualification</label><br />
                 <div className='bg-[#6C7293] opacity-50 py-1 mx-[30px] rounded-lg'>
-                  <p className='mx-3'>{test && test.educationalqualification ? test.educationalqualification : "Educational Qualification"}</p>
+                  <p className='mx-3'>{test && test.educational_qualification ? test.educational_qualification : "Educational Qualification"}</p>
                 </div>
               </>
           }
@@ -232,11 +271,11 @@ function Profile() {
         </div>
         <label className='text-xs opacity-30 mx-[35px] mb-1'>Educational Qualification</label><br />
         <div className='bg-[#6C7293] opacity-50 py-1 mx-[30px] rounded-lg'>
-          <p className='mx-3'>{test && test.educationalqualification ? test.educationalqualification : "Educational qualification"}</p>
+          <p className='mx-3'>{test && test.educational_qualification ? test.educational_qualification : "Educational qualification"}</p>
         </div>
         <label className='text-xs opacity-30 mx-[35px] mb-1'>Aadhaar Number</label><br />
         <div className='bg-[#6C7293] opacity-50 py-1 mx-[30px] rounded-lg'>
-          <p className='mx-3'>{test && test.aadhar ? test.aadhar : "aadhar number here"}</p>
+          <p className='mx-3'>{test && test.aadhar_number ? test.aadhar_number : "aadhar number here"}</p>
         </div>
         <label className='text-xs opacity-30 mx-[35px] mb-1'>Village</label><br />
         <div className='bg-[#6C7293] opacity-50 py-1 mx-[30px] rounded-lg'>

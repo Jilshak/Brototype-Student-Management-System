@@ -79,7 +79,7 @@ function AdvisorsPage() {
     }, [advisor.state])
 
     return (
-        <div className='h-screen grid grid-rows-16'>
+        <div className='grid grid-rows-16'>
             <div className='grid grid-cols-3 items-center'>
                 <Link to='/dashboard'>
                     <button className='lg:w-12 md:w-10 sm:w-10 xs:w-10 lg:h-12 md:h-10 sm:h-10 xs:h-10 lg:ms-[100px] md:ms-[60px] sm:ms-[30px] mt-[30px] opacity-70 bg-[#303443] my-7 rounded-full'>

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import jwtDecode from 'jwt-decode';
-import { InternsWithReview, ReviewerTimeAssigned, ScheduledTimeforAdvisor, reviewersList } from '../features/ScheduleTimeSlice'
+import { InternsWithReview, ReviewerTimeAssigned, Scheduled, ScheduledTimeforAdvisor, removeBooking, reviewersList, unSchedule } from '../features/ScheduleTimeSlice'
 import remove from '../icons/remove.png'
 import { book } from '../features/BookingSlice';
 
@@ -10,6 +10,9 @@ function SceduleTime() {
   //advisor id
   let access = localStorage.getItem("authToken")
   let decode = jwtDecode(access)
+
+  //state for week
+  const [week_numnber, setWeek_number] = useState(1)
 
   let dispatch = useDispatch()
   const reviewers = useSelector((state) => (state.Schedule))
@@ -23,7 +26,7 @@ function SceduleTime() {
 
   useEffect(() => {
     dispatch(reviewersList())
-    dispatch(InternsWithReview())
+    dispatch(InternsWithReview(week_numnber))
     dispatch(ScheduledTimeforAdvisor(decode.user_id))
   }, [dispatch])
 
@@ -57,9 +60,23 @@ function SceduleTime() {
     setToggle(false)
   }
 
+
   //states for booked schedule
   const [item, setItem] = useState()
   const [item2, setItem2] = useState()
+
+
+  const unsheduleReview = async (booking_id, intern_id, slot_id) => {
+    if (item2.length > 0) {
+      await setItem(prevList => prevList.filter(item => item.id !== booking_id))
+      await dispatch(unSchedule(intern_id))
+      let data = {
+        booking_id: booking_id,
+        slot_id: slot_id
+      }
+      dispatch(removeBooking(data))
+    }
+  }
 
   useEffect(() => {
     if (time.review) {
@@ -75,11 +92,29 @@ function SceduleTime() {
           <div className='flex items-center justify-center p-1 mx-[90px] my-[20px] rounded-lg bg-[#141621] '>
             <p className='text-xl'>INTERNS WITH REVIEW</p>
           </div>
+          <div className='flex justify-center'>
+            <select onChange={(e) => {
+              dispatch(InternsWithReview(e.target.value))
+              setWeek_number(e.target.value)
+            }} className='h-[30px] mx-[30px] w-[300px] bg-[#303443] lg:my-5 text-white rounded-md outline-none' name="" id="">
+              {Array.from({ length: 28 }, (_, index) => (
+                <option key={index} value={index + 1}>
+                  Week {index + 1}</option>
+              ))}
+            </select>
+          </div>
           {
             intern ?
               <>
                 {
+
                   intern.map((item) => {
+
+                    const scheduledDate = new Date(item?.weeks[0]?.weekdetails_set[0]?.scheduled_date);
+                    const currentDate = new Date();
+                    const timeDifference = scheduledDate - currentDate;
+                    const timeDifferenceInDays = Math.floor(timeDifference / (24 * 60 * 60 * 1000));
+
                     return (
                       <div key={item.id} onClick={(e) => {
                         setUser({
@@ -87,15 +122,17 @@ function SceduleTime() {
                           username: item.username,
                           batch: item.batch,
                           week: item.current_week
-                        })
-                        setToggle(true)
+                        });
+                        setToggle(true);
                       }} className='flex cursor-pointer items-center justify-around p-1.5 rounded-xl mb-3 mx-[40px] bg-[#141621]'>
                         <div className='h-8 w-8 rounded-full bg-white'></div>
                         <p>{item.username}</p>
-                        <p> {item.review_in}d</p>
+                        <p>{item.domain ? item.domain : "Unfixed"}</p>
+                        <p>{timeDifferenceInDays}d</p>
                       </div>
-                    )
+                    );
                   })
+
                 }
               </> : null
           }
@@ -118,6 +155,7 @@ function SceduleTime() {
                 </div>
                 <select onChange={async (e) => {
                   await dispatch(ReviewerTimeAssigned(e.target.value))
+                  
                   console.log('Reviewer id: ', e.target.value)
                 }} className='h-[30px] mx-[30px] w-[300px] bg-[#303443] lg:mb-0 xs:mb-3 text-white rounded-md outline-none '>
                   <option selected>Select the Reviewer</option>
@@ -155,7 +193,17 @@ function SceduleTime() {
                   }
                 </select>
                 <div className='flex  items-start ms-5 mb-4'>
-                  <button onClick={(e) => dispatchBook()} className='bg-blue-600 hover:bg-blue-500 rounded-lg mx-3 px-8 py-2 w-[120px]'>
+                  <button onClick={async (e) => {
+                    await dispatchBook()
+                    await dispatch(Scheduled(user.id))
+                    console.log("This is the user id: ", user.id)
+                    if (intern) {
+                      console.log("Its entering this block")
+                      setIntern(prevList => prevList.filter(item => item.id !== user.id))
+                      console.log("After the filtering mechanism: ", intern)
+                      await Promise.resolve(dispatch(ScheduledTimeforAdvisor(decode.user_id)))
+                    }
+                  }} className='bg-blue-600 hover:bg-blue-500 rounded-lg mx-3 px-8 py-2 w-[120px]'>
                     Assign
                   </button>
                 </div>
@@ -175,6 +223,7 @@ function SceduleTime() {
             {item ? (
               <>
                 {item.map((val, index) => {
+                  console.log("This is the item: ",val)
                   let data = null;
 
                   // Using forEach to iterate through the timeslots and find the matching one
@@ -198,14 +247,25 @@ function SceduleTime() {
                       <span className='me-3'>
                         <div className='grid'>
                           <span>{val.intern_username}</span>
-                          <span className='text-xs'>Intern BCK{val.intern_batch.batch_number}</span>
+                          <span className='text-xs'>Intern BCK{val.intern_batch?.batch_number}</span>
                         </div>
                       </span>
-                     
+
                       <span className='me-4 xs:hidden lg:block'>
                         {data?.start_time} - {data?.end_time}
                       </span>
+
+                      <div onClick={async (e) => {
+                        console.log(val.id)
+                        console.log(val.slot)
+                        await unsheduleReview(val.id, val.intern, val.slot)
+                        await dispatch(InternsWithReview(week_numnber))
+
+                      }} className='cursor-pointer'>
+                        <img className='h-6 cursor-pointer' src={remove} alt="" />
+                      </div>
                     </div>
+
                   );
                 })}
               </>

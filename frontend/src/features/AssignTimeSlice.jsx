@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import axios from 'axios'
 
 
-
+//for the advisosr to get the assigned time 
 export const GetAssignedTime = createAsyncThunk('get_assigned_time',
     async (id) => {
         try {
@@ -19,7 +19,7 @@ export const GetAssignedTime = createAsyncThunk('get_assigned_time',
     }
 )
 
-
+//for the reviewer to assign their free time
 export const AddTime = createAsyncThunk('add_time',
     async (credentials) => {
         try{
@@ -36,7 +36,7 @@ export const AddTime = createAsyncThunk('add_time',
     }
 )
 
-
+//for the reviewer to delete their time
 export const deleteTime = createAsyncThunk('delete_time',
     async (id) => {
         try{

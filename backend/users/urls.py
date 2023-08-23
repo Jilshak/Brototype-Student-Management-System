@@ -5,7 +5,7 @@ from .views import UserViewSet, MyTokenObtainPairView, BatchViewSet, WeekDetailV
 from rest_framework.routers import DefaultRouter
 
 router = DefaultRouter()
-router.register('users', UserViewSet, basename='user_view')
+router.register(r'users', UserViewSet, basename='user_view')
 router.register('batches', BatchViewSet, basename='batch_view')
 router.register('weeks', WeekViewSet, basename='weeks_view')
 router.register('week_details', WeekDetailViewSet, basename='week_detail_view')

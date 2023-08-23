@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from .Managers import UserManager
-from datetime import datetime, date
+from datetime import datetime, timedelta
 
 # Create your models here.
 
@@ -23,6 +23,12 @@ class User(AbstractUser):
     guardians_name = models.CharField(max_length=250, null=True, blank=True)
     guardians_number = models.CharField(max_length=250, null=True, blank=True)
     aadhar_number = models.CharField(max_length=16, blank=True, null=True)
+    village = models.CharField(max_length=100, blank=True, null=True)
+    taluk = models.CharField(max_length=100, blank=True, null=True)
+    domain = models.CharField(max_length=100, null=True, blank=True)
+    address = models.CharField(max_length=300, blank=True, null=True)
+    father_name = models.CharField(max_length=100, blank=True, null=True)
+    mother_name = models.CharField(max_length=100, blank=True, null=True)
     educational_qualification = models.CharField(
         max_length=250, null=True, blank=True)
     authenticated = models.BooleanField(default=False)
@@ -39,15 +45,30 @@ class User(AbstractUser):
 
     def save(self, *args, **kwargs):
         is_new = self._state.adding  # Check if the user is being created
+        
+        
 
         super().save(*args, **kwargs)  # Call the original save method
 
         # Only run this code for newly created users
         if is_new and not (self.is_superuser or self.is_advisor or self.is_reviewer):
+           
+            days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+            count = 0
             for week_number in range(1, 29):  # Create 28 weeks
-                week = Week.objects.create(user=self, week_number=week_number)
-                # Create WeekDetails for each week
-                WeekDetails.objects.create(week=week)
+                if (datetime.today() + timedelta(days=count)).weekday() != 5:  
+                    week = Week.objects.create(user=self, week_number=week_number)
+                    count += 8
+                    scheduled_date = datetime.today() + timedelta(days=count)
+                    day_name = days[int(scheduled_date.weekday())]
+                elif (datetime.today() + timedelta(days = count)).weekday() == 5:
+                    week = Week.objects.create(user=self, week_number=week_number)
+                    count += 9
+                    scheduled_date = datetime.today() + timedelta(days=count)
+                    day_name = days[int(scheduled_date.weekday())]
+                
+                WeekDetails.objects.create(week=week, scheduled_date=scheduled_date, day_name=day_name)
+
 
     objects = UserManager()
 
@@ -59,7 +80,6 @@ class Week(models.Model):
         User, on_delete=models.CASCADE, related_name='weeks')
     week_number = models.PositiveIntegerField()
     completed = models.BooleanField(default=False)
-    color = models.CharField(max_length=50, default='#3E4257')
 
     def __str__(self):
         return str(self.week_number)
@@ -78,6 +98,8 @@ class WeekDetails(models.Model):
     feedback = models.BooleanField(default=False)
     progress = models.BooleanField(default=False)
     pending_topics = models.TextField(blank=True, null=True)
+    scheduled_date = models.DateField(null=True, blank=True)
+    day_name = models.CharField(max_length=50, null=True, blank=True)
 
 
 class TimeSlot(models.Model):

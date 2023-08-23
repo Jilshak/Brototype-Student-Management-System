@@ -9,10 +9,7 @@ export const book = createAsyncThunk('booking',
             const request = await axios.post(`http://127.0.0.1:8000/booking/`, credentials)
             const response = await request.data
             if (request.status === 201) {
-                let update = {
-                    booked: true
-                }
-                const request = await axios.patch(`http://127.0.0.1:8000/timeslot/${credentials.slot}/`, update)
+                const request = await axios.patch(`http://127.0.0.1:8000/timeslot/${credentials.slot}/`, {booked: true})
                 const res = await request.data
                 if (request.status === 200) {
                     console.log(res)
@@ -29,6 +26,8 @@ export const book = createAsyncThunk('booking',
     }
 )
 
+
+//getting the details of the booked time
 export const TimeBooked = createAsyncThunk('booked_time',
     async (id) => {
         try {

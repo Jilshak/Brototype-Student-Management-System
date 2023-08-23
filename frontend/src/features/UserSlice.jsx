@@ -2,6 +2,8 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 import axios from "axios"
 import { useParams } from 'react-router-dom'
 
+
+//register functionality for the users based on the batch number they have given
 export const Register = createAsyncThunk('register',
     async (credentials) => {
 
@@ -32,6 +34,7 @@ export const Register = createAsyncThunk('register',
     }
 )
 
+//the register functionality of the advisor/reviewers
 export const Register_Staff = createAsyncThunk('register',
     async (credentials) => {
         console.log(credentials)
@@ -46,7 +49,7 @@ export const Register_Staff = createAsyncThunk('register',
     }
 )
 
-
+//the login functinality by jwt token authentication
 export const Login = createAsyncThunk('login',
     async (credentials) => {
         const request = await axios.post('http://127.0.0.1:8000/token/', credentials)
@@ -61,7 +64,7 @@ export const Login = createAsyncThunk('login',
 )
 
 
-
+//retrieving the list of the interns based on the various field and conditions
 export const InternList = createAsyncThunk('intern_list',
     async (id) => {
         try {
@@ -85,6 +88,7 @@ export const InternList = createAsyncThunk('intern_list',
     }
 )
 
+//getting the list of the advisor based on the various conditions and fields
 export const AdvisorList = createAsyncThunk('advisor_list',
     async (id) => {
         try {
@@ -106,7 +110,7 @@ export const AdvisorList = createAsyncThunk('advisor_list',
     }
 )
 
-
+//getting the reveiwers list based on the conditions and fields
 export const ReviewerList = createAsyncThunk('reviewer_list',
     async (id) => {
         try {
@@ -128,14 +132,15 @@ export const ReviewerList = createAsyncThunk('reviewer_list',
     }
 )
 
-
+//logic for deleting the user based of on their user id
 export const deleteUser = createAsyncThunk('delete_user',
     async (id) => {
         console.log(id)
         try {
-            const request = axios.delete(`http://127.0.0.1:8000/users/${id}/`)
-            if ((await request).status === 204) {
-                console.log("The user has been deleted")
+            const request = await axios.delete(`http://127.0.0.1:8000/users/${id}/`)
+            const response = await request.data
+            if (request.status === 204) {
+                return response
             } else {
                 console.log("Something went wrong while deleting the user")
             }
@@ -145,7 +150,7 @@ export const deleteUser = createAsyncThunk('delete_user',
     }
 )
 
-
+//editing the user details of the users/staff/reviewers
 export const editUser = createAsyncThunk('edit_user',
     async (credentials) => {
         if (credentials.batch) {
@@ -161,6 +166,8 @@ export const editUser = createAsyncThunk('edit_user',
             //assigning the batch
             credentials.batch = batchAssign
         } else {
+            console.log("Entering here alright !!!")
+            console.log("Credentials: ",credentials)
             //to filter out null fields from the credentials
             const filteredCredentials = Object.fromEntries(
                 Object.entries(credentials).filter(([_, value]) => value !== null)
@@ -178,6 +185,7 @@ export const editUser = createAsyncThunk('edit_user',
     }
 )
 
+//to get the profile details of a user based of on their id we get that user and then use the details
 export const ProfileDetails = createAsyncThunk('profile_details',
     async (id) => {
         try {
