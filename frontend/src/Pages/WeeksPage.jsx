@@ -31,7 +31,7 @@ function WeeksPage() {
   useEffect(() => {
     if (decode) {
       setLoading(false)
-      if (decode?.is_superuser) {
+      if (decode?.is_superuser || decode?.is_reviewer || decode?.is_advisor) {
         dispatch(ProfileDetails(id))
       } else {
         dispatch(ProfileDetails(decode?.user_id))
@@ -71,7 +71,7 @@ function WeeksPage() {
                   week ?
                     week.map((item) => {
                       return (
-                        <Link key={item.id} to={decode?.is_superuser ? `/week_detail/${item.week_number}/${id}` : `/week_detail/${item.week_number}`}>
+                        <Link key={item.id} to={decode?.is_superuser || decode?.is_advisor || decode?.is_reviewer ? `/week_detail/${item.week_number}/${id}` : `/week_detail/${item.week_number}`}>
                           <div className={` ${item.weekdetails_set[0].conducted_on && (item.weekdetails_set[0].Marks >= 7 ? 'bg-green-500' :
                             (item.weekdetails_set[0].Marks < 7 && item.weekdetails_set[0].Marks >= 6 ? 'bg-yellow-500' : (item.weekdetails_set[0].Marks < 6 && item.weekdetails_set[0].Marks >= 5 ? 'bg-orange-500' : 'bg-blue-400')))} flex lg:lg:w-[110px] xs:w-[70px]items-center justify-center py-4 my-4 mx-6 rounded-xl bg-[#3E4257] text-white`}>
                             <h1>Week {item.week_number}</h1>

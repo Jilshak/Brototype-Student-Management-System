@@ -6,6 +6,7 @@ import WeekDetailsSlice from '../features/WeekDetails'
 import AssignTimeSlice from '../features/AssignTimeSlice'
 import ScheduleTime from '../features/ScheduleTimeSlice'
 import BookingSlice from '../features/BookingSlice'
+import ReviewCompleteSlice from '../features/ReviewCompletedSlice'
 
 
 export const store = configureStore({
@@ -16,6 +17,7 @@ export const store = configureStore({
         WeekDetails: WeekDetailsSlice,
         Booking: AssignTimeSlice,
         Schedule: ScheduleTime,
-        Booked: BookingSlice
+        Booked: BookingSlice,
+        ReviewCompleted: ReviewCompleteSlice,
     }
 })

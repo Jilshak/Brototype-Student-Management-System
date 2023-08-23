@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { ProfileDetails } from '../features/UserSlice'
 import jwtDecode from 'jwt-decode';
 import { WeekDetailsUser } from '../features/WeekDetails'
+import { UpdateDetailsOfUser } from '../features/ReviewCompletedSlice'
 
 
 
@@ -31,8 +32,9 @@ function WeekDetailPage() {
     useEffect(() => {
         if (decode) {
             setLoading(false)
-            console.log(decode.is_superuser)
-            if (decode?.is_superuser) {
+            if (decode?.is_superuser || decode?.is_reviewer || decode?.is_advisor) {
+                console.log("Its entering here all right")
+                console.log(userid)
                 dispatch(ProfileDetails(userid))
             } else {
                 dispatch(ProfileDetails(decode?.user_id))
@@ -73,21 +75,26 @@ function WeekDetailPage() {
             return item.week_number == id
         })
 
-        console.log(week_id.weekdetails_set[0].id)
+        console.log("This is the week details: ", week_id.weekdetails_set[0])
+        console.log("This is the week details: ", week_id.weekdetails_set[0].week)
 
 
 
 
         let credentials = {
             id: week_id.weekdetails_set[0].id,
-            week_id : id,
+            week_id: id,
             Marks: Marks,
             advisor: advisor,
             reviewer: reviewer,
             conducted_on: conducted
         }
 
+
         await dispatch(WeekDetailsUser(credentials))
+        if (Number(Marks) >= 5 && conducted) {
+            await Promise.resolve(dispatch(UpdateDetailsOfUser(week_id?.weekdetails_set[0].week)))
+        }
 
         setToggle(false)
     }
@@ -118,16 +125,16 @@ function WeekDetailPage() {
             return item.week_number == id
         })
 
-         let credentials = {
+        let credentials = {
             id: week_id.weekdetails_set[0].id,
             audio_task: audio,
             description: description,
             typing: typing,
         }
-        
+
         console.log(credentials)
 
-        await dispatch(WeekDetailsUser({...credentials}))
+        await dispatch(WeekDetailsUser({ ...credentials }))
 
         setToggle2(false)
 
@@ -272,7 +279,7 @@ function WeekDetailPage() {
                                             Pending topics
                                         </span>
                                         {
-                                            decode?.is_superuser || decode?.is_advisor ?
+                                            decode?.is_superuser || decode?.is_advisor || decode?.is_reviewer ?
                                                 <img className='h-5 my-8 relative opacity-50 lg:left-36 md:left-30 sm:left-20 xs:left-10' src={edit1} alt="" />
                                                 : null
                                         }
@@ -284,7 +291,7 @@ function WeekDetailPage() {
                                             Review Details
                                         </span>
                                         {
-                                            decode?.is_superuser || decode?.is_advisor ?
+                                            decode?.is_superuser || decode?.is_reviewer ?
                                                 <img onClick={(e) => setToggle(true)} className='h-5 my-8 cursor-pointer relative opacity-50  lg:left-32 md:left-24 sm:left-24 xs:left-10' src={edit1} alt="" />
                                                 : null
                                         }
@@ -340,14 +347,14 @@ function WeekDetailPage() {
                                                             return (
                                                                 <>
                                                                     <div className='mx-[30px] py-2 bg-[#1C1E26] mb-3 opacity-70 rounded-lg'>
-                                                                        <span className='mx-5 flex'>Audio Task : {audio  ? (audio === "true" ? <p className='text-green-500 ms-2'>Added</p> : <p className='text-red-500 ms-2'>Not Added</p> )  : (item.weekdetails_set[0].audio_task ? <p className='text-green-500 ms-2'>Added</p> : <p className='text-red-500 mx-2'> Not Added</p>)}</span>
+                                                                        <span className='mx-5 flex'>Audio Task : {audio ? (audio === "true" ? <p className='text-green-500 ms-2'>Added</p> : <p className='text-red-500 ms-2'>Not Added</p>) : (item.weekdetails_set[0].audio_task ? <p className='text-green-500 ms-2'>Added</p> : <p className='text-red-500 mx-2'> Not Added</p>)}</span>
 
                                                                     </div>
                                                                     <div className='mx-[30px] py-2 bg-[#1C1E26] mb-3 opacity-70 rounded-lg'>
-                                                                        <span className='mx-5 flex'>Descriptions : {description  ? (description === "true" ? <p className='text-green-500 ms-2'>Added</p> : <p className='text-red-500 ms-2'>Not Added</p> )  : (item.weekdetails_set[0].description ? <p className='text-green-500 ms-2'>Added</p> : <p className='text-red-500 mx-2'> Not Added</p>)}</span>
+                                                                        <span className='mx-5 flex'>Descriptions : {description ? (description === "true" ? <p className='text-green-500 ms-2'>Added</p> : <p className='text-red-500 ms-2'>Not Added</p>) : (item.weekdetails_set[0].description ? <p className='text-green-500 ms-2'>Added</p> : <p className='text-red-500 mx-2'> Not Added</p>)}</span>
                                                                     </div>
                                                                     <div className='mx-[30px] py-2 bg-[#1C1E26] mb-3 opacity-70 rounded-lg'>
-                                                                        <span className='mx-5 flex'>Typing : {typing  ? (typing === "true" ? <p className='text-green-500 ms-2'>Added</p> : <p className='text-red-500 ms-2'>Not Added</p> )  : (item.weekdetails_set[0].typing ? <p className='text-green-500 ms-2'>Added</p> : <p className='text-red-500 mx-2'> Not Added</p>)}</span>
+                                                                        <span className='mx-5 flex'>Typing : {typing ? (typing === "true" ? <p className='text-green-500 ms-2'>Added</p> : <p className='text-red-500 ms-2'>Not Added</p>) : (item.weekdetails_set[0].typing ? <p className='text-green-500 ms-2'>Added</p> : <p className='text-red-500 mx-2'> Not Added</p>)}</span>
 
                                                                     </div>
                                                                     <div className='mx-[30px] py-2 bg-[#1C1E26] mb-3 opacity-70 rounded-lg'>
@@ -382,15 +389,15 @@ function WeekDetailPage() {
                                                             return (
                                                                 <>
                                                                     <div className='mx-[30px] py-2 bg-[#1C1E26] mb-3 opacity-70 rounded-lg'>
-                                                                        <span className='mx-5 flex'>Seminar Presentation : {seminar  ? (seminar === "true" ? <p className='text-green-500 ms-2'>Added</p> : <p className='text-red-500 ms-2'>Not Added</p> )  : (item.weekdetails_set[0].seminar_presentation ? <p className='text-green-500 ms-2'>Added</p> : <p className='text-red-500 mx-2'> Not Added</p>)}</span>
+                                                                        <span className='mx-5 flex'>Seminar Presentation : {seminar ? (seminar === "true" ? <p className='text-green-500 ms-2'>Added</p> : <p className='text-red-500 ms-2'>Not Added</p>) : (item.weekdetails_set[0].seminar_presentation ? <p className='text-green-500 ms-2'>Added</p> : <p className='text-red-500 mx-2'> Not Added</p>)}</span>
 
                                                                     </div>
                                                                     <div className='mx-[30px] py-2 bg-[#1C1E26] mb-3 opacity-70 rounded-lg'>
-                                                                        <span className='mx-5 flex'>Feedback Session : {feedback  ? (feedback === "true" ? <p className='text-green-500 ms-2'>Added</p> : <p className='text-red-500 ms-2'>Not Added</p> )  : (item.weekdetails_set[0].feedback ? <p className='text-green-500 ms-2'>Added</p> : <p className='text-red-500 mx-2'> Not Added</p>)}</span>
-                                                                        
+                                                                        <span className='mx-5 flex'>Feedback Session : {feedback ? (feedback === "true" ? <p className='text-green-500 ms-2'>Added</p> : <p className='text-red-500 ms-2'>Not Added</p>) : (item.weekdetails_set[0].feedback ? <p className='text-green-500 ms-2'>Added</p> : <p className='text-red-500 mx-2'> Not Added</p>)}</span>
+
                                                                     </div>
                                                                     <div className='mx-[30px] py-2 bg-[#1C1E26] mb-3 opacity-70 rounded-lg'>
-                                                                        <span className='mx-5 flex'>Progress Video : {progress  ? (progress === "true" ? <p className='text-green-500 ms-2'>Added</p> : <p className='text-red-500 ms-2'>Not Added</p> )  : (item.weekdetails_set[0].progress ? <p className='text-green-500 ms-2'>Added</p> : <p className='text-red-500 mx-2'> Not Added</p>)}</span>
+                                                                        <span className='mx-5 flex'>Progress Video : {progress ? (progress === "true" ? <p className='text-green-500 ms-2'>Added</p> : <p className='text-red-500 ms-2'>Not Added</p>) : (item.weekdetails_set[0].progress ? <p className='text-green-500 ms-2'>Added</p> : <p className='text-red-500 mx-2'> Not Added</p>)}</span>
                                                                     </div>
                                                                 </>
                                                             )

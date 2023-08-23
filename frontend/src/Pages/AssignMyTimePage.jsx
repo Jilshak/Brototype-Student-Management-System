@@ -4,7 +4,9 @@ import { AddTime, GetAssignedTime, deleteTime } from '../features/AssignTimeSlic
 import { TimeBooked } from '../features/BookingSlice'
 import jwtDecode from 'jwt-decode';
 import remove from '../icons/remove.png'
+import authenticated from '../icons/authenticated.png'
 import { unSchedule } from '../features/ScheduleTimeSlice';
+import { Link } from 'react-router-dom'
 
 function AssignMyTimePage() {
 
@@ -79,16 +81,21 @@ function AssignMyTimePage() {
     if (time.length > 0) {
       await setTime(prevList => prevList.filter(item => item.id !== id))
       await dispatch(deleteTime(id))
-    }   
+    }
   }
 
   const handleDeleteScheduled = async (id, intern) => {
-    if (item2.length > 0){
+    if (item2.length > 0) {
       console.log(item2)
       await setItem2(prevList => prevList.filter(item => item.slot !== id))
       await dispatch(unSchedule(intern))
       await dispatch(deleteTime(id))
-    } 
+    }
+  }
+
+  //function that appears after 15 mins of the review scheduled and handles the review completion
+  const handleReviewCompleted = async () => {
+
   }
 
   function getCurrentDate() {
@@ -198,6 +205,21 @@ function AssignMyTimePage() {
                     }
                   });
 
+                  // Get the current date and time
+                  const currentDate = new Date();
+                  const currentTime = currentDate.getTime();
+
+                  // Convert the provided date and time to a Date object
+                  const providedDateTime = new Date(`${data?.date} ${data?.start_time}`);
+                  const providedTime = providedDateTime.getTime();
+
+                  // Calculate the time difference in milliseconds
+                  const timeDifference = currentTime - providedTime;
+
+                  // Check if the provided date is today and at least an hour has passed
+                  const isToday = currentDate.toDateString() === providedDateTime.toDateString();
+                  const quarterHour = timeDifference >= 15 * 60 * 1000; // 1 hour in milliseconds
+
                   return (
                     <div key={data?.id} className='mx-[30px] relative flex justify-around  items-center py-3 opacity-60 mb-5 bg-[#303443] rounded-lg'>
                       <span className='mx-3'>
@@ -231,6 +253,21 @@ function AssignMyTimePage() {
                       }} className='cursor-pointer'>
                         <img className='h-6 cursor-pointer' src={remove} alt="" />
                       </div>
+                      {
+                        // isToday && quarterHour ?
+                        <>
+                          <div onClick={(e) => {
+                            console.log("This is the val: ", val)
+                            console.log(val.slot, val.intern)
+                            handleReviewCompleted(val.slot, val.intern)
+                          }} className='cursor-pointer'>
+                            <Link to={`/weeks/${val.intern}`}>
+                              <img className='h-6 cursor-pointer' src={authenticated} alt="" />
+                            </Link>
+                          </div>
+                        </>
+                        // :null
+                      }
                     </div>
                   );
                 })}
