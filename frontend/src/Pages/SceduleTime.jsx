@@ -3,7 +3,9 @@ import { useDispatch, useSelector } from 'react-redux'
 import jwtDecode from 'jwt-decode';
 import { InternsWithReview, ReviewerTimeAssigned, Scheduled, ScheduledTimeforAdvisor, removeBooking, reviewersList, unSchedule } from '../features/ScheduleTimeSlice'
 import remove from '../icons/remove.png'
+import authenticated from '../icons/authenticated.png'
 import { book } from '../features/BookingSlice';
+import { Link } from 'react-router-dom'
 
 function SceduleTime() {
 
@@ -155,7 +157,7 @@ function SceduleTime() {
                 </div>
                 <select onChange={async (e) => {
                   await dispatch(ReviewerTimeAssigned(e.target.value))
-                  
+
                   console.log('Reviewer id: ', e.target.value)
                 }} className='h-[30px] mx-[30px] w-[300px] bg-[#303443] lg:mb-0 xs:mb-3 text-white rounded-md outline-none '>
                   <option selected>Select the Reviewer</option>
@@ -223,7 +225,7 @@ function SceduleTime() {
             {item ? (
               <>
                 {item.map((val, index) => {
-                  console.log("This is the item: ",val)
+                  console.log("This is the item: ", val)
                   let data = null;
 
                   // Using forEach to iterate through the timeslots and find the matching one
@@ -232,6 +234,15 @@ function SceduleTime() {
                       data = test;
                     }
                   });
+
+                  const currentDate = new Date();
+                  const scheduledDate = new Date(data?.date);
+
+                  // Get the difference in milliseconds between the two dates
+                  const differenceInMilliseconds = scheduledDate.getTime() - currentDate.getTime();
+
+                  // Convert the difference in milliseconds to minutes
+                  const differenceInMinutes = differenceInMilliseconds / (1000 * 60);
 
                   return (
                     <div key={data?.id} className='mx-[30px] relative flex justify-around  items-center py-3 opacity-60 mb-5 bg-[#303443] rounded-lg'>
@@ -256,13 +267,25 @@ function SceduleTime() {
                       </span>
 
                       <div onClick={async (e) => {
-                        console.log(val.id)
+                        console.log("This is the val: ",val)
                         console.log(val.slot)
-                        await unsheduleReview(val.id, val.intern, val.slot)
-                        await dispatch(InternsWithReview(week_numnber))
-
+                        // await unsheduleReview(val.id, val.intern, val.slot)
+                        // await dispatch(InternsWithReview(week_numnber))
+                        console.log("This is the scheduled date: ", scheduledDate)
+                        console.log("This is the scheduled date and the current date difference in minutes: ", differenceInMinutes)
                       }} className='cursor-pointer'>
                         <img className='h-6 cursor-pointer' src={remove} alt="" />
+                      </div>
+                      <div>
+                        {
+                          // currentDate == scheduledDate && differenceInMinutes <= -15 ?
+                          <>
+                            <Link to={`/weeks/${val.intern}`}>
+                              <img className='h-6 cursor-pointer' src={authenticated} alt="" />
+                            </Link>
+                          </>
+                          // : null
+                        }
                       </div>
                     </div>
 

@@ -95,7 +95,7 @@ function AssignMyTimePage() {
 
   //function that appears after 15 mins of the review scheduled and handles the review completion
   const handleReviewCompleted = async () => {
-
+    
   }
 
   function getCurrentDate() {

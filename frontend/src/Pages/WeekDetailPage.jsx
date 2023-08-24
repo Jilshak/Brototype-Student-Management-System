@@ -63,10 +63,12 @@ function WeekDetailPage() {
     const [seminar, setSeminar] = useState(false)
     const [progress, setProgress] = useState(false)
     const [feedback, setFeedback] = useState(false)
-
+    const [pending, setPending] = useState('')
     const [toggle, setToggle] = useState(false)
     const [toggle1, setToggle1] = useState(false)
     const [toggle2, setToggle2] = useState(false)
+    const [toggle3, setToggle3] = useState(false)
+    const [temp, setTemp] = useState('')
 
 
     const edit = async () => {
@@ -253,6 +255,29 @@ function WeekDetailPage() {
                                     :
                                     null
                             }
+                            {
+                                toggle3 ?
+                                    <div className='flex justify-center'>
+                                        <div className='absolute min-h-1/3  min-w-[450px] z-50 grid rounded-2xl gap-3 my-10 bg-[#1f212c]'>
+                                            <div className='flex item-center justify-center my-3'>
+                                                <span className=' text-md'>
+                                                    Enter the Pending Topics here:
+                                                </span>
+                                            </div>
+                                            <textarea
+                                            value={temp}
+                                                onKeyDown={(e) => {
+                                                    if (e.key === 'Enter') {
+                                                        e.preventDefault();
+                                                        setPending([...pending, [temp]]);
+                                                        console.log(pending)
+                                                        setTemp('')
+                                                    }
+                                                }}
+                                                className='bg-[#282b3b] outline-none pl-2 py-2' onChange={(e) => setTemp(e.target.value)} name="" id="" cols="30" rows="10"></textarea>
+                                        </div>
+                                    </div> : null
+                            }
                             <div className='grid items-start justify-start ms-12'>
                                 <span className='px-24 text-2xl py-4 rounded-3xl bg-[#15171E]  my-6'>
                                     Week {id}
@@ -280,10 +305,28 @@ function WeekDetailPage() {
                                         </span>
                                         {
                                             decode?.is_superuser || decode?.is_advisor || decode?.is_reviewer ?
-                                                <img className='h-5 my-8 relative opacity-50 lg:left-36 md:left-30 sm:left-20 xs:left-10' src={edit1} alt="" />
+                                                <img onClick={(e) => setToggle3(true)} className='h-5 my-8 relative cursor-pointer opacity-50 lg:left-36 md:left-30 sm:left-20 xs:left-10' src={edit1} alt="" />
                                                 : null
                                         }
                                     </div>
+                                    {
+                                        weekDetail ?
+
+                                            <>
+                                                {
+                                                    weekDetail?.map((item) => {
+                                                        if (item.week_number == id) {
+                                                            return (
+                                                                <p>
+                                                                    {pending ? pending : item.weekdetails_set[0].pending || pending ? (item.weekdetails_set[0].pending ? item.weekdetails_set[0].pending : pending) : <p className='text-gray-500 mx-2'> ______ </p>}
+                                                                </p>
+                                                            )
+                                                        }
+                                                    })
+                                                }
+                                            </>
+                                            : null
+                                    }
                                 </div>
                                 <div className='bg-[#15171E] min-h-[300px] me-[100px] lg:mt-0 xs:mt-5 '>
                                     <div className='flex justify-center'>
