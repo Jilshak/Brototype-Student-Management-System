@@ -97,7 +97,7 @@ class WeekDetails(models.Model):
     seminar_presentation = models.BooleanField(default=False)
     feedback = models.BooleanField(default=False)
     progress = models.BooleanField(default=False)
-    pending_topics = models.TextField(blank=True, null=True)
+    pending_topics = models.CharField(max_length=500, blank=True, null=True)
     scheduled_date = models.DateField(null=True, blank=True)
     day_name = models.CharField(max_length=50, null=True, blank=True)
 

@@ -49,7 +49,7 @@ function WeekDetailPage() {
             setWeekDetail(weekDetails.state.weeks)
             console.log(weekDetail)
         }
-    }, [weekDetails.state])
+    }, [weekDetails.state, dispatch])
 
 
     const [Marks, setMarks] = useState()
@@ -59,7 +59,6 @@ function WeekDetailPage() {
     const [audio, setAudio] = useState(false)
     const [description, setDescription] = useState(false)
     const [typing, setTyping] = useState(false)
-    const [additional, setAdditional] = useState(false)
     const [seminar, setSeminar] = useState(false)
     const [progress, setProgress] = useState(false)
     const [feedback, setFeedback] = useState(false)
@@ -68,7 +67,6 @@ function WeekDetailPage() {
     const [toggle1, setToggle1] = useState(false)
     const [toggle2, setToggle2] = useState(false)
     const [toggle3, setToggle3] = useState(false)
-    const [temp, setTemp] = useState('')
 
 
     const edit = async () => {
@@ -114,8 +112,7 @@ function WeekDetailPage() {
             feedback: feedback
         }
         console.log(seminar, progress, feedback)
-        await dispatch(WeekDetailsUser(credentials))
-
+        await Promise.resolve(dispatch(WeekDetailsUser(credentials)))
         setToggle1(false)
     }
 
@@ -136,11 +133,29 @@ function WeekDetailPage() {
 
         console.log(credentials)
 
-        await dispatch(WeekDetailsUser({ ...credentials }))
+        await Promise.resolve(dispatch(WeekDetailsUser({ ...credentials })))
 
         setToggle2(false)
 
 
+    }
+
+    const edit4 = async () => {
+
+        const week_id = weekDetail?.find((item) => {
+            return item.week_number == id
+        })
+
+        let credentials = {
+            id: week_id.weekdetails_set[0].id,
+            pending_topics: pending
+        }
+        await Promise.resolve(dispatch(WeekDetailsUser(credentials)))
+
+        console.log(credentials)
+
+
+        setToggle3(false)
     }
 
     return (
@@ -264,17 +279,10 @@ function WeekDetailPage() {
                                                     Enter the Pending Topics here:
                                                 </span>
                                             </div>
-                                            <textarea
-                                            value={temp}
-                                                onKeyDown={(e) => {
-                                                    if (e.key === 'Enter') {
-                                                        e.preventDefault();
-                                                        setPending([...pending, [temp]]);
-                                                        console.log(pending)
-                                                        setTemp('')
-                                                    }
-                                                }}
-                                                className='bg-[#282b3b] outline-none pl-2 py-2' onChange={(e) => setTemp(e.target.value)} name="" id="" cols="30" rows="10"></textarea>
+                                            <textarea className='bg-[#282b3b] outline-none pl-2 py-2' onChange={(e) => setPending(e.target.value)} placeholder='If you want to empty it press space without typing anything' name="" id="" cols="30" rows="10"></textarea>
+                                            <button onClick={(e) => edit4()} className='bg-red-500 hover:bg-red-600 px-8 py-2 rounded-xl'>
+                                                Save
+                                            </button>
                                         </div>
                                     </div> : null
                             }
@@ -309,24 +317,29 @@ function WeekDetailPage() {
                                                 : null
                                         }
                                     </div>
-                                    {
-                                        weekDetail ?
-
-                                            <>
-                                                {
-                                                    weekDetail?.map((item) => {
-                                                        if (item.week_number == id) {
-                                                            return (
-                                                                <p>
-                                                                    {pending ? pending : item.weekdetails_set[0].pending || pending ? (item.weekdetails_set[0].pending ? item.weekdetails_set[0].pending : pending) : <p className='text-gray-500 mx-2'> ______ </p>}
-                                                                </p>
-                                                            )
-                                                        }
-                                                    })
+                                    <ul>
+                                        {weekDetails?.state?.weeks && pending ? (
+                                            <div className='relative'>
+                                                <div className='w-[300px] absolute top-[-90px] right-0 text-orange-400'>
+                                                    {pending}
+                                                </div>
+                                            </div>
+                                        ) : (
+                                            weekDetails?.state?.weeks?.map((item) => {
+                                                if (item.week_number == id && item.weekdetails_set[0].pending_topics) {
+                                                    return (
+                                                        <div className='relative'>
+                                                            <div className='lg:w-[400px] absolute top-[-90px] lg:left-[-90px] text-orange-400'>
+                                                                {item.weekdetails_set[0].pending_topics}
+                                                            </div>
+                                                        </div>
+                                                    );
                                                 }
-                                            </>
-                                            : null
-                                    }
+                                                return null;
+                                            })
+                                        )}
+
+                                    </ul>
                                 </div>
                                 <div className='bg-[#15171E] min-h-[300px] me-[100px] lg:mt-0 xs:mt-5 '>
                                     <div className='flex justify-center'>
