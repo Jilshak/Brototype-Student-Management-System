@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import folder from '../icons/folder.png'
+import task_folder from '../icons/task_folder.png'
 import edit1 from '../icons/edit1.png'
 import remove from '../icons/remove.png'
-import { useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { ProfileDetails } from '../features/UserSlice'
 import jwtDecode from 'jwt-decode';
@@ -292,18 +293,30 @@ function WeekDetailPage() {
                                 </span>
                             </div>
                             <div className='grid  lg:grid-cols-6 ms:grid-cols-3 sm:grid-cols-1 xs:grid-cols-1 items-center justify-start bg-[#15171E] min-h-[170px] w-auto me-[100px] ms-[48px]'>
-                                <div className='grid items-start justify-center'>
-                                    <img className='h-[60px] ms-7' src={folder} alt="" />
-                                    <p>Personal Workout </p>
-                                </div>
-                                <div className='grid items-start justify-center'>
-                                    <img className='h-[60px] ms-7' src={folder} alt="" />
-                                    <p>Technical Workout</p>
-                                </div>
-                                <div className='grid items-start justify-center'>
-                                    <img className='h-[60px] ms-9' src={folder} alt="" />
-                                    <p>Miscellenous Workout</p>
-                                </div>
+                                <Link to='/this_week_task'>
+                                    <div className='grid items-start justify-center'>
+                                        <img className='h-[55px] ms-7' src={task_folder} alt="" />
+                                        <p>This Week Task </p>
+                                    </div>
+                                </Link>
+                                <Link to='/personal_workout'>
+                                    <div className='grid items-start justify-center'>
+                                        <img className='h-[60px] ms-7' src={folder} alt="" />
+                                        <p>Personal Workout </p>
+                                    </div>
+                                </Link>
+                                <Link to='/technical_workout'>
+                                    <div className='grid items-start justify-center'>
+                                        <img className='h-[60px] ms-7' src={folder} alt="" />
+                                        <p>Technical Workout</p>
+                                    </div>
+                                </Link>
+                                <Link to='/miscellenous_workout'>
+                                    <div className='grid items-start justify-center'>
+                                        <img className='h-[60px] ms-9' src={folder} alt="" />
+                                        <p>Miscellenous Workout</p>
+                                    </div>
+                                </Link>
                             </div>
                             <div className='grid lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1 xs:grid-cols-1 my-5 ms-12'>
                                 <div className='bg-[#15171E] grid justify-center min-h-[300px] lg:me-[40px] xs:me-[100px] overflow-y-auto'>

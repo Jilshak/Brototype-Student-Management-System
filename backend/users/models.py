@@ -100,6 +100,10 @@ class WeekDetails(models.Model):
     pending_topics = models.CharField(max_length=500, blank=True, null=True)
     scheduled_date = models.DateField(null=True, blank=True)
     day_name = models.CharField(max_length=50, null=True, blank=True)
+    this_weeks_tasks = models.FileField(upload_to='weekly_task', null=True, blank=True)
+    miscellenous_tasks = models.FileField(upload_to='miscellenous_task', null=True, blank=True)
+    personal_tasks = models.FileField(upload_to='personal_task', null=True, blank=True)
+    technical_tasks = models.FileField(upload_to='technical_tasks', null=True, blank=True)
 
 
 class TimeSlot(models.Model):

@@ -19,6 +19,10 @@ import BatchStudentsPage from './Pages/BatchStudentsPage'
 import AuthorizePage from './Pages/AuthorizePage'
 import ChatPage from './Pages/ChatPage'
 import WeekDetailPage from './Pages/WeekDetailPage'
+import ThisWeeksTask from './Pages/Upload/ThisWeeksTask'
+import MiscellenousWorkouts from './Pages/Upload/MiscellenousWorkouts'
+import TechnicalWorkouts from './Pages/Upload/TechnicalWorkouts'
+import PersonalWorkouts from './Pages/Upload/PersonalWorkouts'
 
 function Components() {
 
@@ -43,6 +47,10 @@ function Components() {
                     <Route path='schedule_time' element={<SceduleTime />} />
                     <Route path='update_week' element={<UpdateWeekPage />} />
                     <Route path='assign_time' element={<AssignMyTimePage />} />
+                    <Route path='this_week_task' element={<ThisWeeksTask />} />
+                    <Route path='personal_workout' element={<PersonalWorkouts />} />
+                    <Route path='miscellenous_workout' element={<MiscellenousWorkouts />} />
+                    <Route path='technical_workout' element={<TechnicalWorkouts />} />
                     <Route path='batch_number/:id' element={<BatchStudentsPage />} />
                     <Route path='chat' element={<ChatPage />} />
                     <Route path='week_detail/:id/:userid?' element={<WeekDetailPage />} />
