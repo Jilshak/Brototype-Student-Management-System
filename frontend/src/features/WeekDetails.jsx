@@ -194,6 +194,179 @@ export const removeTechnicalTask = createAsyncThunk('remove_technical_task',
 
 
 
+//////////////////////////////////////////////////////////PERSONAL WORKOUT TASKS//////////////////////////////////////////////////////////////////
+
+
+//getting the technical task
+export const get_personal_tasks = createAsyncThunk('get_technical_tasks',
+    async (credentials) => {
+        try {
+            console.log("Its is entering here!!")
+            const request = await axios.get(`http://127.0.0.1:8000/weeks/`)
+            const response = request.data
+            if (request.status == 200) {
+                let data = await response.filter((item) => item.user == credentials.userid && item.week_number == credentials.week_id)
+                console.log(data)
+                return data[0]?.weekdetails_set[0]?.personal_tasks
+                // return data
+            } else {
+                console.log("Something went wrong while uploading the file")
+            }
+        } catch (error) {
+            console.log("Error: ", error)
+        }
+    }
+)
+
+//uploading technical task
+export const personal_tasks = createAsyncThunk('technical_tasks',
+    async (credentials) => {
+        try {
+            const request = await axios.get(`http://127.0.0.1:8000/weeks/`)
+            const response = request.data
+            console.log("This is the initial response: ", response)
+            if (request.status == 200) {
+                let data = response.filter((item) => item.user == credentials.userid && item.week_number == credentials.week_id)
+                console.log("This is the data: ", data)
+                console.log(data[0].weekdetails_set[0].id)
+                const req = await axios.patch(`http://127.0.0.1:8000/week_details/${data[0].weekdetails_set[0].id}/`, credentials?.personal_tasks)
+                const res = req.data
+                if (req.status == 200) {
+                    console.log(res)
+                } else {
+                    console.log("Something went wrong while uploading the data ")
+                }
+            } else {
+                console.log("Something went wrong while uploading the file")
+            }
+        } catch (error) {
+            console.log("Error: ", error)
+        }
+    }
+)
+
+
+//removing personal tasks
+export const removePersonalTasks = createAsyncThunk('remove_technical_task',
+    async (credentials) => {
+        try {
+            console.log("Its is entering here!!")
+            const request = await axios.get(`http://127.0.0.1:8000/weeks/`)
+            const response = request.data
+            if (request.status == 200) {
+                let data = response.filter((item) => item.user == credentials.userid && item.week_number == credentials.week_id)
+                console.log(data[0].weekdetails_set[0].id)
+                const req = await axios.patch(`http://127.0.0.1:8000/week_details/${data[0].weekdetails_set[0].id}/`, { personal_tasks: credentials.personal_tasks })
+                const res = req.data
+                if (req.status == 200) {
+                    console.log("The file has been uploaded")
+                    console.log(res)
+                } else {
+                    console.log("Something went wrong while uploading the data ")
+                }
+            } else {
+                console.log("Something went wrong while uploading the file")
+            }
+        } catch (error) {
+            console.log("Error: ", error)
+        }
+    }
+)
+
+
+
+
+
+
+//////////////////////////////////////////////////////////PERSONAL WORKOUT TASKS//////////////////////////////////////////////////////////////////
+
+
+//////////////////////////////////////////////////////////MISCELLENOUS WORKOUT TASKS//////////////////////////////////////////////////////////////////
+
+
+//getting the miscellenous task
+export const get_miscellenous_tasks = createAsyncThunk('get_technical_tasks',
+    async (credentials) => {
+        try {
+            console.log("Its is entering here!!")
+            const request = await axios.get(`http://127.0.0.1:8000/weeks/`)
+            const response = request.data
+            if (request.status == 200) {
+                let data = await response.filter((item) => item.user == credentials.userid && item.week_number == credentials.week_id)
+                console.log(data)
+                return data[0]?.weekdetails_set[0]?.miscellenous_tasks
+                // return data
+            } else {
+                console.log("Something went wrong while uploading the file")
+            }
+        } catch (error) {
+            console.log("Error: ", error)
+        }
+    }
+)
+
+//uploading miscellenous task
+export const miscellenous_tasks = createAsyncThunk('technical_tasks',
+    async (credentials) => {
+        try {
+            const request = await axios.get(`http://127.0.0.1:8000/weeks/`)
+            const response = request.data
+            console.log("This is the initial response: ", response)
+            if (request.status == 200) {
+                let data = response.filter((item) => item.user == credentials.userid && item.week_number == credentials.week_id)
+                console.log("This is the data: ", data)
+                console.log(data[0].weekdetails_set[0].id)
+                const req = await axios.patch(`http://127.0.0.1:8000/week_details/${data[0].weekdetails_set[0].id}/`, credentials?.miscellenous_tasks)
+                const res = req.data
+                if (req.status == 200) {
+                    console.log(res)
+                } else {
+                    console.log("Something went wrong while uploading the data ")
+                }
+            } else {
+                console.log("Something went wrong while uploading the file")
+            }
+        } catch (error) {
+            console.log("Error: ", error)
+        }
+    }
+)
+
+
+//removing miscellenous tasks
+export const removeMiscellenousTasks = createAsyncThunk('remove_technical_task',
+    async (credentials) => {
+        try {
+            console.log("Its is entering here!!")
+            const request = await axios.get(`http://127.0.0.1:8000/weeks/`)
+            const response = request.data
+            if (request.status == 200) {
+                let data = response.filter((item) => item.user == credentials.userid && item.week_number == credentials.week_id)
+                console.log(data[0].weekdetails_set[0].id)
+                const req = await axios.patch(`http://127.0.0.1:8000/week_details/${data[0].weekdetails_set[0].id}/`, { miscellenous_tasks: credentials.miscellenous_tasks })
+                const res = req.data
+                if (req.status == 200) {
+                    console.log("The file has been uploaded")
+                    console.log(res)
+                } else {
+                    console.log("Something went wrong while uploading the data ")
+                }
+            } else {
+                console.log("Something went wrong while uploading the file")
+            }
+        } catch (error) {
+            console.log("Error: ", error)
+        }
+    }
+)
+
+
+
+
+
+
+//////////////////////////////////////////////////////////MISCELLENOUS WORKOUT TASKS//////////////////////////////////////////////////////////////////
+
 
 
 const initialState = {
@@ -253,6 +426,21 @@ export const WeekDetailsSlice = createSlice({
             state.data = []
             state.isLoading = false
             state.msg = 'The load has been completed but something went wrong while loading the technical task'
+        },
+        [get_personal_tasks.pending]: (state) => {
+            state.data = []
+            state.isLoading = true
+            state.msg = 'It is personal tasks is on loading'
+        },
+        [get_personal_tasks.fulfilled]: (state, action) => {
+            state.data = action.payload
+            state.isLoading = false
+            state.msg = 'The personal task have been loaded'
+        },
+        [get_personal_tasks.rejected]: (state) => {
+            state.data = []
+            state.isLoading = false
+            state.msg = 'The load has been completed but something went wrong while loading the personal task'
         },
     }
 })
