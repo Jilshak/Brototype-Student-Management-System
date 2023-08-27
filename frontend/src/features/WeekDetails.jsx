@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import axios from 'axios'
 
 
-//for editing the week details of the user - only for the admin and the advisors
+//for editing the week details of the user - only for the admin and the advisors and reviewers
 export const WeekDetailsUser = createAsyncThunk('weekdetails',
     async (credentials) => {
         console.log(credentials)
@@ -23,6 +23,176 @@ export const WeekDetailsUser = createAsyncThunk('weekdetails',
         }
     }
 )
+
+//////////////////////////////////////////////////////////THIS WEEK TASKS//////////////////////////////////////////////////////////////////
+
+//getting the weeks task
+export const get_week_task = createAsyncThunk('get_week_task',
+    async (credentials) => {
+        try {
+            console.log("Its is entering here!!")
+            const request = await axios.get(`http://127.0.0.1:8000/weeks/`)
+            const response = request.data
+            if (request.status == 200) {
+                let data = await response.filter((item) => item.user == credentials.userid && item.week_number == credentials.week_id)
+                console.log(data)
+                return data[0].weekdetails_set[0].this_weeks_tasks
+                // return data
+            } else {
+                console.log("Something went wrong while uploading the file")
+            }
+        } catch (error) {
+            console.log("Error: ", error)
+        }
+    }
+)
+
+
+//uploading this weeks task
+export const This_weeks_task = createAsyncThunk('this_weeks_task',
+    async (credentials) => {
+        try {
+            console.log("Its is entering here!!")
+            // console.log(id)
+            const request = await axios.get(`http://127.0.0.1:8000/weeks/`)
+            const response = request.data
+            if (request.status == 200) {
+                let data = response.filter((item) => item.user == credentials.userid && item.week_number == credentials.week_id)
+                console.log(data[0].weekdetails_set[0].id)
+                const req = await axios.patch(`http://127.0.0.1:8000/week_details/${data[0].weekdetails_set[0].id}/`, credentials?.this_weeks_tasks)
+                const res = req.data
+                if (req.status == 200) {
+                    console.log("The file has been uploaded")
+                    console.log(res)
+                } else {
+                    console.log("Something went wrong while uploading the data ")
+                }
+            } else {
+                console.log("Something went wrong while uploading the file")
+            }
+        } catch (error) {
+            console.log("Error: ", error)
+        }
+    }
+)
+
+//removing this week tasks
+export const removeThisWeekTask = createAsyncThunk('remove_this_week_task',
+    async (credentials) => {
+        try {
+            console.log("Its is entering here!!")
+            const request = await axios.get(`http://127.0.0.1:8000/weeks/`)
+            const response = request.data
+            if (request.status == 200) {
+                let data = response.filter((item) => item.user == credentials.userid && item.week_number == credentials.week_id)
+                console.log(data[0].weekdetails_set[0].id)
+                const req = await axios.patch(`http://127.0.0.1:8000/week_details/${data[0].weekdetails_set[0].id}/`, { this_weeks_tasks: credentials.this_weeks_tasks })
+                const res = req.data
+                if (req.status == 200) {
+                    console.log("The file has been uploaded")
+                    console.log(res)
+                } else {
+                    console.log("Something went wrong while uploading the data ")
+                }
+            } else {
+                console.log("Something went wrong while uploading the file")
+            }
+        } catch (error) {
+            console.log("Error: ", error)
+        }
+    }
+)
+
+//////////////////////////////////////////////////////////THIS WEEK TASKS//////////////////////////////////////////////////////////////////
+
+
+
+
+//////////////////////////////////////////////////////////TECHNICAL WORKOUT TASKS//////////////////////////////////////////////////////////////////
+
+
+//getting the technical task
+export const get_technical_tasks = createAsyncThunk('get_technical_tasks',
+    async (credentials) => {
+        try {
+            console.log("Its is entering here!!")
+            const request = await axios.get(`http://127.0.0.1:8000/weeks/`)
+            const response = request.data
+            if (request.status == 200) {
+                let data = await response.filter((item) => item.user == credentials.userid && item.week_number == credentials.week_id)
+                console.log(data)
+                return data[0]?.weekdetails_set[0]?.technical_tasks
+                // return data
+            } else {
+                console.log("Something went wrong while uploading the file")
+            }
+        } catch (error) {
+            console.log("Error: ", error)
+        }
+    }
+)
+
+//uploading technical task
+export const technical_tasks = createAsyncThunk('technical_tasks',
+    async (credentials) => {
+        try {
+            const request = await axios.get(`http://127.0.0.1:8000/weeks/`)
+            const response = request.data
+            console.log("This is the initial response: ", response)
+            if (request.status == 200) {
+                let data = response.filter((item) => item.user == credentials.userid && item.week_number == credentials.week_id)
+                console.log("This is the data: ", data)
+                console.log(data[0].weekdetails_set[0].id)
+                const req = await axios.patch(`http://127.0.0.1:8000/week_details/${data[0].weekdetails_set[0].id}/`, credentials?.technical_tasks)
+                const res = req.data
+                if (req.status == 200) {
+                    console.log(res)
+                } else {
+                    console.log("Something went wrong while uploading the data ")
+                }
+            } else {
+                console.log("Something went wrong while uploading the file")
+            }
+        } catch (error) {
+            console.log("Error: ", error)
+        }
+    }
+)
+
+
+//removing technical tasks
+export const removeTechnicalTask = createAsyncThunk('remove_technical_task',
+    async (credentials) => {
+        try {
+            console.log("Its is entering here!!")
+            const request = await axios.get(`http://127.0.0.1:8000/weeks/`)
+            const response = request.data
+            if (request.status == 200) {
+                let data = response.filter((item) => item.user == credentials.userid && item.week_number == credentials.week_id)
+                console.log(data[0].weekdetails_set[0].id)
+                const req = await axios.patch(`http://127.0.0.1:8000/week_details/${data[0].weekdetails_set[0].id}/`, { technical_tasks: credentials.technical_tasks })
+                const res = req.data
+                if (req.status == 200) {
+                    console.log("The file has been uploaded")
+                    console.log(res)
+                } else {
+                    console.log("Something went wrong while uploading the data ")
+                }
+            } else {
+                console.log("Something went wrong while uploading the file")
+            }
+        } catch (error) {
+            console.log("Error: ", error)
+        }
+    }
+)
+
+
+
+
+//////////////////////////////////////////////////////////TECHNICAL WORKOUT TASKS//////////////////////////////////////////////////////////////////
+
+
 
 
 
@@ -53,6 +223,36 @@ export const WeekDetailsSlice = createSlice({
             state.data = []
             state.isLoading = false
             state.msg = 'The load has been completed but something went wrong while loading it'
+        },
+        [get_week_task.pending]: (state) => {
+            state.data = []
+            state.isLoading = true
+            state.msg = 'It is still on loading'
+        },
+        [get_week_task.fulfilled]: (state, action) => {
+            state.data = action.payload
+            state.isLoading = false
+            state.msg = 'The week details have been loaded'
+        },
+        [get_week_task.rejected]: (state) => {
+            state.data = []
+            state.isLoading = false
+            state.msg = 'The load has been completed but something went wrong while loading it'
+        },
+        [get_technical_tasks.pending]: (state) => {
+            state.data = []
+            state.isLoading = true
+            state.msg = 'It is technical tasks is on loading'
+        },
+        [get_technical_tasks.fulfilled]: (state, action) => {
+            state.data = action.payload
+            state.isLoading = false
+            state.msg = 'The technical task have been loaded'
+        },
+        [get_technical_tasks.rejected]: (state) => {
+            state.data = []
+            state.isLoading = false
+            state.msg = 'The load has been completed but something went wrong while loading the technical task'
         },
     }
 })

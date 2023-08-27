@@ -47,11 +47,11 @@ function Components() {
                     <Route path='schedule_time' element={<SceduleTime />} />
                     <Route path='update_week' element={<UpdateWeekPage />} />
                     <Route path='assign_time' element={<AssignMyTimePage />} />
-                    <Route path='this_week_task' element={<ThisWeeksTask />} />
-                    <Route path='personal_workout' element={<PersonalWorkouts />} />
-                    <Route path='miscellenous_workout' element={<MiscellenousWorkouts />} />
-                    <Route path='technical_workout' element={<TechnicalWorkouts />} />
-                    <Route path='batch_number/:id' element={<BatchStudentsPage />} />
+                    <Route path='this_week_task/:id/:userid?' element={<ThisWeeksTask />} />
+                    <Route path='personal_workout/:id/:userid?' element={<PersonalWorkouts />} />
+                    <Route path='miscellenous_workout/:id/:userid?' element={<MiscellenousWorkouts />} />
+                    <Route path='technical_workout/:id/:userid?' element={<TechnicalWorkouts />} />
+                    <Route path='batch_number/:id/' element={<BatchStudentsPage />} />
                     <Route path='chat' element={<ChatPage />} />
                     <Route path='week_detail/:id/:userid?' element={<WeekDetailPage />} />
                 </Route>

@@ -293,25 +293,25 @@ function WeekDetailPage() {
                                 </span>
                             </div>
                             <div className='grid  lg:grid-cols-6 ms:grid-cols-3 sm:grid-cols-1 xs:grid-cols-1 items-center justify-start bg-[#15171E] min-h-[170px] w-auto me-[100px] ms-[48px]'>
-                                <Link to='/this_week_task'>
+                                <Link to={`/this_week_task/${id}/${userid}`}>
                                     <div className='grid items-start justify-center'>
                                         <img className='h-[55px] ms-7' src={task_folder} alt="" />
                                         <p>This Week Task </p>
                                     </div>
                                 </Link>
-                                <Link to='/personal_workout'>
+                                <Link to={`/personal_workout/${id}/${userid}`}>
                                     <div className='grid items-start justify-center'>
                                         <img className='h-[60px] ms-7' src={folder} alt="" />
                                         <p>Personal Workout </p>
                                     </div>
                                 </Link>
-                                <Link to='/technical_workout'>
+                                <Link to={`/technical_workout/${id}/${userid}`}>
                                     <div className='grid items-start justify-center'>
                                         <img className='h-[60px] ms-7' src={folder} alt="" />
                                         <p>Technical Workout</p>
                                     </div>
                                 </Link>
-                                <Link to='/miscellenous_workout'>
+                                <Link to={`/miscellenous_workout/${id}/${userid}`}>
                                     <div className='grid items-start justify-center'>
                                         <img className='h-[60px] ms-9' src={folder} alt="" />
                                         <p>Miscellenous Workout</p>

@@ -82,8 +82,8 @@ export const InternList = createAsyncThunk('intern_list',
             console.log(filterData)
             return filterData
         } catch (error) {
-            console.error('Error:', error); 
-            throw error; 
+            console.error('Error:', error);
+            throw error;
         }
     }
 )
@@ -167,7 +167,7 @@ export const editUser = createAsyncThunk('edit_user',
             credentials.batch = batchAssign
         } else {
             console.log("Entering here alright !!!")
-            console.log("Credentials: ",credentials)
+            console.log("Credentials: ", credentials)
             //to filter out null fields from the credentials
             const filteredCredentials = Object.fromEntries(
                 Object.entries(credentials).filter(([_, value]) => value !== null)
@@ -192,16 +192,39 @@ export const ProfileDetails = createAsyncThunk('profile_details',
             const request = axios.get(`http://127.0.0.1:8000/users/${id}/`)
             const response = (await request).data
 
-            if ((await request).status === 200){
+            if ((await request).status === 200) {
                 return response
-            }else{
+            } else {
                 console.log("Something wrong occured while fetching the users data from the endpoint")
             }
-        }catch(error){
+        } catch (error) {
             console.log(error)
         }
 
     }
+)
+
+export const profileImage = createAsyncThunk('profile_image',
+    async (credentials) => {
+        try {
+            console.log("This is from the userSlice: ",credentials)
+            console.log("This is from the userSlice: ",credentials.image)
+            const request = await axios.patch(`http://127.0.0.1:8000/users/${credentials.id}/`, credentials?.image, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            })
+            const response = request.data
+            if (request.status === 200) {
+                console.log("The profile image has been updated")
+            } else {
+                console.log("Something went wrong while patching the profile image")
+            }
+        } catch (error) {
+            console.log("Error: ", error)
+        }
+    }
+
 )
 
 

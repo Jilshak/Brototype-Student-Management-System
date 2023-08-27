@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import profile from '../images/profile.jpeg'
+import axios from 'axios'
 import authenticated from '../icons/authenticated.png'
 import unauthenticated from '../icons/unauthenticated.png'
 import edit1 from '../icons/edit1.png'
 import remove from '../icons/remove.png'
 import jwtDecode from 'jwt-decode';
 import { useDispatch, useSelector } from 'react-redux'
-import { ProfileDetails, editUser } from '../features/UserSlice'
+import { ProfileDetails, editUser, profileImage } from '../features/UserSlice'
 
 function Profile() {
 
@@ -79,6 +80,19 @@ function Profile() {
 
   const profileDetail = useSelector((state) => state.Users)
 
+  const updateImage = async (e) => {
+    const formData = new FormData();
+    formData.append('image', e);
+
+    const credentials = {
+      id: decode.user_id,
+      image: formData
+    }
+
+    await Promise.resolve(dispatch(profileImage(credentials)))
+    await dispatch(ProfileDetails(decode.user_id))
+  };
+
   useEffect(() => {
     setTest(profileDetail.state)
   }, [profileDetail.state])
@@ -87,7 +101,22 @@ function Profile() {
     <div className={decode.is_superuser || decode.is_advisor || decode.is_reviewer ? 'grid grid-cols-1 items-center justify-center lg:mx-[250px] md:mx-[150px] sm:mx-[50px] xs:mx-[0px]' : 'grid lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1 xs:grid-cols-1'}>
       <div className='grid grid-rows-1'>
         <div className='mx-[100px] grid items-center justify-center mt-10'>
-          <img className=' rounded-full w-[250px] h-[250px] bg-cover ' src={profile} alt="" />
+          <button type="button" className="rounded-full w-[250px] h-[250px] object-cover z-50" aria-expanded="false" data-dropdown-toggle="dropdown-user">
+            <label htmlFor="profile_image">
+              <input
+                type="file"
+                name='profile_image'
+                accept='image/*'
+                id='profile_image'
+                onChange={(e) => updateImage(e.target.files[0])}
+                className="hidden"
+              />
+              <img
+                className="rounded-full w-[250px] h-[250px] object-cover cursor-pointer"
+                src={test?.image ? test?.image : "https://img.icons8.com/?size=512&id=zXd7HOdmWPxf&format=png"}
+              />
+            </label>
+          </button>
           <div className='flex mt-4'>
             <img className='h-6 mt-1 me-3' src={decode.authenticated ? authenticated : unauthenticated} alt="" />
             <span onClick={(e) => setEdit(true)} className='w-[200px] cursor-pointer flex justify-center items-center p-1 rounded-lg bg-[#1A1E29]'>
