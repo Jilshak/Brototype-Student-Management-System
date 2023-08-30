@@ -1,7 +1,5 @@
 import os
 from django.core.asgi import get_asgi_application
-from django.urls import re_path
-from chats.consumers import ChatConsumer
 from channels.routing import ProtocolTypeRouter, URLRouter
 
 
