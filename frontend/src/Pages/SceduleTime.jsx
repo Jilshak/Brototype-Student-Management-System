@@ -269,22 +269,22 @@ function SceduleTime() {
                       <div onClick={async (e) => {
                         console.log("This is the val: ",val)
                         console.log(val.slot)
-                        // await unsheduleReview(val.id, val.intern, val.slot)
-                        // await dispatch(InternsWithReview(week_numnber))
-                        console.log("This is the scheduled date: ", scheduledDate)
-                        console.log("This is the scheduled date and the current date difference in minutes: ", differenceInMinutes)
+                        await unsheduleReview(val.id, val.intern, val.slot)
+                        await dispatch(InternsWithReview(week_numnber))
+                        // console.log("This is the scheduled date: ", scheduledDate)
+                        // console.log("This is the scheduled date and the current date difference in minutes: ", differenceInMinutes)
                       }} className='cursor-pointer'>
                         <img className='h-6 cursor-pointer' src={remove} alt="" />
                       </div>
                       <div>
                         {
-                          // currentDate == scheduledDate && differenceInMinutes <= -15 ?
+                          currentDate == scheduledDate && differenceInMinutes <= -15 ?
                           <>
                             <Link to={`/weeks/${val.intern}`}>
                               <img className='h-6 cursor-pointer' src={authenticated} alt="" />
                             </Link>
                           </>
-                          // : null
+                          : null
                         }
                       </div>
                     </div>
