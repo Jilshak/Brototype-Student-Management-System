@@ -1,62 +1,81 @@
-from channels.generic.websocket import AsyncJsonWebsocketConsumer
-from .models import Message
+from channels.generic.websocket import AsyncWebsocketConsumer
 import json
+from .serializers import MessageSerializer
+from channels.db import database_sync_to_async
+from .models import Message, User
+from asgiref.sync import sync_to_async
+from django.contrib.auth import get_user_model
 
-class ChatConsumer(AsyncJsonWebsocketConsumer):
+
+class ChatConsumer(AsyncWebsocketConsumer):
+
     async def connect(self):
+        # this is a nested dictionary and it will return the room_id which we are passing through the url
+        current_user_id = self.scope['url_route']['kwargs']['id']
+        # other_user_id = int(self.scope['query_string'])
+        # print(other_user_id)
+
+        self.room_id = current_user_id
+        self.room_group_name = f'chat_{self.room_id}'
+
+        # the channel_layer.group_add() takes two arguments
+        # the name of the group to add the connection to --> self.room_group_name
+        # and the name of the websocket connection ---> self.channel_name
+        await self.channel_layer.group_add(
+            self.room_group_name,
+            self.channel_name
+        )
+
         await self.accept()
-        print(self.scope["user"].username)
-        print(self.scope["user"].email)
 
     async def disconnect(self, close_code):
-        ...
- 
-    async def receive_json(self, message):
-        command = message.get("command")
-        if command == "Say hello !":
-            print(message["data_string"])
-            await self.send_json({
-                "command_response": "The command to \
-                say hello was received ",
-                "data_string_bacK": message.get
-              ("data_string", None)
-            })
-        
-    # async def connect(self):
-    #     # Get user information and establish a WebSocket connection
-    #     self.user = self.scope["user"]
-    #     self.room_name = f"chat_{self.user.id}"
-    #     self.room_group_name = f"chat_{self.user.id}"
+        await self.channel_layer.group_discard(
+            self.room_group_name,
+            self.channel_name
+        )
+        await super().disconnect(close_code)
+    
 
-    #     await self.channel_layer.group_add(self.room_group_name, self.channel_name)
+    async def receive(self, text_data=None):
+        data = json.loads(text_data)
+        message = data["message"]
+        sender_username = data["sender_username"]
 
-    #     await self.accept()
+        await self.save_message(
+            sender=sender_username, message=message, thread_name=self.room_group_name
+        )
 
-    # async def disconnect(self, close_code):
-    #     # Remove the user from the group when the WebSocket connection is closed
-    #     await self.channel_layer.group_discard(self.room_group_name, self.channel_name)
+        print("This is the channel group name: ", self.room_group_name)
 
-    # async def receive(self, text_data):
-    #     # Receive a message from the WebSocket
-    #     text_data_json = json.loads(text_data)
-    #     message = text_data_json["message"]
+        # Send the message to the channel layer
+        await self.channel_layer.group_send(
+            self.room_group_name,
+            {
+                "type": "chat_message",
+                "message": message,
+                "senderUsername": sender_username,
+            },
+        )
 
-    #     # Save the message to the database and send it to the group
-    #     await self.create_message(message)
-    #     await self.send_message(message)
+    async def chat_message(self, event):
+        print("Its entering here alright!!!")
+        message = event["message"]
+        username = event["senderUsername"]
 
-    # async def create_message(self, message):
-    #     # Create a new message instance and save it to the database
-    #     await Message.objects.create(sender=self.user, message=message)
+        await self.send(
+            text_data=json.dumps(
 
-    # async def send_message(self, message):
-    #     # Send the message to the group
-    #     await self.channel_layer.group_send(
-    #         self.room_group_name,
-    #         {"type": "chat.message", "message": message}
-    #     )
+                {
+                    "message": message,
+                    "senderUsername": username,
+                }
+            ),
 
-    # async def chat_message(self, event):
-    #     # Send the received message to the WebSocket
-    #     message = event["message"]
-    #     await self.send(text_data=json.dumps({"message": message}))
+        )
+
+    @database_sync_to_async
+    def save_message(self, sender, message, thread_name):
+        user_instance = User.objects.get(username=sender)
+
+        Message.objects.create(
+            sender=user_instance, message=message, thread_name=thread_name)

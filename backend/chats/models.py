@@ -1,13 +1,12 @@
 from django.db import models
 from users.models import User
 
-# Create your models here.
 class Message(models.Model):
-    sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='message_sender')
+    sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sender', null=True, blank=True)
+    receiver = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reciever',null=True, blank=True)
+    thread_name = models.CharField(max_length=200, null=True, blank=True)
     message = models.TextField()
-    created_at = models.DateTimeField(auto_now_add=True)
-    deleted = models.BooleanField(default=False)
-    seen = models.BooleanField(default=False)
-    
+    timestamp = models.DateTimeField(auto_now_add=True)
+
     def __str__(self):
-        return f'{self.message} - {self.sender.username}'
+        return f'{self.sender.username}-{self.thread_name}' if self.sender else f'{self.message}-{self.thread_name}'

@@ -23,6 +23,7 @@ import ThisWeeksTask from './Pages/Upload/ThisWeeksTask'
 import MiscellenousWorkouts from './Pages/Upload/MiscellenousWorkouts'
 import TechnicalWorkouts from './Pages/Upload/TechnicalWorkouts'
 import PersonalWorkouts from './Pages/Upload/PersonalWorkouts'
+import ChattingPage from './Pages/ChattingPage'
 
 function Components() {
 
@@ -55,6 +56,7 @@ function Components() {
                     <Route path='chat' element={<ChatPage />} />
                     <Route path='week_detail/:id/:userid?' element={<WeekDetailPage />} />
                 </Route>
+                <Route path='/chat_page/:user_id/:selected_id' element={<ChattingPage />} />
             </Route>
 
         </Routes>

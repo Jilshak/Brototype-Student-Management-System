@@ -1,6 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 import axios from "axios"
-import { useParams } from 'react-router-dom'
 
 
 //register functionality for the users based on the batch number they have given
@@ -81,6 +80,22 @@ export const InternList = createAsyncThunk('intern_list',
             })
             console.log(filterData)
             return filterData
+        } catch (error) {
+            console.error('Error:', error);
+            throw error;
+        }
+    }
+
+)
+export const fullUserList = createAsyncThunk('Full_User_List',
+    async (id) => {
+        try {
+            const request = await axios.get('http://127.0.0.1:8000/users/')
+            let data = await request.data
+            if (request.status === 200){
+                console.log("All the users have been fetched!!!")
+                return data
+            }
         } catch (error) {
             console.error('Error:', error);
             throw error;
@@ -337,6 +352,23 @@ const UserSlice = createSlice({
             state.isLoading = false
             state.state = []
             state.msg = "Something went wrong while loading the profile list"
+        },
+
+
+        [fullUserList.pending]: (state) => {
+            state.isLoading = true
+            state.state = []
+            state.msg = "It is still loading"
+        },
+        [fullUserList.fulfilled]: (state, action) => {
+            state.isLoading = false
+            state.state = action.payload
+            state.msg = "The user list is loaded"
+        },
+        [fullUserList.rejected]: (state) => {
+            state.isLoading = false
+            state.state = []
+            state.msg = "Something went wrong while loading the user list"
         },
     }
 })
