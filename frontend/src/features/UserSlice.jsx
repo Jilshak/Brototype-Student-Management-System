@@ -242,11 +242,30 @@ export const profileImage = createAsyncThunk('profile_image',
 
 )
 
+export const SideBarSlice = createAsyncThunk('side_bar_slice',
+    async (id) => {
+        try {
+            const request = axios.get(`http://127.0.0.1:8000/users/${id}/`)
+            const response = (await request).data
+
+            if ((await request).status === 200) {
+                return response
+            } else {
+                console.log("Something wrong occured while fetching the users data from the endpoint")
+            }
+        } catch (error) {
+            console.log(error)
+        }
+
+    }
+)
+
 
 
 
 const initialState = {
     state: [],
+    sidebar: [],
     isLoading: true,
     mgs: '',
     auth: false
@@ -369,6 +388,23 @@ const UserSlice = createSlice({
             state.isLoading = false
             state.state = []
             state.msg = "Something went wrong while loading the user list"
+        },
+
+
+        [SideBarSlice.pending]: (state) => {
+            state.isLoading = true
+            state.sidebar = []
+            state.msg = "It is still loading"
+        },
+        [SideBarSlice.fulfilled]: (state, action) => {
+            state.isLoading = false
+            state.sidebar = action.payload
+            state.msg = "The user sidebar is loaded"
+        },
+        [SideBarSlice.rejected]: (state) => {
+            state.isLoading = false
+            state.sidebar = []
+            state.msg = "Something went wrong while loading the user sidebar"
         },
     }
 })

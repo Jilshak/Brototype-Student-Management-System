@@ -2,12 +2,18 @@ import React, { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import jwtDecode from 'jwt-decode';
 import remove from '../icons/remove.png'
+import noprofile from '../icons/noprofile.png'
+import { useDispatch, useSelector } from 'react-redux';
+import { SideBarSlice } from '../features/UserSlice';
 function Sidebar() {
 
     const [isSidebarOpen, setIsSidebarOpen] = useState(false); // New state for sidebar 
     const toggleSidebar = () => {
         setIsSidebarOpen(!isSidebarOpen);
     };
+
+    const dispatch = useDispatch()
+    const user = useSelector((state) => (state.Users))
 
 
     //for loggin out
@@ -22,6 +28,10 @@ function Sidebar() {
     //conditional rendering for the side bar
     let token = localStorage.getItem("authToken")
     let decode = jwtDecode(token)
+
+    useEffect(() => {
+        dispatch(SideBarSlice(decode.user_id))
+    }, [])
 
     return (
         <div className=''>
@@ -60,6 +70,18 @@ function Sidebar() {
                         <img className='h-6 lg:hidden cursor-pointer relative left-[200px]' onClick={(e) => setIsSidebarOpen(false)} src={remove} alt="" />
                     </div>
                     <ul class="space-y-2 ms-5 mt-5 text-lg">
+
+                        {
+                            user.sidebar ?
+                                <>
+                                    <li className='mb-8'>
+                                        <span className='flex items-center justify-start max-w-[180px] p-2 opacity-70 rounded-2xl bg-[#272d43]'>
+                                            <img className='h-12 rounded-full w-12 object-cover' src={user.sidebar.image ? user.sidebar.image : noprofile} alt="" />
+                                            <p className='text-white text-xl ms-4'>{(decode.username).toUpperCase()}</p>
+                                        </span>
+                                    </li>
+                                </> : null
+                        }
 
                         <li>
                             <Link to='/'>
@@ -140,19 +162,7 @@ function Sidebar() {
                                     </Link>
                                 </li> : null
                         }
-                        {
-                            decode.is_advisor && decode.authenticated ?
-                                <li>
-                                    <Link to='/update_week'>
-                                        <a href="#" class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
-                                            <svg class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"> <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM2 2a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1H2z" />
-                                                <path d="M2.5 4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5H3a.5.5 0 0 1-.5-.5V4zM11 7.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1zm-3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1zm-5 3a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1zm3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1z" />
-                                            </svg>
-                                            <span class="flex-1 ml-3 whitespace-nowrap">Update Week</span>
-                                        </a>
-                                    </Link>
-                                </li> : null
-                        }
+                        
 
                         {
                             decode.is_user && !decode.is_superuser && !decode.is_reviewer && !decode.is_advisor && decode.authenticated ?

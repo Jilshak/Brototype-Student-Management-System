@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import leftarrow from '../icons/leftarrow.png'
+import noprofile from '../icons/noprofile.png'
 import send from '../icons/send.png'
 import jwtDecode from 'jwt-decode';
 import { useNavigate, useParams } from 'react-router-dom'
@@ -89,25 +90,25 @@ function ChattingPage() {
             reciever: selected_id
         }
         dispatch(GetChattingUsers(credentials))
-    },[])
+    }, [])
 
 
+    //logic for sending the messages
     const handleSendMessage = async () => {
         if (socket && socket.readyState === socket.OPEN && input !== '') {
-            // The WebSocket connection is open, so send the message.
             await socket.send(JSON.stringify({ message: input, sender_username: decode?.username }));
-            // The message has been sent, so update the messages state variable.
         } else {
-            // The WebSocket connection is not open, so do nothing.
             console.log("Websocket is not open for you to send message")
         }
         await setInput('')
-        dispatch(UserMessages(room_id))
+
 
         //using use ref to scroll back into view of the messages
         if (lastMessageRef.current) {
-           await lastMessageRef.current.scrollIntoView({ behavior: 'smooth', target: lastMessageRef.current });
+            await lastMessageRef.current.scrollIntoView({ behavior: 'smooth', target: lastMessageRef.current });
         }
+        //if this dispatch is not there then the messages are multiplying each time i send them for no reason
+        // dispatch(UserMessages(room_id))
     };
 
 
@@ -115,8 +116,29 @@ function ChattingPage() {
     return (
         <div className='h-screen w-screen'>
             <div className='h-16 bg-[#191C24] flex items-center'>
-                <div onClick={backButton} className='bg-[#22242F] cursor-pointer ms-5 h-11 w-11 flex items-center justify-center rounded-full'>
-                    <img className='h-7' src={leftarrow} alt="" />
+                <div onClick={backButton} className='bg-[#22242F] z-50 cursor-pointer ms-5 h-9 w-9 flex items-center justify-center rounded-full'>
+                    <img className='h-5' src={leftarrow} alt="" />
+                </div>
+                <div className='absolute w-full right-0'>
+                    {
+                        userMessages.user_details && userMessages.user_details.length >= 1 ?
+                            <>
+                                {
+                                    userMessages.user_details.map((item) => {
+                                        if (item.id == user_id) {
+                                            return (
+                                                <div className='flex items-center justify-end'>
+                                                    <p className='text-white font-semibold text-xl me-4'>{item.username}</p>
+                                                    <span className='me-5 rounded-full h-12 w-12'>
+                                                        <img className='h-12 rounded-full' src={item.image ? item.image : noprofile} />
+                                                    </span>
+                                                </div>
+                                            )
+                                        }
+                                    })
+                                }
+                            </> : null
+                    }
                 </div>
             </div>
             <div>
@@ -132,7 +154,7 @@ function ChattingPage() {
                                                 <div
                                                     key={index}
                                                     className={`flex ${item.senderUsername === decode?.username || item?.sender === decode?.user_id ? 'justify-end' : 'justify-start'} mb-4`}
-                                                    ref={messageRef} 
+                                                    ref={messageRef}
                                                 >
                                                     <div
                                                         className={`py-3 px-4 ${item.senderUsername === decode?.username || item?.sender === decode?.user_id ? 'bg-gray-300 rounded-br-3xl rounded-tr-3xl rounded-tl-xl' : 'bg-blue-400 rounded-bl-3xl rounded-tl-3xl rounded-tr-xl text-white'}`}
@@ -166,7 +188,7 @@ function ChattingPage() {
                             }}
                             className="bg-[#0F121A] hover:bg-[#141824]  text-white px-5 me-0 relative right-0 py-3 rounded-e-lg"
                         >
-                            <img className='h-5' src={send} alt="" />
+                            <img className='h-5 min-w-[15px]' src={send} alt="" />
                         </button>
                     </div>
                 </div>
