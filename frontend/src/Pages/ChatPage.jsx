@@ -43,7 +43,7 @@ function ChatPage() {
   const [find, setFind] = useState();
   const searchItem = async (e) => {
     if (!find) {
-      setUsers(users);
+      setFind(users);
     }
     if (e.target.value === '') {
       setUsers(find);
@@ -59,7 +59,7 @@ function ChatPage() {
   }
 
   useEffect(() => {
-    if (recent?.history.length >= 1) {
+    if (recent?.history?.length >= 1) {
       console.log("This is the recentChats: ", recentChats)
       setRecentChats(recent.history)
     }
@@ -67,7 +67,7 @@ function ChatPage() {
 
   return (
     <div className='grid  justify-center'>
-      <div className='bg-[#191C24] relative w-[450px] h-[600px] top-20 rounded-xl overflow-y-auto'>
+      <div className='bg-[#191C24] relative min-w-[400px] max-w-[450px] h-[600px] left-[-30px] top-20 rounded-xl overflow-y-auto'>
         {
           selectedItem == 0 ?
             <>
@@ -172,7 +172,7 @@ function ChatPage() {
             :
             <>
               {
-                recentChats ?
+                recentChats && recent.history.length >= 1 ?
                   <>
                     {
                       recentChats.map((item) => {
@@ -196,7 +196,7 @@ function ChatPage() {
                         }
                       })
                     }
-                  </> : <p className='text-white'>still loading here</p>
+                  </> : null
               }
             </>
         }

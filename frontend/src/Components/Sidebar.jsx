@@ -67,7 +67,7 @@ function Sidebar() {
             >
                 <div class="h-full px-3 py-4 overflow-y-auto bg-[#191C24]">
                     <div className='flex items-center absolute justify-end'>
-                        <img className='h-6 lg:hidden cursor-pointer relative left-[200px]' onClick={(e) => setIsSidebarOpen(false)} src={remove} alt="" />
+                        <img className='h-6 z-50 lg:hidden cursor-pointer relative left-[200px]' onClick={(e) => setIsSidebarOpen(false)} src={remove} alt="" />
                     </div>
                     <ul class="space-y-2 ms-5 mt-5 text-lg">
 

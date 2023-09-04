@@ -75,8 +75,52 @@ export const GetHistory = createAsyncThunk('get_history',
                 const res = req.data
                 if (req.status === 200) {
                     const data = res.filter((item) => uniqueIds.includes(item.id))
-                    console.log("This is the getHistory user data1: ", data)
+                    let final = data.sort((a, b) => {
+                        // Find the most recent message timestamp for each user
+                        const timestampA = response
+                            .filter((message) => message.receiver === a.id || message.sender === a.id)
+                            .map((message) => new Date(message.timestamp))
+                            .reduce((max, current) => (current > max ? current : max), new Date(0));
+
+                        const timestampB = response
+                            .filter((message) => message.receiver === b.id || message.sender === b.id)
+                            .map((message) => new Date(message.timestamp))
+                            .reduce((max, current) => (current > max ? current : max), new Date(0));
+
+                        // Sort in descending order based on the message timestamp
+                        return timestampB - timestampA;
+                    });
+
+                    console.log("This is the getHistory user data1: ", final)
+                    return final
+
+                }
+            }
+        } catch (error) {
+            console.log("Error: ", error)
+        }
+    }
+)
+
+
+/////for Notifications
+export const getNotifications = createAsyncThunk('get_notification',
+    async (decode) => {
+        try {
+            const request = await axios.get(`http://127.0.0.1:8000/chat/notification/`)
+            const response = request.data
+            if (request.status === 200) {
+                if (decode.is_user && !decode.is_advisor && !decode.is_reviewer && !decode.is_superuser) {
+                    let data = response.filter((item) => item.thread_name == 'noti_36_1')
                     return data
+                } else if (decode.is_user && decode.is_advisor && !decode.is_reviewer && !decode.is_superuser) {
+                    let data = response.filter((item) => item.thread_name == 'noti_36_2')
+                    return data
+                } else if (decode.is_user && decode.is_reviewer && !decode.is_superuser && !decode.is_advisor) {
+                    let data = response.filter((item) => item.thread_name == 'noti_36_3')
+                    return data
+                } else {
+                    return response
                 }
             }
         } catch (error) {
@@ -90,6 +134,7 @@ export const GetHistory = createAsyncThunk('get_history',
 const initialState = {
     isLoading: false,
     data: [],
+    notification: [],
     user_details: [],
     history: [],
     msg: 'Still in the intial state'
@@ -147,6 +192,23 @@ const ChatSlice = createSlice({
         [GetHistory.rejected]: (state) => {
             state.isLoading = false
             state.history = []
+            state.msg = 'The loading of the state has been finished with some problem.'
+        },
+
+
+        [getNotifications.pending]: (state) => {
+            state.isLoading = true
+            state.history = []
+            state.msg = "The state is still loading!!"
+        },
+        [getNotifications.fulfilled]: (state, action) => {
+            state.isLoading = false
+            state.notification = action.payload
+            state.msg = "The state has been loaded"
+        },
+        [getNotifications.rejected]: (state) => {
+            state.isLoading = false
+            state.notification = []
             state.msg = 'The loading of the state has been finished with some problem.'
         },
     }

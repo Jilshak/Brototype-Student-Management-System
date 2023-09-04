@@ -145,7 +145,7 @@ function ChattingPage() {
                 <div className="w-full h-[88vh] px-5 flex flex-col justify-between">
                     <div className="flex flex-col mt-5 overflow-x-auto">
                         {
-                            !userMessages.isLoading ?
+                            !userMessages.isLoading && userMessages.data.length >= 1 ?
                                 <>
                                     {
                                         messages?.map((item, index) => {
