@@ -55,11 +55,43 @@ export const GetChattingUsers = createAsyncThunk('get_chatting_user',
 )
 
 
+//filter through the messages to find the users which you have send messages to using --> sender id
+//after getting the messages find to whom you have send the messages using ---> receiver id
+//after that according to the message timestamp you can show the users according to the time the message has been send to
+export const GetHistory = createAsyncThunk('get_history',
+    async (id) => {
+        try {
+            const requst = await axios.get(`http://127.0.0.1:8000/chat/messages/`)
+            const response = requst.data
+            if (requst.status == 200) {
+                let data = await response.filter((item) => item.sender == id || item.receiver == id)
+                let reciever_ids = data.map((item) => item.receiver)
+                reciever_ids.push(id)
+                let sender_ids = data.map((item) => item.sender)
+                let uniqueIds = [...new Set([...reciever_ids, ...sender_ids])];
+                console.log("This is the getHistory user data: ", data)
+                console.log("These are the receiver ids: ", reciever_ids)
+                const req = await axios.get(`http://127.0.0.1:8000/users/`)
+                const res = req.data
+                if (req.status === 200) {
+                    const data = res.filter((item) => uniqueIds.includes(item.id))
+                    console.log("This is the getHistory user data1: ", data)
+                    return data
+                }
+            }
+        } catch (error) {
+            console.log("Error: ", error)
+        }
+    }
+)
+
+
 
 const initialState = {
     isLoading: false,
     data: [],
     user_details: [],
+    history: [],
     msg: 'Still in the intial state'
 }
 
@@ -98,6 +130,23 @@ const ChatSlice = createSlice({
         [GetChattingUsers.rejected]: (state) => {
             state.isLoading = false
             state.user_details = []
+            state.msg = 'The loading of the state has been finished with some problem.'
+        },
+
+
+        [GetHistory.pending]: (state) => {
+            state.isLoading = true
+            state.history = []
+            state.msg = "The state is still loading!!"
+        },
+        [GetHistory.fulfilled]: (state, action) => {
+            state.isLoading = false
+            state.history = action.payload
+            state.msg = "The state has been loaded"
+        },
+        [GetHistory.rejected]: (state) => {
+            state.isLoading = false
+            state.history = []
             state.msg = 'The loading of the state has been finished with some problem.'
         },
     }

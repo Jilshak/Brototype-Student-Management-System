@@ -7,13 +7,16 @@ import contacts from '../icons/contacts.png'
 import chat from '../icons/chat.png'
 import noprofile from '../icons/noprofile.png'
 import { Link } from 'react-router-dom';
+import { GetHistory } from '../features/ChatSlice';
 
 function ChatPage() {
 
   const dispatch = useDispatch()
   const userList = useSelector((state) => (state.Users))
+  const recent = useSelector((state) => (state.Chats))
 
   const [users, setUsers] = useState([])
+  const [recentChats, setRecentChats] = useState([])
 
   //for selecting the grid item
   const [selectedItem, setSelectedItem] = useState(0);
@@ -50,6 +53,17 @@ function ChatPage() {
       }));
     }
   }
+
+  const history = () => {
+    dispatch(GetHistory(decode.user_id))
+  }
+
+  useEffect(() => {
+    if (recent?.history.length >= 1) {
+      console.log("This is the recentChats: ", recentChats)
+      setRecentChats(recent.history)
+    }
+  }, [recent?.history, dispatch])
 
   return (
     <div className='grid  justify-center'>
@@ -150,16 +164,50 @@ function ChatPage() {
                           }
                         })
                       }
-                    </> : null
+                    </>
+                    : null
                 }
               </div>
-            </> : null
+            </>
+            :
+            <>
+              {
+                recentChats ?
+                  <>
+                    {
+                      recentChats.map((item) => {
+                        if (item.id !== decode.user_id) {
+                          return (
+                            <Link to={`/chat_page/${item.id}/${decode.user_id}`}>
+                              <div className='flex my-4 gap-3 items-center cursor-pointer mx-5 bg-[#0c0e14] rounded-xl'>
+                                <div className='flex relative mx-3 py-1 items-center'>
+                                  <span>
+                                    <img className='h-12 w-12 object-cover rounded-full' src={item.image ? item.image : noprofile} alt="" />
+                                  </span>
+                                  <p className='ms-5'>{item.username}</p>
+                                </div>
+                                <p className='ml-auto mr-4 text-sm bg-slate-800 p-1 rounded-xl text-[#a8a8a9]'>
+                                  {item.is_user && !item.is_advisor && !item.is_reviewer && !item.is_superuser ? `Intern`
+                                    : (item.is_user && item.is_advisor && !item.is_reviewer && !item.is_superuser ? 'Advisor' : 'Reviewer')}
+                                </p>
+                              </div>
+                            </Link>
+                          )
+                        }
+                      })
+                    }
+                  </> : <p className='text-white'>still loading here</p>
+              }
+            </>
         }
         <div className='grid grid-cols-2 items-center bg-[#1f2837] min-h-[50px] absolute opacity-70 justify-center bottom-0 w-full'>
           <div onClick={() => handleItemClick(0)} className={`flex cursor-pointer h-full items-center hover:bg-#243145 justify-center ${selectedItem == '0' ? 'bg-[#243145]' : ''}`}>
             <img className='h-7' src={contacts} alt="" />
           </div>
-          <div onClick={() => handleItemClick(1)} className={`flex cursor-pointer h-full items-center  justify-center ${selectedItem == '1' ? 'bg-[#243145]' : ''}`}>
+          <div onClick={() => {
+            handleItemClick(1)
+            history()
+          }} className={`flex cursor-pointer h-full items-center  justify-center ${selectedItem == '1' ? 'bg-[#243145]' : ''}`}>
             <img className='h-7' src={chat} alt="" />
           </div>
         </div>

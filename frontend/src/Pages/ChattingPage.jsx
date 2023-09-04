@@ -96,7 +96,7 @@ function ChattingPage() {
     //logic for sending the messages
     const handleSendMessage = async () => {
         if (socket && socket.readyState === socket.OPEN && input !== '') {
-            await socket.send(JSON.stringify({ message: input, sender_username: decode?.username }));
+            await socket.send(JSON.stringify({ message: input, sender_username: decode?.username, receiver_id: String(user_id) }));
         } else {
             console.log("Websocket is not open for you to send message")
         }

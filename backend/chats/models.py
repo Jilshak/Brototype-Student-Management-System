@@ -3,7 +3,7 @@ from users.models import User
 
 class Message(models.Model):
     sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sender', null=True, blank=True)
-    receiver = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reciever',null=True, blank=True)
+    receiver = models.ForeignKey(User, on_delete=models.CASCADE, related_name='receiver',null=True, blank=True)
     thread_name = models.CharField(max_length=200, null=True, blank=True)
     message = models.TextField()
     timestamp = models.DateTimeField(auto_now_add=True)
