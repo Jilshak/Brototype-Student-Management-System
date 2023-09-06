@@ -92,7 +92,7 @@ export const fullUserList = createAsyncThunk('Full_User_List',
         try {
             const request = await axios.get('http://127.0.0.1:8000/users/')
             let data = await request.data
-            if (request.status === 200){
+            if (request.status === 200) {
                 console.log("All the users have been fetched!!!")
                 return data
             }
@@ -222,8 +222,8 @@ export const ProfileDetails = createAsyncThunk('profile_details',
 export const profileImage = createAsyncThunk('profile_image',
     async (credentials) => {
         try {
-            console.log("This is from the userSlice: ",credentials)
-            console.log("This is from the userSlice: ",credentials.image)
+            console.log("This is from the userSlice: ", credentials)
+            console.log("This is from the userSlice: ", credentials.image)
             const request = await axios.patch(`http://127.0.0.1:8000/users/${credentials.id}/`, credentials?.image, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
@@ -263,9 +263,30 @@ export const SideBarSlice = createAsyncThunk('side_bar_slice',
 
 
 
+export const SideBarNotification = createAsyncThunk('sidebar_notificatoin',
+    async (id) => {
+        try {
+            const request = await axios.patch(`http://127.0.0.1:8000/users/${id}/`, { notification_count: 0 })
+            const response = request.data
+            if (request.status == 200) {
+                console.log("The notification count has been increased")
+                return response
+            } else {
+                console.log("Something went wrong while increasing the notification count")
+            }
+        } catch (error) {
+            console.log("Error: ", error)
+        }
+    }
+)
+
+
+
+
 const initialState = {
     state: [],
     sidebar: [],
+    dummy: [],
     isLoading: true,
     mgs: '',
     auth: false
@@ -402,6 +423,22 @@ const UserSlice = createSlice({
             state.msg = "The user sidebar is loaded"
         },
         [SideBarSlice.rejected]: (state) => {
+            state.isLoading = false
+            state.sidebar = []
+            state.msg = "Something went wrong while loading the user sidebar"
+        },
+
+        [SideBarNotification.pending]: (state) => {
+            state.isLoading = true
+            state.sidebar = []
+            state.msg = "It is still loading"
+        },
+        [SideBarNotification.fulfilled]: (state, action) => {
+            state.isLoading = false
+            state.sidebar = action.payload
+            state.msg = "The user sidebar is loaded"
+        },
+        [SideBarNotification.rejected]: (state) => {
             state.isLoading = false
             state.sidebar = []
             state.msg = "Something went wrong while loading the user sidebar"

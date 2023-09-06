@@ -2,19 +2,6 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import axios from 'axios'
 
 
-// export const SocketConnection = createAsyncThunk('socket_connection',
-//     async (room_id) => {
-//         try {
-//             console.log("This is the room id: ", room_id)
-//             const request = await new WebSocket(`ws://127.0.0.1:8000/ws/chat/${room_id}/`)
-//             request.onclose((event) => {
-//                 console.log("Socket has been closed!!")
-//             })
-//         } catch (error) {
-//             console.log("Error: ", error)
-//         }
-//     }
-// )
 
 export const UserMessages = createAsyncThunk('user_messages',
     async (room_id) => {
@@ -111,13 +98,13 @@ export const getNotifications = createAsyncThunk('get_notification',
             const response = request.data
             if (request.status === 200) {
                 if (decode.is_user && !decode.is_advisor && !decode.is_reviewer && !decode.is_superuser) {
-                    let data = response.filter((item) => item.thread_name == 'noti_36_1')
+                    let data = response.filter((item) => item.thread_name == 'noti_36_1' || item.thread_name == 'noti_36_123')
                     return data
                 } else if (decode.is_user && decode.is_advisor && !decode.is_reviewer && !decode.is_superuser) {
-                    let data = response.filter((item) => item.thread_name == 'noti_36_2')
+                    let data = response.filter((item) => item.thread_name == 'noti_36_2' || item.thread_name == 'noti_36_123')
                     return data
                 } else if (decode.is_user && decode.is_reviewer && !decode.is_superuser && !decode.is_advisor) {
-                    let data = response.filter((item) => item.thread_name == 'noti_36_3')
+                    let data = response.filter((item) => item.thread_name == 'noti_36_3' || item.thread_name == 'noti_36_123')
                     return data
                 } else {
                     return response

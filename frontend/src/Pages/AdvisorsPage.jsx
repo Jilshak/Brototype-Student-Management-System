@@ -138,7 +138,7 @@ function AdvisorsPage() {
 
 
             {
-                advisors ?
+                 !advisor.isLoading && advisors ?
 
                     <div className='overflow-y-auto'>
                         <div className='grid items-start mx-5 justify-center mt-10'>

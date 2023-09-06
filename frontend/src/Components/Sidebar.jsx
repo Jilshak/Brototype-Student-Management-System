@@ -9,7 +9,11 @@ function Sidebar() {
 
     const [isSidebarOpen, setIsSidebarOpen] = useState(false); // New state for sidebar 
     const toggleSidebar = () => {
-        setIsSidebarOpen(!isSidebarOpen);
+        if (isSidebarOpen) {
+            setIsSidebarOpen(false)
+        } else {
+            setIsSidebarOpen(true)
+        }
     };
 
     const dispatch = useDispatch()
@@ -32,15 +36,16 @@ function Sidebar() {
     useEffect(() => {
         dispatch(SideBarSlice(decode.user_id))
     }, [])
+    useEffect(() => {
+
+    }, [user.sidebar.notification_count, dispatch])
+
 
     return (
         <div className=''>
             <button
                 onClick={toggleSidebar}
-                data-drawer-target="default-sidebar"
-                data-drawer-toggle="default-sidebar"
-                aria-controls="default-sidebar"
-                className="inline-flex items-center p-2 mt-2 ml-3 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+                className="inline-flex items-center p-2 mt-2 ml-3 text-sm text-gray-500 rounded-lg lg:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
             >
                 <span className="sr-only">Open sidebar</span>
                 <svg
@@ -61,7 +66,7 @@ function Sidebar() {
 
             <aside
                 id="default-sidebar"
-                className={`fixed top-0 left-0 z-40 w-64 h-screen transition-transform ${isSidebarOpen ? '' : '-translate-x-full sm:translate-x-0'
+                className={`fixed top-0 left-0 z-40 w-64 h-screen transition-transform ${isSidebarOpen ? '' : '-translate-x-full lg:translate-x-0'
                     }`}
                 aria-label="Sidebar"
             >
@@ -99,10 +104,11 @@ function Sidebar() {
                                 <li>
                                     <Link to='/dashboard'>
                                         <a href="#" class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
-                                            <svg class="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 21">
-                                                <path d="M16.975 11H10V4.025a1 1 0 0 0-1.066-.998 8.5 8.5 0 1 0 9.039 9.039.999.999 0 0 0-1-1.066h.002Z" />
-                                                <path d="M12.5 0c-.157 0-.311.01-.565.027A1 1 0 0 0 11 1.02V10h8.975a1 1 0 0 0 1-.935c.013-.188.028-.374.028-.565A8.51 8.51 0 0 0 12.5 0Z" />
-                                            </svg>
+                                            <svg className='' xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-collection" viewBox="0 0 16 16"> 
+                                            <path d="M2.5 3.5a.5.5 0 0 1 0-1h11a.5.5 0 0 1 0
+                                             1h-11zm2-2a.5.5 0 0 1 0-1h7a.5.5 0 0 1 0 1h-7zM0 13a1.5 1.5 0 0 0 1.5 1.5h13A1.5 1.5 0 0 0 16 13V6a1.5
+                                             1.5 0 0 0-1.5-1.5h-13A1.5 1.5 0 0 0 0 6v7zm1.5.5A.5.5 0 0 1 1 13V6a.5.5 0 0 1 
+                                            .5-.5h13a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-.5.5h-13z" /> </svg>
                                             <span class="ml-3 ">Admin Dashboard</span>
                                         </a>
                                     </Link>
@@ -162,7 +168,7 @@ function Sidebar() {
                                     </Link>
                                 </li> : null
                         }
-                        
+
 
                         {
                             decode.is_user && !decode.is_superuser && !decode.is_reviewer && !decode.is_advisor && decode.authenticated ?
@@ -184,8 +190,10 @@ function Sidebar() {
                                     <svg class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
                                         <path d="m17.418 3.623-.018-.008a6.713 6.713 0 0 0-2.4-.569V2h1a1 1 0 1 0 0-2h-2a1 1 0 0 0-1 1v2H9.89A6.977 6.977 0 0 1 12 8v5h-2V8A5 5 0 1 0 0 8v6a1 1 0 0 0 1 1h8v4a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1v-4h6a1 1 0 0 0 1-1V8a5 5 0 0 0-2.582-4.377ZM6 12H4a1 1 0 0 1 0-2h2a1 1 0 0 1 0 2Z" />
                                     </svg>
-                                    <span class="flex-1 ml-3 whitespace-nowrap">Notification</span>
-                                    <span class="inline-flex items-center justify-center w-3 h-3 p-3 ml-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full dark:bg-blue-900 dark:text-blue-300">3</span>
+                                    {
+                                        decode.is_superuser ? <span class="flex-1 ml-3 whitespace-nowrap">Send Notifications</span> : <span class="flex-1 ml-3 whitespace-nowrap">Notifications</span>
+                                    }
+                                    {!decode.is_superuser ? <span class="inline-flex items-center justify-center w-3 h-3 p-3 ml-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full dark:bg-blue-900 dark:text-blue-300">{!decode.is_superuser ? user.sidebar.notification_count : null}</span> : null}
                                 </a>
                             </Link>
                         </li>

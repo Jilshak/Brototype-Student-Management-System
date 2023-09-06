@@ -138,7 +138,7 @@ function ReviewersPage() {
             }
 
             {
-                reviewers ?
+                !reviewer.isLoading && reviewers ?
                     <div className='grid justify-center mt-10'>
                         <div className='xs:me-[50px] overflow-y-auto max-h-[550px]'>
                             {

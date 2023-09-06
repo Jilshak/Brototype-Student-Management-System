@@ -38,6 +38,10 @@ class User(AbstractUser):
     review_in = models.IntegerField(blank=True, default=7)
     current_week = models.IntegerField(blank=True, default=1)
     review_scheduled = models.BooleanField(default=False)
+    
+    # notification and chats count
+    notification_count = models.PositiveIntegerField(default=0)
+    chat_count = models.PositiveIntegerField(default=0)
 
     is_reviewer = models.BooleanField(default=False)
     is_advisor = models.BooleanField(default=False)
@@ -116,7 +120,7 @@ class TimeSlot(models.Model):
     booked = models.BooleanField(default=False)
 
     def __str__(self):
-        a = f'{self.user} - {self.day} - {self.start_time} - {self.end_time}'
+        a = f'{self.user}- {self.date} - {self.day} - {self.start_time} - {self.end_time}'
         return a
 
 

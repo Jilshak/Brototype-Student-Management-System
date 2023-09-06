@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import header from '../images/header.webp'
+import brotosuite from '../images/brotosuite.png'
 import { Link, useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { Login } from '../features/UserSlice'

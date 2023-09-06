@@ -39,6 +39,25 @@ export const authorize = createAsyncThunk('authorize',
     }
 )
 
+//remove unauthorized/unwanted users from the list
+export const unauthorized = createAsyncThunk('unauthorized',
+    async (id) => {
+        try{
+            const request = await axios.delete(`http://127.0.0.1:8000/users/${id}/`)
+            const response = request.data
+            if (request.status == 200){
+                console.log("The user has been deleted")
+                return
+            }else{
+                console.log("Something went wrong while deleting the user")
+                return
+            }
+        }catch(error){
+            console.log("Error: ", error)
+        }
+    }
+)
+
 
 
 

@@ -89,12 +89,12 @@ function SceduleTime() {
 
   return (
     <>
-      <div className='grid lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1 xs:grid-cols-1'>
+      <div className='grid lg:grid-cols-2 md:grid-cols-2 relative xs:right-[50px] xs:top-10  lg:top-0 lg:right-0 sm:grid-cols-1 xs:grid-cols-1'>
         <div className='bg-[#111217] max-h-[400px] overflow-y-auto min-w-[400px] grid grid-flow-row mt-10 mx-10 rounded-lg'>
           <div className='flex items-center justify-center p-1 mx-[90px] my-[20px] rounded-lg bg-[#141621] '>
             <p className='text-xl'>INTERNS WITH REVIEW</p>
           </div>
-          <div className='flex justify-center'>
+          <div className='flex justify-center mb-4'>
             <select onChange={(e) => {
               dispatch(InternsWithReview(e.target.value))
               setWeek_number(e.target.value)
@@ -186,7 +186,7 @@ function SceduleTime() {
                         {
                           times.map((item) => {
                             return (
-                              <option key={item.id} value={item.id}>{item.day} - {item.start_time} - {item.end_time}</option>
+                              <option key={item.id} value={item.id}>{item.date} - {item.day} - {item.start_time} - {item.end_time}</option>
                             )
                           })
                         }
@@ -216,9 +216,9 @@ function SceduleTime() {
         }
 
       </div>
-      <div className='grid lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1 xs:grid-cols-1 '>
+      <div className='grid lg:grid-cols-2 relative xs:right-[50px] lg:top-0 lg:right-0 xs:top-10 md:grid-cols-2 sm:grid-cols-1 xs:grid-cols-1 '>
         <div className='bg-[#111217] max-h-[330px] overflow-y-auto min-w-[400px] grid grid-flow-row mt-10 mx-10 rounded-lg'>
-          <div className='flex items-center  sticky top-0 z-50 justify-center p-1 mx-[90px] my-[20px] rounded-lg bg-[#141621] '>
+          <div className='flex items-center  sticky top-0 justify-center p-1 mx-[90px] my-[20px] rounded-lg bg-[#141621] '>
             <p className='text-xl'>REVIEWS SCHEDULED</p>
           </div>
           <div className='grid'>
@@ -278,13 +278,13 @@ function SceduleTime() {
                       </div>
                       <div>
                         {
-                          currentDate == scheduledDate && differenceInMinutes <= -15 ?
+                          // currentDate == scheduledDate && differenceInMinutes <= -15 ?
                           <>
                             <Link to={`/weeks/${val.intern}`}>
                               <img className='h-6 cursor-pointer' src={authenticated} alt="" />
                             </Link>
                           </>
-                          : null
+                          // : null
                         }
                       </div>
                     </div>

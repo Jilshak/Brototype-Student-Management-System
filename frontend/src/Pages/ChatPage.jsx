@@ -67,7 +67,7 @@ function ChatPage() {
 
   return (
     <div className='grid  justify-center'>
-      <div className='bg-[#191C24] relative min-w-[400px] max-w-[450px] h-[600px] left-[-30px] top-20 rounded-xl overflow-y-auto'>
+      <div className='bg-[#191C24]  relative min-w-[400px] max-w-[450px] h-[600px] left-[-30px] top-20 rounded-xl overflow-y-auto'>
         {
           selectedItem == 0 ?
             <>
@@ -78,7 +78,7 @@ function ChatPage() {
               <div>
                 {
                   !userList.isLoading && decode && userList.state.length >= 1 ?
-                    <>
+                    <div className='overflow-y-auto max-h-[460px]'>
                       {
                         users.map((item) => {
                           //for the user
@@ -143,7 +143,7 @@ function ChatPage() {
                             }
                             //for admin
                           } else {
-                            if (item.id !== decode.user_id) {
+                            if (item.id !== decode.user_id && !item.batch) {
                               return (
                                 <Link to={`/chat_page/${item.id}/${decode.user_id}`}>
                                   <div className='flex my-4 gap-3 items-center cursor-pointer mx-5 bg-[#0c0e14] rounded-xl'>
@@ -164,7 +164,7 @@ function ChatPage() {
                           }
                         })
                       }
-                    </>
+                    </div>
                     : null
                 }
               </div>

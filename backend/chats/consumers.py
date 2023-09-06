@@ -143,9 +143,55 @@ class NotificationConsumer(AsyncWebsocketConsumer):
             ),
 
         )
+    # @database_sync_to_async
+    # def save_notification(self, sender, message, thread_name):
+    #     user_instance = User.objects.get(username=sender)
+    #     user_instance.notification_count += 1
+    #     user_instance.save()
+
+    #     Notification.objects.create(
+    #         sender=user_instance, message=message, thread_name=thread_name)
     @database_sync_to_async
     def save_notification(self, sender, message, thread_name):
         user_instance = User.objects.get(username=sender)
 
-        Notification.objects.create(
-            sender=user_instance, message=message, thread_name=thread_name)
+        # Create the notification first
+        notification = Notification.objects.create(
+            sender=user_instance, message=message, thread_name=thread_name
+        )
+
+        # Increment and save the user's notification count
+        if (thread_name == 'noti_36_1'):
+            users_to_send = User.objects.filter(batch__isnull=False)
+            
+            for user_instance in users_to_send:
+                user_instance.notification_count += 1
+                user_instance.save()
+                
+                
+        if (thread_name == 'noti_36_2'):
+            users_to_send = User.objects.filter(is_advisor=True)
+            
+            for user_instance in users_to_send:
+                user_instance.notification_count += 1
+                user_instance.save()
+                
+
+        if (thread_name == 'noti_36_3'):
+            users_to_send = User.objects.filter(is_reviewer=True)
+            
+            for user_instance in users_to_send:
+                user_instance.notification_count += 1
+                user_instance.save()
+                
+                
+        if (thread_name == 'noti_36_123'):
+            users_to_send = User.objects.all()
+            
+            for user_instance in users_to_send:
+                user_instance.notification_count += 1
+                user_instance.save()
+
+        # Return the created notification
+        return notification
+

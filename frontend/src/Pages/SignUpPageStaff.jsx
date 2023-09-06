@@ -18,6 +18,10 @@ function SignUpPageStaff() {
   let dispatch = useDispatch()
   let navigate = useNavigate()
 
+  //errors
+  const [Utoggle, setUToggle] = useState(false)
+  const [Ptoggle, setPToggle] = useState(false)
+
   const handleSubmit = async (e) => {
 
     if (!password === password1) {
@@ -57,7 +61,14 @@ function SignUpPageStaff() {
           </div>
           <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6">
             <div>
-              <input onChange={(e) => setUserName(e.target.value)} type="text" name="username" id="username" className="bg-black outline-none py-4 text-white sm:text-sm rounded-md  block w-full p-2.5  dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Username" required="" />
+              <input onChange={(e) => {
+                setUserName(e.target.value)
+                username.includes(" ") ? setUToggle(true) : setUToggle(false)
+                setUserName(e.target.value)
+              }} type="text" name="username" id="username" className="bg-black outline-none py-4 text-white sm:text-sm rounded-md  block w-full p-2.5  dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Username" required="" />
+              {
+                Utoggle ? <small className='text-red-400 text-xs absolute'>Username Contains white spaces</small> : null
+              }
             </div>
             <div className='flex'>
               <input onChange={(e) => setFirstName(e.target.value)} type="text" name="firstname" id="firstname" className="bg-black outline-none py-4 text-white sm:text-sm rounded-md  block w-full p-2.5  dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="First Name" required="" />
@@ -73,7 +84,13 @@ function SignUpPageStaff() {
               <input onChange={(e) => setPassword(e.target.value)} type="password" name="password" id="password" className="bg-black outline-none py-4 text-white sm:text-sm rounded-md  block w-full p-2.5  dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Password" required="" />
             </div>
             <div>
-              <input onChange={(e) => setPassword1(e.target.value)} type="password" name="password1" id="password1" className="bg-black outline-none py-4 text-white sm:text-sm rounded-md  block w-full p-2.5  dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Confirm Password" required="" />
+              <input onChange={ async (e) => {
+                setPassword1(e.target.value)
+                password == password1 || password == '' || password1 == '' ? await setPToggle(false) : await setPToggle(true)
+              }} type="password" name="password1" id="password1" className="bg-black outline-none py-4 text-white sm:text-sm rounded-md  block w-full p-2.5  dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Confirm Password" required="" />
+              {
+                Ptoggle ? <small className='text-red-400 text-xs absolute'>The passwrods doesn't match one another!!</small> : null
+              }
             </div>
 
             <button type="submit" className="w-full py-4 text-white bg-[#EB1616] text-[18px] font-medium rounded-lg text-sm px-5  text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">Sign Up</button>

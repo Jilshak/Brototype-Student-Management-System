@@ -98,10 +98,10 @@ function Profile() {
   }, [profileDetail.state])
 
   return (
-    <div className={decode.is_superuser || decode.is_advisor || decode.is_reviewer ? 'grid grid-cols-1 items-center justify-center lg:mx-[250px] md:mx-[150px] sm:mx-[50px] xs:mx-[0px]' : 'grid lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1 xs:grid-cols-1'}>
+    <div className={decode.is_superuser || decode.is_advisor || decode.is_reviewer ? 'grid grid-cols-1 relative right-[50px] items-center justify-center lg:mx-[250px] md:mx-[150px] sm:mx-[50px] xs:mx-[0px]' : 'grid lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1 xs:grid-cols-1'}>
       <div className='grid grid-rows-1'>
         <div className='mx-[100px] grid items-center justify-center mt-10'>
-          <button type="button" className="rounded-full w-[250px] h-[250px] object-cover z-50" aria-expanded="false" data-dropdown-toggle="dropdown-user">
+          <button type="button" className="rounded-full w-[250px]  h-[250px] object-cover " aria-expanded="false" data-dropdown-toggle="dropdown-user">
             <label htmlFor="profile_image">
               <input
                 type="file"

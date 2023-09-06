@@ -54,18 +54,18 @@ function WeeksPage() {
       {
         loading ?
           (
-            <h1>Loading...</h1>
+            null
           ) :
 
           <>
-            <span className={decode?.is_superuser ? 'h-[150px bg-[#22242F] absolute rounded-xl hover:bg-[#292b38] flex max-w-[50px] mx-[20px] top-[330px] py-10 px-2' : 'hidden'}>
+            {/* <span className={decode?.is_superuser ? 'h-[150px bg-[#22242F] absolute rounded-xl hover:bg-[#292b38] flex max-w-[50px] mx-[20px] top-[330px] py-10 px-2' : 'hidden'}>
               <button onClick={(e) => goBack()} className=''>
                 <img className='h-[40px] opacity-70' src={adminleftarrow} alt="" />
               </button>
-            </span>
+            </span> */}
 
-            <div className='mx-[100px] bg-[#303443] opacity-70 my-[20px] rounded-2xl'>
-              <div className='grid lg:mx-[50px] lg:grid-cols-6 md:grid-cols-3 gap-1.5 sm:grid-cols-3 xs:grid-cols-2'>
+            <div className='lg:mx-[100px] relative lg:left-0 lg:bottom-6 xs:left-[-30px] md:mx-[70px] min-w-[400px] bg-[#303443] opacity-70 my-[20px] rounded-2xl'>
+              <div className='grid lg:mx-[50px]  xs:mt-[60px] lg:grid-cols-6 md:grid-cols-3 gap-1.5 sm:grid-cols-3 xs:grid-cols-3'>
 
                 {
                   week ?
@@ -85,7 +85,8 @@ function WeeksPage() {
 
               </div>
             </div>
-            <div className='grid lg:grid-cols-2 sm:grid-cols-1 xs:grid-cols-1 mx-[100px] me-10'>
+
+            <div className='grid lg:grid-cols-2 sm:grid-cols-1 xs:grid-cols-1 lg:mx-[100px] min-w-[400px] relative lg:right-0 xs:right-8 lg:me-10'>
               <div className='bg-[#303443] grid lg:mt-0 xs:mt-5 grid-flow-row max-w-[490px] py-4 opacity-70 rounded-2xl'>
                 <span className=' bg-[#232530] my-2 p-1 flex items-center opacity-40 mx-5 rounded-lg'>
                   <p className='mx-5'>Total Number of Weeks : 28</p>
@@ -101,7 +102,7 @@ function WeeksPage() {
                 </span>
               </div>
 
-              <div className='bg-[#303443] grid lg:mt-0 xs:mt-5 grid-flow-row max-w-[490px] lg:ms-[20px] xs:ms-[0px] py-4 opacity-70 rounded-2xl'>
+              <div className='bg-[#303443] grid lg:mt-0 min-w-[400px] relative xs:mt-8 grid-flow-row max-w-[500px] lg:ms-[20px] xs:ms-[0px] py-4 opacity-70 rounded-2xl'>
                 <span className=' bg-[#232530] my-2 p-1 flex opacity-40 mx-5 rounded-lg'>
                   <div className='bg-green-500 h-5 w-5 mx-4 my-1 rounded-full'></div>
                   <p>Task completed</p>

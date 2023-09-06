@@ -3,6 +3,7 @@ import jwtDecode from 'jwt-decode';
 import send from '../icons/send.png'
 import { useDispatch, useSelector } from 'react-redux'
 import { getNotifications } from '../features/ChatSlice';
+import { SideBarNotification } from '../features/UserSlice';
 
 function NotificationPage() {
 
@@ -18,9 +19,9 @@ function NotificationPage() {
   const noti = useSelector((state) => (state.Chats))
 
   useEffect(() => {
-    let credential = decode.is_superuser ? `36_${selected}` 
-    : (decode.is_user && !decode.is_advisor && !decode.is_reviewer && !decode.is_superuser ? `36_1` 
-    : decode.is_user && decode.is_advisor && !decode.is_reviewer ? `36_2` : `36_3` ) 
+    let credential = decode.is_superuser ? `36_${selected}`
+      : (decode.is_user && !decode.is_advisor && !decode.is_reviewer && !decode.is_superuser ? `36_1`
+        : decode.is_user && decode.is_advisor && !decode.is_reviewer ? `36_2` : `36_3`)
     let room_id = `noti_${credential}`
     const createSocket = async () => {
       console.log(decode)
@@ -52,6 +53,7 @@ function NotificationPage() {
 
   useEffect(() => {
     dispatch(getNotifications(decode))
+    dispatch(SideBarNotification(decode.user_id))
   }, [])
 
   //logic for sending the messages
@@ -76,19 +78,19 @@ function NotificationPage() {
         decode.is_superuser ?
           <>
             <div>
-              <div className="w-full h-[95vh] px-5 flex flex-col justify-between">
-                <select onChange={(e) => {
-                  console.log("This is the current selected value: ", selected)
-                  console.log("This is the current event value: ", e.target.value)
-                  setSelected(e.target.value)
-                }} className='flex h-12 pl-7 border-0 text-[#dcdada] outline-none absolute right-0 m-3 rounded-xl w-[250px] items-center justify-end bg-[#23283A]'>
-                  <option value="0">SEND NOTIFICATIONS TO</option>
-                  <option value="1">INTERNS</option>
-                  <option value="2">ADVISORS</option>
-                  <option value="3">REVIEWERS</option>
-                  <option value="123">ALL</option>
-                </select>
-                <div className="flex flex-col relative top-20 mt-5 overflow-x-auto">
+              <select onChange={(e) => {
+                console.log("This is the current selected value: ", selected)
+                console.log("This is the current event value: ", e.target.value)
+                setSelected(e.target.value)
+              }} className='flex h-12 pl-7 border-0 text-[#dcdada] outline-none absolute right-0 m-3 rounded-xl lg:w-[250px] md:w-[175px] sm:w-[150px] xs:w-[90px] items-center justify-end bg-[#23283A]'>
+                <option className='truncate' value="0">SEND NOTIFICATIONS TO</option>
+                <option value="1">INTERNS</option>
+                <option value="2">ADVISORS</option>
+                <option value="3">REVIEWERS</option>
+                <option value="123">ALL</option>
+              </select>
+              <div className="w-full px-5 flex flex-col justify-between">
+                <div className="flex flex-col h-[75vh] top-20 relative mt-5 overflow-x-auto">
                   {
                     !noti.isLoading && noti.notification.length >= 1 ?
                       <>
@@ -126,24 +128,24 @@ function NotificationPage() {
                       </> : null
                   }
                 </div>
-                <div className="py-5 flex relative lg:mx-[300px] md:mx-[200px]">
-                  <input
-                    onChange={(e) => setInput(e.target.value)}
-                    className="w-full min-w-[350px] bg-[#0F121A] text-white pl-6 outline-none py-3  px-3 rounded-s-xl"
-                    type="text"
-                    placeholder="type your message here..."
-                    value={input}
-                  />
-                  <button
-                    onClick={(e) => {
-                      e.preventDefault()
-                      handleSendNotification()
-                    }}
-                    className="bg-[#0F121A] hover:bg-[#141824]  text-white px-5 me-0 relative right-0 py-3 rounded-e-lg"
-                  >
-                    <img className='h-5 min-w-[15px]' src={send} alt="" />
-                  </button>
-                </div>
+              </div>
+              <div className="py-5 bottom-0 flex absolute lg:mx-[300px] md:mx-[200px]">
+                <input
+                  onChange={(e) => setInput(e.target.value)}
+                  className="w-full max-w-[500px] lg:min-w-[500px] md:min-w-[400px] sm:min-w-[300px] xs:min-w-[300px] bg-[#0F121A] text-white pl-6 outline-none py-3  px-3 rounded-s-xl"
+                  type="text"
+                  placeholder="type your Notification message here..."
+                  value={input}
+                />
+                <button
+                  onClick={(e) => {
+                    e.preventDefault()
+                    handleSendNotification()
+                  }}
+                  className="bg-[#0F121A] hover:bg-[#141824]  text-white px-5 me-0 relative right-0 py-3 rounded-e-lg"
+                >
+                  <img className='h-5 min-w-[15px]' src={send} alt="" />
+                </button>
               </div>
             </div>
           </> :

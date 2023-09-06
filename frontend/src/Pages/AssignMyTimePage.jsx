@@ -47,7 +47,6 @@ function AssignMyTimePage() {
   const [item2, setItem2] = useState()
 
   const addTime = async () => {
-
     let credentials = {
       day: day,
       date: date,
@@ -56,26 +55,46 @@ function AssignMyTimePage() {
       user: decode.user_id
     }
 
-    let local = [
-      {
-        day: day,
-        date: date,
-        start_time: start + ':00',
-        end_time: end + ':00',
-      }
-    ]
+    let local = {
+      day: day,
+      date: date,
+      start_time: start + ':00',
+      end_time: end + ':00',
+    }
 
     if (day && date && start && end) {
+      let shouldSchedule = true;
+
       if (time) {
-        await setTime(prevTime => [...prevTime, ...local])
+        // Check for overlapping time slots
+        for (const existingSlot of time) {
+          const existingStartTime = existingSlot.start_time;
+          const existingEndTime = existingSlot.end_time;
+
+          if (
+            (local.start_time >= existingStartTime && local.start_time <= existingEndTime) ||
+            (local.end_time >= existingStartTime && local.end_time <= existingEndTime)
+          ) {
+            // There's an overlap, don't schedule
+            shouldSchedule = false;
+            break;
+          }
+        }
+      }
+
+      if (shouldSchedule) {
+        // Only schedule if there's no overlap
+        await setTime(prevTime => [...prevTime, local]);
+        dispatch(AddTime(credentials));
       } else {
-        setTime(local)
+        console.log("Time slot overlaps with an existing slot.");
       }
     } else {
-      console.log("Complete the whole fields")
+      console.log("Complete the whole fields");
     }
-    dispatch(AddTime(credentials))
+
   }
+
 
   const handleDelete = async (id) => {
     if (time.length > 0) {
@@ -95,7 +114,7 @@ function AssignMyTimePage() {
 
   //function that appears after 15 mins of the review scheduled and handles the review completion
   const handleReviewCompleted = async () => {
-    
+
   }
 
   function getCurrentDate() {
@@ -118,12 +137,12 @@ function AssignMyTimePage() {
 
   return (
     <>
-      <div className='grid lg:min-h-[150px] md:min-h-[200px] sm:min-h-[220px] xs:min-h-[260px] grid-cols-1 bg-[#16171D] opacity-70 mx-10 mt-10 rounded-lg'>
-        <span className='flex justify-start items-center'>
-          <p className='text-xl ms-10 lg:mt-3'>Assign My Time</p>
+      <div className='grid lg:min-h-[150px] md:min-h-[350px] sm:min-h-[350px] xs:min-h-[260px] xs:min-w-[400px] relative xs:right-[70px] lg:right-0 xs:top-[30px] grid-cols-1 bg-[#16171D] opacity-70 mx-10 mt-10 rounded-lg'>
+        <span className='flex lg:justify-start xs:justify-center items-center'>
+          <p className='text-xl ms-10 lg:mt-3 lg:my-1 xs:my-4'>Assign My Time</p>
         </span>
         <div className='lg:flex gap-5 items-center lg:h-[100px] md:h-[130px] sm:h-[150px] xs:h-[250px] mx-[35px]'>
-          <select onChange={(e) => setDay(e.target.value)} className='p-2 w-[200px] bg-[#303443] lg:my-3 mb-3 text-white rounded-md outline-none '>
+          <select onChange={(e) => setDay(e.target.value)} className='p-2 w-[200px] xs:min-w-[350px] lg:min-w-[200px] bg-[#303443] lg:my-3 mb-3 text-white rounded-md outline-none '>
             <option selected>Select a day</option>
             <option value='Monday'>Monday</option>
             <option value='Tuesday'>Tuesday</option>
@@ -135,16 +154,20 @@ function AssignMyTimePage() {
           </select>
           <input min={minDate} onChange={(e) => {
             setDate(e.target.value)
-          }} className='p-2 w-[200px] bg-[#303443] text-white rounded-md outline-none' type='date' placeholder='DD/MM/YY' />
-          <input onChange={(e) => setStart(e.target.value)} className='p-2 my-3 w-[100px] bg-[#303443] text-white rounded-md outline-none' type='time' placeholder='Time' />
-          <p>to</p>
-          <input onChange={(e) => setEnd(e.target.value)} className='p-2 my-3 w-[100px] bg-[#303443] text-white rounded-md outline-none' type='time' placeholder='Time' />
-          <button onClick={(e) => addTime()} className='p-2 mx-3 w-[70px] bg-[#303443] text-white rounded-md outline-none'>
-            ADD
-          </button>
+          }} className='p-2 w-[200px] bg-[#303443] xs:min-w-[350px] lg:min-w-[200px] text-white rounded-md outline-none' type='date' placeholder='DD/MM/YY' />
+          <div className='flex xs:justify-center md:justify-start sm:justify-start lg:justify-start items-center'>
+            <input onChange={(e) => setStart(e.target.value)} className='p-2 my-3 lg:w-[100px] xs:min-w-[145px] bg-[#303443] text-white rounded-md outline-none lg:ms-4 xs:ms-4 sm:ms-0' type='time' placeholder='Time' />
+            <p className='mx-5'>to</p>
+            <input onChange={(e) => setEnd(e.target.value)} className='p-2 my-3 lg:w-[100px] xs:min-w-[145px] bg-[#303443] text-white rounded-md outline-none' type='time' placeholder='Time' />
+          </div>
+          <div className='flex xs:items-center xs:mt-2 lg:mt-0 xs:justify-center sm:justify-start'>
+            <button onClick={(e) => addTime()} className='p-2 mx-3 lg:min-w-[70px] md:min-w-[345px] xs:min-w-[345px] xs:ms-6 sm:ms-0 md:ms-0 lg:ms-3 flex items-center justify-center bg-[#303443] text-white rounded-md outline-none'>
+              ADD
+            </button>
+          </div>
         </div>
       </div>
-      <div className='grid lg:grid-cols-2 md:grid-cols-1'>
+      <div className='grid lg:grid-cols-2 xs:min-w-[480px] lg:min-h-[150px] relative xs:right-[70px] lg:right-0 md:grid-cols-1'>
         <div className='bg-[#16171D] opacity-70  mx-10 mt-10 max-h-[500px] overflow-y-auto rounded-lg '>
           <div className='flex justify-center items-center my-5'>
             <p className='text-xl text-[#7981A0]'>Time Scheduleded</p>
@@ -173,9 +196,11 @@ function AssignMyTimePage() {
                             {item.end_time}
                           </span>
                           <div className='absolute'>
-                            <span className='relative lg:left-[450px] md:left-[550px] sm:left-[250px] xs:left-[250px]'>
-                              <img onClick={(e) => handleDelete(item.id)} className='h-6 cursor-pointer' src={remove} alt="" />
-                            </span>
+                            <div className='relative w-full h-full object-contain'>
+                              <span className='relative lg:left-[450px] md:left-[450px] sm:left-[250px] xs:left-[290px]'>
+                                <img onClick={(e) => handleDelete(item.id)} className='h-6 cursor-pointer' src={remove} alt="" />
+                              </span>
+                            </div>
                           </div>
 
                         </div>
@@ -188,7 +213,7 @@ function AssignMyTimePage() {
             }
           </div>
         </div>
-        <div className='bg-[#16171D] opacity-70  mx-10 mt-10 rounded-lg'>
+        <div className='bg-[#16171D] opacity-70  mx-10 lg:mt-10 xs:mt-3 rounded-lg'>
           <div className='flex justify-center items-center my-5'>
             <p className='text-xl text-[#7981A0]'>Fixed Schedule</p>
           </div>

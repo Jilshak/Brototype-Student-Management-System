@@ -106,7 +106,7 @@ function BatchStudentsPage() {
                 Interns?.isLoading ?
 
                     (
-                        <h1>Loading....</h1>
+                        null
                     )
 
                     :

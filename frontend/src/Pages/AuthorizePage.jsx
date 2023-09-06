@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import authenticated from '../icons/authenticated.png'
+import remove from '../icons/remove.png'
 import { useDispatch, useSelector } from 'react-redux'
-import { UnauthorizedIntern, authorize } from '../features/AuthorizeSlice'
+import { UnauthorizedIntern, authorize, unauthorized } from '../features/AuthorizeSlice'
 
 function AuthorizePage() {
 
@@ -25,6 +26,11 @@ function AuthorizePage() {
   const authorizeUser = async (id) => {
     await dispatch(authorize(id))
     setAuthIntern(prevList => prevList.filter(intern => intern.id !== id))
+  }
+  
+  const removeUser = async (id) => {
+    await dispatch(unauthorized(id))
+    setAuthIntern(prevList => prevList.filter(intern => intern.id !== id ))
   }
 
   return (
@@ -55,7 +61,8 @@ function AuthorizePage() {
                       <span className='ms-4'>
                         BCK112
                       </span>
-                      <span className='ms-8'>
+                      <span className='ms-8 flex items-center'>
+                        <img onClick={(e) => removeUser(item.id)} className='min-h-[24px] me-4 min-w-[20px] max-h-[20px] max-w-[20px] cursor-pointer' src={remove} alt="" />
                         <img onClick={(e) => authorizeUser(item.id)} className='min-h-[20] min-w-[20px] max-h-[20px] max-w-[20px] cursor-pointer' src={authenticated} alt="" />
                       </span>
                     </div>
