@@ -57,6 +57,7 @@ function ChattingPage() {
         }
     }, [room_id, socket]);
 
+    // Creating the socket connection with retry logic
     //creating the socket connection
     useEffect(() => {
         let credential = user_id < selected_id ? `${user_id}_${selected_id}` : `${selected_id}_${user_id}`
@@ -74,7 +75,6 @@ function ChattingPage() {
         createSocket()
         dispatch(UserMessages(room_id))
     }, [])
-
 
     //for the message loading
     useEffect(() => {

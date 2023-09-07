@@ -54,34 +54,29 @@ function AssignMyTimePage() {
       end_time: end,
       user: decode.user_id
     }
-
+  
     let local = {
       day: day,
       date: date,
       start_time: start + ':00',
       end_time: end + ':00',
     }
-
+  
     if (day && date && start && end) {
       let shouldSchedule = true;
-
-      if (time) {
-        // Check for overlapping time slots
-        for (const existingSlot of time) {
-          const existingStartTime = existingSlot.start_time;
-          const existingEndTime = existingSlot.end_time;
-
-          if (
-            (local.start_time >= existingStartTime && local.start_time <= existingEndTime) ||
-            (local.end_time >= existingStartTime && local.end_time <= existingEndTime)
-          ) {
-            // There's an overlap, don't schedule
-            shouldSchedule = false;
-            break;
-          }
+  
+      for (let i of time) {
+        if (
+          i.day === day &&
+          i.date === date &&
+          i.start_time === (start + ':00') &&
+          i.end_time === (end + ':00')
+        ) {
+          shouldSchedule = false;
+          break; // No need to check further, we found an overlap
         }
       }
-
+  
       if (shouldSchedule) {
         // Only schedule if there's no overlap
         await setTime(prevTime => [...prevTime, local]);
@@ -92,9 +87,8 @@ function AssignMyTimePage() {
     } else {
       console.log("Complete the whole fields");
     }
-
   }
-
+  
 
   const handleDelete = async (id) => {
     if (time.length > 0) {

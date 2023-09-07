@@ -1,4 +1,4 @@
-#!C:\Users\Jilshak\Desktop\Projects\Brototype_new\backend\venv\Scripts\python.exe
+#!"C:\Users\Jilshak\Desktop\Projects\Brototype_new\backend - Copy\venv\Scripts\python.exe"
 # EASY-INSTALL-ENTRY-SCRIPT: 'autobahn==23.6.2','console_scripts','xbrnetwork-ui'
 import re
 import sys
