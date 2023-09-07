@@ -86,7 +86,7 @@ function SignUpPageStaff() {
             <div>
               <input onChange={ async (e) => {
                 setPassword1(e.target.value)
-                password == password1 || password == '' || password1 == '' ? await setPToggle(false) : await setPToggle(true)
+                password == password1 ? await setPToggle(false) : await setPToggle(true)
               }} type="password" name="password1" id="password1" className="bg-black outline-none py-4 text-white sm:text-sm rounded-md  block w-full p-2.5  dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Confirm Password" required="" />
               {
                 Ptoggle ? <small className='text-red-400 text-xs absolute'>The passwrods doesn't match one another!!</small> : null

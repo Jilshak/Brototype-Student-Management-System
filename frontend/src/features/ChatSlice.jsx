@@ -97,17 +97,26 @@ export const getNotifications = createAsyncThunk('get_notification',
             const request = await axios.get(`http://127.0.0.1:8000/chat/notification/`)
             const response = request.data
             if (request.status === 200) {
-                if (decode.is_user && !decode.is_advisor && !decode.is_reviewer && !decode.is_superuser) {
-                    let data = response.filter((item) => item.thread_name == 'noti_36_1' || item.thread_name == 'noti_36_123')
-                    return data
-                } else if (decode.is_user && decode.is_advisor && !decode.is_reviewer && !decode.is_superuser) {
-                    let data = response.filter((item) => item.thread_name == 'noti_36_2' || item.thread_name == 'noti_36_123')
-                    return data
-                } else if (decode.is_user && decode.is_reviewer && !decode.is_superuser && !decode.is_advisor) {
-                    let data = response.filter((item) => item.thread_name == 'noti_36_3' || item.thread_name == 'noti_36_123')
-                    return data
-                } else {
-                    return response
+                const req = await axios.get(`http://127.0.0.1:8000/users/${decode.user_id}/`)
+                const res = await req.data
+                if (req.status === 200) {
+                    let joining_date = await res.date_joined
+                    console.log("This is the res from the notification slice: ", res)
+
+                    if (res?.authenticated && decode.is_user &&  !decode.is_advisor && !decode.is_reviewer && !decode.is_superuser) {
+                        let data = response.filter((item) => (item.thread_name == 'noti_36_1' && item.timestamp > joining_date) || (item.thread_name == 'noti_36_123' && item.timestamp > joining_date) )
+                        return data
+                    } else if (decode.is_user && decode.is_advisor && !decode.is_reviewer && !decode.is_superuser) {
+                        let data = response.filter((item) => item.thread_name == 'noti_36_2' || item.thread_name == 'noti_36_123')
+                        return data
+                    } else if (decode.is_user && decode.is_reviewer && !decode.is_superuser && !decode.is_advisor) {
+                        let data = response.filter((item) => item.thread_name == 'noti_36_3' || item.thread_name == 'noti_36_123')
+                        return data
+                    } else if (decode.is_superuser){
+                        return response
+                    }else{
+                        return null
+                    }
                 }
             }
         } catch (error) {

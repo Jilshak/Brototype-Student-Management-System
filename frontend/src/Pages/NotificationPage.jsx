@@ -67,10 +67,10 @@ function NotificationPage() {
   };
 
   useEffect(() => {
-    if (noti.notification.length >= 1) {
-      setNotification(noti.notification)
+    if (noti?.notification?.length >= 1) {
+      setNotification(noti?.notification)
     }
-  }, [noti.notification])
+  }, [noti?.notification])
 
   return (
     <div>
@@ -92,7 +92,7 @@ function NotificationPage() {
               <div className="w-full px-5 flex flex-col justify-between">
                 <div className="flex flex-col h-[75vh] top-20 relative mt-5 overflow-x-auto">
                   {
-                    !noti.isLoading && noti.notification.length >= 1 ?
+                    !noti?.isLoading && noti?.notification?.length >= 1 ?
                       <>
                         {
                           notification?.map((item, index) => {
@@ -154,7 +154,7 @@ function NotificationPage() {
             <div className="w-full h-[95vh] px-5 flex flex-col justify-between">
               <div className="flex flex-col relative top-5 mt-5 overflow-x-auto">
                 {
-                  !noti.isLoading && noti.notification.length >= 1 ?
+                  !noti?.isLoading && noti?.notification?.length >= 1 ?
                     <>
                       {
                         notification?.map((item, index) => {

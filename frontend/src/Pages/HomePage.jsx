@@ -9,13 +9,13 @@ function HomePage() {
   return (
 
     <div className='bg-black h-screen w-screen'>
-      <div class="grid grid-cols-12 gap-4 bg-black h-screen w-screen">
+      <div className="grid grid-cols-12 gap-4 bg-black h-screen w-screen">
 
-        <div class="col-span-2">
+        <div className="col-span-2">
           <Sidebar />
         </div>
 
-        <div class="col-span-10 text-white">
+        <div className="col-span-10 text-white">
           <Outlet />
         </div>
       </div>

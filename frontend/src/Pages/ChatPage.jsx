@@ -82,7 +82,7 @@ function ChatPage() {
                       {
                         users.map((item) => {
                           //for the user
-                          if (decode.is_user && !decode.is_advisor && !decode.is_reviewer && !decode.is_superuser) {
+                          if (decode.is_user && item.authenticated && !decode.is_advisor && !decode.is_reviewer && !decode.is_superuser) {
                             if (item.id !== decode.user_id && !item.is_reviewer && !item.is_superuser) {
                               return (
                                 <Link to={`/chat_page/${item.id}/${decode.user_id}`}>
@@ -102,7 +102,7 @@ function ChatPage() {
                               )
                             }
                             //for the advisor
-                          } else if (decode.is_user && decode.is_advisor && !decode.is_reviewer && !decode.is_superuser) {
+                          } else if (decode.is_user && item.authenticated && decode.is_advisor && !decode.is_reviewer && !decode.is_superuser) {
                             if (item.id !== decode.user_id) {
                               return (
                                 <Link to={`/chat_page/${item.id}/${decode.user_id}`}>
@@ -122,7 +122,7 @@ function ChatPage() {
                               )
                             }
                             //for the reviewer
-                          } else if (decode.is_user && decode.is_reviewer && !decode.is_advisor && !decode.is_superuser) {
+                          } else if (decode.is_user && item.authenticated && decode.is_reviewer && !decode.is_advisor && !decode.is_superuser) {
                             if (item.id !== decode.user_id && !item.batch) {
                               return (
                                 <Link to={`/chat_page/${item.id}/${decode.user_id}`}>
@@ -143,7 +143,7 @@ function ChatPage() {
                             }
                             //for admin
                           } else {
-                            if (item.id !== decode.user_id && !item.batch) {
+                            if (item.id !== decode.user_id && !item.batch && item.authenticated) {
                               return (
                                 <Link to={`/chat_page/${item.id}/${decode.user_id}`}>
                                   <div className='flex my-4 gap-3 items-center cursor-pointer mx-5 bg-[#0c0e14] rounded-xl'>
