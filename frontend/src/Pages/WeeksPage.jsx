@@ -103,7 +103,7 @@ function WeeksPage() {
               </div>
             </div>
 
-            <div className='grid lg:grid-cols-2 sm:grid-cols-1 xs:grid-cols-1 lg:mx-[100px] min-w-[400px] relative lg:right-0 xs:right-8 lg:me-10'>
+            <div className='grid lg:grid-cols-2  sm:grid-cols-1 xs:grid-cols-1 lg:mx-[100px] min-w-[400px] relative  lg:right-0 xs:right-8 lg:me-10'>
               <div className='bg-[#303443] grid lg:mt-0 xs:mt-5 grid-flow-row max-w-[490px] py-4 opacity-70 rounded-2xl'>
                 <span className=' bg-[#232530] my-2 p-1 flex items-center opacity-40 mx-5 rounded-lg'>
                   <p className='mx-5'>Total Number of Weeks : 28</p>
@@ -119,7 +119,7 @@ function WeeksPage() {
                 </span>
               </div>
 
-              <div className='bg-[#303443] grid lg:mt-0 min-w-[400px] relative xs:mt-8 grid-flow-row max-w-[500px] lg:ms-[20px] xs:ms-[0px] py-4 opacity-70 rounded-2xl'>
+              <div className='bg-[#303443] grid lg:mt-0 min-w-[400px] relative xs:mt-8 grid-flow-row max-w-[500px] lg:ms-[20px] xs:ms-[0px] lg:mb-0 xs:mb-6 py-4 opacity-70 rounded-2xl'>
                 <span className=' bg-[#232530] my-2 p-1 flex opacity-40 mx-5 rounded-lg'>
                   <div className='bg-green-500 h-5 w-5 mx-4 my-1 rounded-full'></div>
                   <p>Task completed</p>
