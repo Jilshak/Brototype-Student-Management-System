@@ -17,11 +17,33 @@ function WeeksPage() {
 
   const weeks = useSelector((state) => state.Users)
 
+
   const [week, setWeek] = useState()
+
+  //getting the current week number
+  const count = week?.reduce((accumulator, week) => {
+    if (week?.completed) {
+      return accumulator + 1;
+    }
+    return accumulator;
+  }, 1);
+
+  const totlaWeeks = 28
+
+
+  const perfomance = week?.reduce((accumulator, week) => {
+    if (week?.completed) {
+      let marks = week?.weekdetails_set[0].Marks
+      return accumulator + marks
+    }
+    return accumulator
+  }, 0)
 
   const goBack = () => {
     navigate(-1)
   }
+
+  
 
   useEffect(() => {
     let token = localStorage.getItem("authToken")
@@ -48,7 +70,7 @@ function WeeksPage() {
     }
   }, [weeks.state])
 
- 
+
   return (
     <>
       {
@@ -58,11 +80,6 @@ function WeeksPage() {
           ) :
 
           <>
-            {/* <span className={decode?.is_superuser ? 'h-[150px bg-[#22242F] absolute rounded-xl hover:bg-[#292b38] flex max-w-[50px] mx-[20px] top-[330px] py-10 px-2' : 'hidden'}>
-              <button onClick={(e) => goBack()} className=''>
-                <img className='h-[40px] opacity-70' src={adminleftarrow} alt="" />
-              </button>
-            </span> */}
 
             <div className='lg:mx-[100px] relative lg:left-0 lg:bottom-6 xs:left-[-30px] md:mx-[70px] min-w-[400px] bg-[#303443] opacity-70 my-[20px] rounded-2xl'>
               <div className='grid lg:mx-[50px]  xs:mt-[60px] lg:grid-cols-6 md:grid-cols-3 gap-1.5 sm:grid-cols-3 xs:grid-cols-3'>
@@ -92,13 +109,13 @@ function WeeksPage() {
                   <p className='mx-5'>Total Number of Weeks : 28</p>
                 </span>
                 <span className=' bg-[#232530] my-2 p-1 flex items-center opacity-40 mx-5 rounded-lg'>
-                  <p className='mx-5'>Current Week : 8</p>
+                  <p className='mx-5'>Current Week : {count}</p>
                 </span>
-                <span className=' bg-[#232530] my-2 flex items-center opacity-40 mx-5 rounded-lg'>
-                  <p className='mx-5'>Perfomance : </p>
+                <span className=' bg-[#232530] cursor-pointer my-2 flex items-center opacity-40 mx-5 rounded-lg'>
+                  <p className='mx-5'> Perfomance : {count === 1 ? <span className='text-purple-500'>Just Started</span> : (perfomance/(count-1) >= 7 ? <span className='text-green-500'>Excellent</span> : (perfomance/(count-1) >= 6 && perfomance/(count-1) < 7 ? <span className='text-yellow-500'>Good</span> : <span className='text-orange-500'>Avarage</span>))} </p>
                 </span>
                 <span className=' bg-[#232530] my-2 p-1 flex items-center opacity-40 mx-5 rounded-lg'>
-                  <p className='mx-5 '>Weeks Remaining : 21</p>
+                  <p className='mx-5 '>Weeks Remaining : {totlaWeeks - count}</p>
                 </span>
               </div>
 
