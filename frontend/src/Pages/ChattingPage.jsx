@@ -19,7 +19,7 @@ function ChattingPage() {
 
     //states for the handling of the functions
     const [input, setInput] = useState('')
-    const [messages, setMessages] = useState([])
+    const [messages, setMessages] = useState()
     const [socket, setSocket] = useState()
 
     //redux tools
@@ -49,8 +49,13 @@ function ChattingPage() {
                 const message = await JSON.parse(event.data);
                 console.log("This is the message: ", message)
 
-                // Update messages in state and save to local storage
-                setMessages(prevMessages => [...prevMessages, message])
+                setMessages(prevMessages => {
+                    if (!prevMessages) {
+                      return [message];
+                    } else {
+                      return [...prevMessages, message];
+                    }
+                  });
 
             };
 
@@ -66,7 +71,9 @@ function ChattingPage() {
             console.log(decode)
             try {
                 const request = await new WebSocket(`ws://127.0.0.1:8000/ws/chat/${credential}/`)
-                await setSocket(request)
+                request.onopen = async () => {
+                    await setSocket(request)
+                }
 
             } catch (error) {
                 console.log("Error: ", error)
@@ -107,8 +114,6 @@ function ChattingPage() {
         if (lastMessageRef.current) {
             await lastMessageRef.current.scrollIntoView({ behavior: 'smooth', target: lastMessageRef.current });
         }
-        //if this dispatch is not there then the messages are multiplying each time i send them for no reason
-        // dispatch(UserMessages(room_id))
     };
 
 
@@ -121,7 +126,7 @@ function ChattingPage() {
                 </div>
                 <div className='absolute w-full right-0'>
                     {
-                        userMessages.user_details && userMessages.user_details.length >= 1 ?
+                        userMessages?.user_details && userMessages?.user_details?.length >= 0 ?
                             <>
                                 {
                                     userMessages.user_details.map((item) => {
@@ -145,7 +150,7 @@ function ChattingPage() {
                 <div className="w-full h-[88vh] px-5 flex flex-col justify-between">
                     <div className="flex flex-col mt-5 overflow-x-auto">
                         {
-                            !userMessages.isLoading && userMessages.data.length >= 1 ?
+                            !userMessages.isLoading && userMessages.data.length >= 0 ?
                                 <>
                                     {
                                         messages?.map((item, index) => {
@@ -181,15 +186,20 @@ function ChattingPage() {
                             placeholder="type your message here..."
                             value={input}
                         />
-                        <button
-                            onClick={(e) => {
-                                e.preventDefault()
-                                handleSendMessage()
-                            }}
-                            className="bg-[#0F121A] hover:bg-[#141824]  text-white px-5 me-0 relative right-0 py-3 rounded-e-lg"
-                        >
-                            <img className='h-5 min-w-[15px]' src={send} alt="" />
-                        </button>
+                        {
+                            socket ?
+                                <>
+                                    <button
+                                        onClick={(e) => {
+                                            e.preventDefault()
+                                            handleSendMessage()
+                                        }}
+                                        className="bg-[#0F121A] hover:bg-[#141824]  text-white px-5 me-0 relative right-0 py-3 rounded-e-lg"
+                                    >
+                                        <img className='h-5 min-w-[15px]' src={send} alt="" />
+                                    </button>
+                                </> : null
+                        }
                     </div>
                 </div>
             </div>
