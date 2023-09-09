@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
-import adminleftarrow from '../icons/adminleftarrow.png'
 import { useDispatch, useSelector } from 'react-redux'
 import { ProfileDetails } from '../features/UserSlice';
 import jwtDecode from 'jwt-decode';
@@ -38,10 +37,6 @@ function WeeksPage() {
     }
     return accumulator
   }, 0)
-
-  const goBack = () => {
-    navigate(-1)
-  }
 
   
 

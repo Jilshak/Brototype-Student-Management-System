@@ -1,11 +1,11 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import axios from 'axios'
+import api from '../services/Axios'
 
 //for getting the details of unauthorized intern for the admin
 export const UnauthorizedIntern = createAsyncThunk('unauthorized_intern',
     async () => {
         try {
-            const request = axios.get('http://127.0.0.1:8000/users/')
+            const request = api.get(`/users/`)
             const response = (await request).data
 
             if ((await request).status === 200) {
@@ -25,7 +25,7 @@ export const authorize = createAsyncThunk('authorize',
             let data = {
                 authenticated: true
             }
-            const request = axios.patch(`http://127.0.0.1:8000/users/${id}/`,data)
+            const request = api.patch(`/users/${id}/`,data)
             const response = (await request).data
             if ((await request).status === 200){
                 console.log("The authentication of the user is done and now have the functionality")
@@ -43,7 +43,7 @@ export const authorize = createAsyncThunk('authorize',
 export const unauthorized = createAsyncThunk('unauthorized',
     async (id) => {
         try{
-            const request = await axios.delete(`http://127.0.0.1:8000/users/${id}/`)
+            const request = await api.delete(`/users/${id}/`)
             const response = request.data
             if (request.status == 200){
                 console.log("The user has been deleted")

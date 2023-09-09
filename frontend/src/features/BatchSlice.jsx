@@ -1,11 +1,13 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import axios from 'axios'
+import api from '../services/Axios'
+
+
 
 //for getting all the batches from the server
 export const Batches = createAsyncThunk('batches',
     async () => {
         try {
-            const request = await axios.get("http://127.0.0.1:8000/batches/")
+            const request = await api.get(`/batches/`)
             const response = await request.data
             if (request.status === 200) {
                 return response
@@ -22,7 +24,7 @@ export const Batches = createAsyncThunk('batches',
 export const createBatch = createAsyncThunk('create_batch',
     async (credentials) => {
         try {
-            const request = axios.post("http://127.0.0.1:8000/batches/", credentials)
+            const request = api.post(`/batches/`, credentials)
             const response = await request.data
 
             if ((await request).status === 201) {
@@ -41,16 +43,16 @@ export const createBatch = createAsyncThunk('create_batch',
 export const deleteBatch = createAsyncThunk('delete_batch',
     async (id) => {
         try {
-            const request = axios.delete(`http://127.0.0.1:8000/batches/${id}/`)
+            const request = api.delete(`/batches/${id}/`)
             const response = await request.data
             if ((await request).status === 204) {
-                const req = await axios.get("http://127.0.0.1:8000/users/")
+                const req = await api.get("api/users/")
                 const res = await req.data
                 if (req.status === 200){
                     let batch_users = await res.filter(item => item.batch == id)
                     let data = await batch_users.map(item => item.id)
                     for (const i of data){
-                        await axios.delete(`http://127.0.0.1:8000/users/${i}/`)
+                        await api.delete(`api/users/${i}/`)
                     }
                 }
                 console.log('the batch has been deleted')

@@ -6,6 +6,7 @@ import jwtDecode from 'jwt-decode';
 import { useNavigate, useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { GetChattingUsers, UserMessages } from '../features/ChatSlice';
+import { base } from '../services/Axios';
 
 
 function ChattingPage() {
@@ -70,7 +71,7 @@ function ChattingPage() {
         const createSocket = async () => {
             console.log(decode)
             try {
-                const request = await new WebSocket(`ws://127.0.0.1:8000/ws/chat/${credential}/`)
+                const request = await new WebSocket(`${base}/ws/chat/${credential}/`)
                 request.onopen = async () => {
                     await setSocket(request)
                 }

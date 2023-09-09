@@ -1,12 +1,12 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import axios from 'axios'
+import api from '../services/Axios'
 
 //for getting the reviewers list 
 //in future i'll also want to add that if the reviewer has any alloted time left then only they will be retrieved
 export const reviewersList = createAsyncThunk('reviewers_list',
     async () => {
         try {
-            const request = axios.get(`http://127.0.0.1:8000/users/`)
+            const request = api.get(`/users/`)
             const response = (await request).data
             if ((await request).status === 200) {
                 let reviewers = await response.filter((item) => item.is_reviewer)
@@ -23,7 +23,7 @@ export const reviewersList = createAsyncThunk('reviewers_list',
 export const ReviewerTimeAssigned = createAsyncThunk('reviewer_time_assigned',
     async (id) => {
         try {
-            const request = await axios.get(`http://127.0.0.1:8000/timeslot/`)
+            const request = await api.get(`/timeslot/`)
             const response = (await request).data
             if ((await request).status == 200) {
                 let data = await response.filter((item) => item.user == id && !item.booked)
@@ -41,7 +41,7 @@ export const InternsWithReview = createAsyncThunk('interns_with_review',
     async (week) => {
         try {
             console.log("Week number: ", week)
-            const request = await axios.get(`http://127.0.0.1:8000/users/`)
+            const request = await api.get(`/users/`)
             const response = await request.data
             if (request.status === 200) {
                 console.log("This is the intial list: ", response)
@@ -74,7 +74,7 @@ export const InternsWithReview = createAsyncThunk('interns_with_review',
 export const Scheduled = createAsyncThunk('scheduled',
     async (id) => {
         try {
-            const request = await axios.patch(`http://127.0.0.1:8000/users/${id}/`, { review_scheduled: true })
+            const request = await api.patch(`/users/${id}/`, { review_scheduled: true })
             const response = await request.data
             if (request.status === 200) {
                 console.log(response)
@@ -92,7 +92,7 @@ export const Scheduled = createAsyncThunk('scheduled',
 export const unSchedule = createAsyncThunk('unshedule',
     async (id) => {
         try {
-            const request = await axios.patch(`http://127.0.0.1:8000/users/${id}/`, { review_scheduled: false })
+            const request = await api.patch(`/users/${id}/`, { review_scheduled: false })
             const response = await request.data
             if (request.status === 200) {
                 console.log(response)
@@ -110,11 +110,11 @@ export const unSchedule = createAsyncThunk('unshedule',
 export const removeBooking = createAsyncThunk('remove_booking',
     async (data) => {
         try {
-            const request = await axios.delete(`http://127.0.0.1:8000/booking/${data.booking_id}/`)
+            const request = await api.delete(`/booking/${data.booking_id}/`)
             const response = await request.data
             if (request.status === 204) {
                 console.log(response)
-                const req = await axios.patch(`http://127.0.0.1:8000/timeslot/${data.slot_id}/`, { booked: false })
+                const req = await api.patch(`/timeslot/${data.slot_id}/`, { booked: false })
                 const res = await req.data
                 if (req.status == 200) {
                     console.log("It is successful: ", res)
@@ -135,13 +135,13 @@ export const ScheduledTimeforAdvisor = createAsyncThunk('scheduled_time_for_advi
         try {
             console.log("This is being called!!!")
             console.log(id)
-            const request = await axios.get(`http://127.0.0.1:8000/booking/`)
+            const request = await api.get(`/booking/`)
             const response = await request.data
             if (request.status === 200) {
                 let data = response.filter((item) => item.advisor == id)
                 let value = await data.map(item => item.slot)
 
-                const req = await axios.get(`http://127.0.0.1:8000/timeslot/`)
+                const req = await api.get(`/timeslot/`)
                 const res = await req.data
                 if (req.status === 200) {
                     let desired = res.filter((item) => value.includes(item.id))

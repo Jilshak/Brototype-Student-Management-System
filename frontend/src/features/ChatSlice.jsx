@@ -1,12 +1,11 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import axios from 'axios'
-
+import api from '../services/Axios'
 
 
 export const UserMessages = createAsyncThunk('user_messages',
     async (room_id) => {
         try {
-            const request = await axios.get(`http://127.0.0.1:8000/chat/messages/`)
+            const request = await api.get(`/chat/messages/`)
             const response = request.data
             if (request.status === 200) {
                 console.log("The message list has been loaded")
@@ -26,7 +25,7 @@ export const UserMessages = createAsyncThunk('user_messages',
 export const GetChattingUsers = createAsyncThunk('get_chatting_user',
     async (credential) => {
         try {
-            const request = axios.get(`http://127.0.0.1:8000/users/`)
+            const request = api.get(`/users/`)
             const response = (await request).data
 
             if ((await request).status === 200) {
@@ -48,7 +47,7 @@ export const GetChattingUsers = createAsyncThunk('get_chatting_user',
 export const GetHistory = createAsyncThunk('get_history',
     async (id) => {
         try {
-            const requst = await axios.get(`http://127.0.0.1:8000/chat/messages/`)
+            const requst = await api.get(`/chat/messages/`)
             const response = requst.data
             if (requst.status == 200) {
                 let data = await response.filter((item) => item.sender == id || item.receiver == id)
@@ -58,7 +57,7 @@ export const GetHistory = createAsyncThunk('get_history',
                 let uniqueIds = [...new Set([...reciever_ids, ...sender_ids])];
                 console.log("This is the getHistory user data: ", data)
                 console.log("These are the receiver ids: ", reciever_ids)
-                const req = await axios.get(`http://127.0.0.1:8000/users/`)
+                const req = await api.get(`/users/`)
                 const res = req.data
                 if (req.status === 200) {
                     const data = res.filter((item) => uniqueIds.includes(item.id))
@@ -94,10 +93,10 @@ export const GetHistory = createAsyncThunk('get_history',
 export const getNotifications = createAsyncThunk('get_notification',
     async (decode) => {
         try {
-            const request = await axios.get(`http://127.0.0.1:8000/chat/notification/`)
+            const request = await api.get(`/chat/notification/`)
             const response = request.data
             if (request.status === 200) {
-                const req = await axios.get(`http://127.0.0.1:8000/users/${decode.user_id}/`)
+                const req = await api.get(`/users/${decode.user_id}/`)
                 const res = await req.data
                 if (req.status === 200) {
                     let joining_date = await res.date_joined

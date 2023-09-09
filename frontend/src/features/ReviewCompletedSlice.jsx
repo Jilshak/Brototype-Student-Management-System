@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import axios from 'axios'
+import api from '../services/Axios'
 
 
 //updating the user week details completed field so that the user can go to the next week
@@ -7,7 +7,7 @@ import axios from 'axios'
 export const UpdateDetailsOfUser = createAsyncThunk('update_details_of_user',
     async (week_id) => {
         try {
-            const request = await axios.patch(`http://127.0.0.1:8000/weeks/${week_id}/`, { completed: true })
+            const request = await api.patch(`/weeks/${week_id}/`, { completed: true })
             const response = await request.data
 
             if (request.status === 200) {

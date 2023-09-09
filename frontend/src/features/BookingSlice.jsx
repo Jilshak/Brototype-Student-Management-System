@@ -1,15 +1,15 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import axios from 'axios'
+import api from '../services/Axios'
 
 //function for assigning the reviewer to the intern
 export const book = createAsyncThunk('booking',
     async (credentials) => {
         try {
             console.log(credentials)
-            const request = await axios.post(`http://127.0.0.1:8000/booking/`, credentials)
+            const request = await api.post(`/booking/`, credentials)
             const response = await request.data
             if (request.status === 201) {
-                const request = await axios.patch(`http://127.0.0.1:8000/timeslot/${credentials.slot}/`, {booked: true})
+                const request = await api.patch(`/timeslot/${credentials.slot}/`, {booked: true})
                 const res = await request.data
                 if (request.status === 200) {
                     console.log(res)
@@ -32,7 +32,7 @@ export const TimeBooked = createAsyncThunk('booked_time',
     async (id) => {
         try {
             console.log("it is called")
-            const request = await axios.get(`http://127.0.0.1:8000/timeslot/`)
+            const request = await api.get(`/timeslot/`)
             const response = await request.data
             if (request.status === 200) {
                 let slots = await response.filter((item) => item.user === id && item.booked === true)
@@ -41,7 +41,7 @@ export const TimeBooked = createAsyncThunk('booked_time',
 
 
                 //checking the booking data
-                const second_request = await axios.get(`http://127.0.0.1:8000/booking/`)
+                const second_request = await api.get(`/booking/`)
                 const second_response = await second_request.data
                 if (second_request.status === 200) {
                     let desired = second_response.filter((item) => value.includes(item.slot))

@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import axios from 'axios'
+import api from '../services/Axios'
 
 
 //for editing the week details of the user - only for the admin and the advisors and reviewers
@@ -10,7 +10,7 @@ export const WeekDetailsUser = createAsyncThunk('weekdetails',
             Object.entries(credentials).filter(([_, value]) => value !== null)
         );
         try {
-            const request = axios.patch(`http://127.0.0.1:8000/week_details/${credentials.id}/`, filteredCredentials)
+            const request = api.patch(`/week_details/${credentials.id}/`, filteredCredentials)
             const response = (await request).data
             if ((await request).status === 200) {
                 // console.log(response)
@@ -31,7 +31,7 @@ export const get_week_task = createAsyncThunk('get_week_task',
     async (credentials) => {
         try {
             console.log("Its is entering here!!")
-            const request = await axios.get(`http://127.0.0.1:8000/weeks/`)
+            const request = await api.get(`/weeks/`)
             const response = request.data
             if (request.status == 200) {
                 let data = await response.filter((item) => item.user == credentials.userid && item.week_number == credentials.week_id)
@@ -54,12 +54,12 @@ export const This_weeks_task = createAsyncThunk('this_weeks_task',
         try {
             console.log("Its is entering here!!")
             // console.log(id)
-            const request = await axios.get(`http://127.0.0.1:8000/weeks/`)
+            const request = await api.get(`/weeks/`)
             const response = request.data
             if (request.status == 200) {
                 let data = response.filter((item) => item.user == credentials.userid && item.week_number == credentials.week_id)
                 console.log(data[0].weekdetails_set[0].id)
-                const req = await axios.patch(`http://127.0.0.1:8000/week_details/${data[0].weekdetails_set[0].id}/`, credentials?.this_weeks_tasks)
+                const req = await api.patch(`/week_details/${data[0].weekdetails_set[0].id}/`, credentials?.this_weeks_tasks)
                 const res = req.data
                 if (req.status == 200) {
                     console.log("The file has been uploaded")
@@ -81,12 +81,12 @@ export const removeThisWeekTask = createAsyncThunk('remove_this_week_task',
     async (credentials) => {
         try {
             console.log("Its is entering here!!")
-            const request = await axios.get(`http://127.0.0.1:8000/weeks/`)
+            const request = await api.get(`/weeks/`)
             const response = request.data
             if (request.status == 200) {
                 let data = response.filter((item) => item.user == credentials.userid && item.week_number == credentials.week_id)
                 console.log(data[0].weekdetails_set[0].id)
-                const req = await axios.patch(`http://127.0.0.1:8000/week_details/${data[0].weekdetails_set[0].id}/`, { this_weeks_tasks: credentials.this_weeks_tasks })
+                const req = await api.patch(`/week_details/${data[0].weekdetails_set[0].id}/`, { this_weeks_tasks: credentials.this_weeks_tasks })
                 const res = req.data
                 if (req.status == 200) {
                     console.log("The file has been uploaded")
@@ -116,7 +116,7 @@ export const get_technical_tasks = createAsyncThunk('get_technical_tasks',
     async (credentials) => {
         try {
             console.log("Its is entering here!!")
-            const request = await axios.get(`http://127.0.0.1:8000/weeks/`)
+            const request = await api.get(`/weeks/`)
             const response = request.data
             if (request.status == 200) {
                 let data = await response.filter((item) => item.user == credentials.userid && item.week_number == credentials.week_id)
@@ -136,14 +136,14 @@ export const get_technical_tasks = createAsyncThunk('get_technical_tasks',
 export const technical_tasks = createAsyncThunk('technical_tasks',
     async (credentials) => {
         try {
-            const request = await axios.get(`http://127.0.0.1:8000/weeks/`)
+            const request = await api.get(`/weeks/`)
             const response = request.data
             console.log("This is the initial response: ", response)
             if (request.status == 200) {
                 let data = response.filter((item) => item.user == credentials.userid && item.week_number == credentials.week_id)
                 console.log("This is the data: ", data)
                 console.log(data[0].weekdetails_set[0].id)
-                const req = await axios.patch(`http://127.0.0.1:8000/week_details/${data[0].weekdetails_set[0].id}/`, credentials?.technical_tasks)
+                const req = await api.patch(`/week_details/${data[0].weekdetails_set[0].id}/`, credentials?.technical_tasks)
                 const res = req.data
                 if (req.status == 200) {
                     console.log(res)
@@ -165,12 +165,12 @@ export const removeTechnicalTask = createAsyncThunk('remove_technical_task',
     async (credentials) => {
         try {
             console.log("Its is entering here!!")
-            const request = await axios.get(`http://127.0.0.1:8000/weeks/`)
+            const request = await api.get(`/weeks/`)
             const response = request.data
             if (request.status == 200) {
                 let data = response.filter((item) => item.user == credentials.userid && item.week_number == credentials.week_id)
                 console.log(data[0].weekdetails_set[0].id)
-                const req = await axios.patch(`http://127.0.0.1:8000/week_details/${data[0].weekdetails_set[0].id}/`, { technical_tasks: credentials.technical_tasks })
+                const req = await api.patch(`/week_details/${data[0].weekdetails_set[0].id}/`, { technical_tasks: credentials.technical_tasks })
                 const res = req.data
                 if (req.status == 200) {
                     console.log("The file has been uploaded")
@@ -202,7 +202,7 @@ export const get_personal_tasks = createAsyncThunk('get_technical_tasks',
     async (credentials) => {
         try {
             console.log("Its is entering here!!")
-            const request = await axios.get(`http://127.0.0.1:8000/weeks/`)
+            const request = await api.get(`/weeks/`)
             const response = request.data
             if (request.status == 200) {
                 let data = await response.filter((item) => item.user == credentials.userid && item.week_number == credentials.week_id)
@@ -222,14 +222,14 @@ export const get_personal_tasks = createAsyncThunk('get_technical_tasks',
 export const personal_tasks = createAsyncThunk('technical_tasks',
     async (credentials) => {
         try {
-            const request = await axios.get(`http://127.0.0.1:8000/weeks/`)
+            const request = await api.get(`/weeks/`)
             const response = request.data
             console.log("This is the initial response: ", response)
             if (request.status == 200) {
                 let data = response.filter((item) => item.user == credentials.userid && item.week_number == credentials.week_id)
                 console.log("This is the data: ", data)
                 console.log(data[0].weekdetails_set[0].id)
-                const req = await axios.patch(`http://127.0.0.1:8000/week_details/${data[0].weekdetails_set[0].id}/`, credentials?.personal_tasks)
+                const req = await api.patch(`/week_details/${data[0].weekdetails_set[0].id}/`, credentials?.personal_tasks)
                 const res = req.data
                 if (req.status == 200) {
                     console.log(res)
@@ -251,12 +251,12 @@ export const removePersonalTasks = createAsyncThunk('remove_technical_task',
     async (credentials) => {
         try {
             console.log("Its is entering here!!")
-            const request = await axios.get(`http://127.0.0.1:8000/weeks/`)
+            const request = await api.get(`/weeks/`)
             const response = request.data
             if (request.status == 200) {
                 let data = response.filter((item) => item.user == credentials.userid && item.week_number == credentials.week_id)
                 console.log(data[0].weekdetails_set[0].id)
-                const req = await axios.patch(`http://127.0.0.1:8000/week_details/${data[0].weekdetails_set[0].id}/`, { personal_tasks: credentials.personal_tasks })
+                const req = await api.patch(`/week_details/${data[0].weekdetails_set[0].id}/`, { personal_tasks: credentials.personal_tasks })
                 const res = req.data
                 if (req.status == 200) {
                     console.log("The file has been uploaded")
@@ -289,7 +289,7 @@ export const get_miscellenous_tasks = createAsyncThunk('get_technical_tasks',
     async (credentials) => {
         try {
             console.log("Its is entering here!!")
-            const request = await axios.get(`http://127.0.0.1:8000/weeks/`)
+            const request = await api.get(`/weeks/`)
             const response = request.data
             if (request.status == 200) {
                 let data = await response.filter((item) => item.user == credentials.userid && item.week_number == credentials.week_id)
@@ -309,14 +309,14 @@ export const get_miscellenous_tasks = createAsyncThunk('get_technical_tasks',
 export const miscellenous_tasks = createAsyncThunk('technical_tasks',
     async (credentials) => {
         try {
-            const request = await axios.get(`http://127.0.0.1:8000/weeks/`)
+            const request = await api.get(`/weeks/`)
             const response = request.data
             console.log("This is the initial response: ", response)
             if (request.status == 200) {
                 let data = response.filter((item) => item.user == credentials.userid && item.week_number == credentials.week_id)
                 console.log("This is the data: ", data)
                 console.log(data[0].weekdetails_set[0].id)
-                const req = await axios.patch(`http://127.0.0.1:8000/week_details/${data[0].weekdetails_set[0].id}/`, credentials?.miscellenous_tasks)
+                const req = await api.patch(`/week_details/${data[0].weekdetails_set[0].id}/`, credentials?.miscellenous_tasks)
                 const res = req.data
                 if (req.status == 200) {
                     console.log(res)
@@ -338,12 +338,12 @@ export const removeMiscellenousTasks = createAsyncThunk('remove_technical_task',
     async (credentials) => {
         try {
             console.log("Its is entering here!!")
-            const request = await axios.get(`http://127.0.0.1:8000/weeks/`)
+            const request = await api.get(`/weeks/`)
             const response = request.data
             if (request.status == 200) {
                 let data = response.filter((item) => item.user == credentials.userid && item.week_number == credentials.week_id)
                 console.log(data[0].weekdetails_set[0].id)
-                const req = await axios.patch(`http://127.0.0.1:8000/week_details/${data[0].weekdetails_set[0].id}/`, { miscellenous_tasks: credentials.miscellenous_tasks })
+                const req = await api.patch(`/week_details/${data[0].weekdetails_set[0].id}/`, { miscellenous_tasks: credentials.miscellenous_tasks })
                 const res = req.data
                 if (req.status == 200) {
                     console.log("The file has been uploaded")

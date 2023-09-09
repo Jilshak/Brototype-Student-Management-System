@@ -4,6 +4,8 @@ import send from '../icons/send.png'
 import { useDispatch, useSelector } from 'react-redux'
 import { getNotifications } from '../features/ChatSlice';
 import { SideBarNotification } from '../features/UserSlice';
+import { base } from '../services/Axios';
+
 
 function NotificationPage() {
 
@@ -19,6 +21,7 @@ function NotificationPage() {
   const noti = useSelector((state) => (state.Chats))
 
   useEffect(() => {
+    console.log("This is the base url: ", base)
     let credential = decode.is_superuser ? `36_${selected}`
       : (decode.is_user && !decode.is_advisor && !decode.is_reviewer && !decode.is_superuser ? `36_1`
         : decode.is_user && decode.is_advisor && !decode.is_reviewer ? `36_2` : `36_3`)
@@ -26,7 +29,7 @@ function NotificationPage() {
     const createSocket = async () => {
       console.log(decode)
       try {
-        const request = await new WebSocket(`ws://127.0.0.1:8000/ws/notification/${credential}/`)
+        const request = await new WebSocket(`${base}/ws/notification/${credential}/`)
         await setSocket(request)
 
       } catch (error) {

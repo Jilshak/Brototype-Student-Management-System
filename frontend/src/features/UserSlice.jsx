@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
-import axios from "axios"
+import api from "../services/Axios";
 
 
 //register functionality for the users based on the batch number they have given
@@ -7,7 +7,7 @@ export const Register = createAsyncThunk('register',
     async (credentials) => {
 
         //finding the batch id for the user entered batch_number
-        const batchAssign = await axios.get("http://127.0.0.1:8000/batches/").then(res => {
+        const batchAssign = await api.get(`/batches/`).then(res => {
             const matchingBatch = res.data.find(x => x.batch_number === credentials.batch);
             if (matchingBatch) {
                 console.log("This is being called here which means it should work as expected!!!")
@@ -21,7 +21,7 @@ export const Register = createAsyncThunk('register',
         //assigning the batch
         credentials.batch = batchAssign
 
-        const request = await axios.post("http://127.0.0.1:8000/users/", credentials)
+        const request = await api.post(`/users/`, credentials)
         const response = request.data
         console.log(credentials)
         if (request.status === 201) {
@@ -37,7 +37,7 @@ export const Register = createAsyncThunk('register',
 export const Register_Staff = createAsyncThunk('register',
     async (credentials) => {
         console.log(credentials)
-        const request = await axios.post("http://127.0.0.1:8000/users/", credentials)
+        const request = await api.post(`/users/`, credentials)
         const response = request.data
         if (request.status === 201) {
 
@@ -51,7 +51,7 @@ export const Register_Staff = createAsyncThunk('register',
 //the login functinality by jwt token authentication
 export const Login = createAsyncThunk('login',
     async (credentials) => {
-        const request = await axios.post('http://127.0.0.1:8000/token/', credentials)
+        const request = await api.post(`/token/`, credentials)
         const response = await request.data
         if (request.status === 200) {
             localStorage.setItem('authToken', JSON.stringify(response.access))
@@ -67,7 +67,7 @@ export const Login = createAsyncThunk('login',
 export const InternList = createAsyncThunk('intern_list',
     async (id) => {
         try {
-            const request = await axios.get('http://127.0.0.1:8000/users/')
+            const request = await api.get(`/users/`)
             let data = await request.data
             const filterData = await data.filter(user => {
                 return (
@@ -90,7 +90,7 @@ export const InternList = createAsyncThunk('intern_list',
 export const fullUserList = createAsyncThunk('Full_User_List',
     async (id) => {
         try {
-            const request = await axios.get('http://127.0.0.1:8000/users/')
+            const request = await api.get(`/users/`)
             let data = await request.data
             if (request.status === 200) {
                 console.log("All the users have been fetched!!!")
@@ -107,7 +107,7 @@ export const fullUserList = createAsyncThunk('Full_User_List',
 export const AdvisorList = createAsyncThunk('advisor_list',
     async (id) => {
         try {
-            const request = await axios.get('http://127.0.0.1:8000/users/')
+            const request = await api.get(`/users/`)
             let data = await request.data
 
             const filterData = data.filter(user => {
@@ -129,7 +129,7 @@ export const AdvisorList = createAsyncThunk('advisor_list',
 export const ReviewerList = createAsyncThunk('reviewer_list',
     async (id) => {
         try {
-            const request = await axios.get('http://127.0.0.1:8000/users/')
+            const request = await api.get(`/users/`)
             let data = await request.data
 
             const filterData = data.filter(user => {
@@ -152,7 +152,7 @@ export const deleteUser = createAsyncThunk('delete_user',
     async (id) => {
         console.log(id)
         try {
-            const request = await axios.delete(`http://127.0.0.1:8000/users/${id}/`)
+            const request = await api.delete(`/users/${id}/`)
             const response = await request.data
             if (request.status === 204) {
                 return response
@@ -170,7 +170,7 @@ export const editUser = createAsyncThunk('edit_user',
     async (credentials) => {
         if (credentials.batch) {
             //finding the batch id for the user entered batch_number
-            const batchAssign = await axios.get("http://127.0.0.1:8000/batches/").then(res => {
+            const batchAssign = await api.get(`/batches/`).then(res => {
                 const matchingBatch = res.data.find(x => x.batch_number === credentials.batch);
                 if (matchingBatch) {
                     return matchingBatch.id;
@@ -188,7 +188,7 @@ export const editUser = createAsyncThunk('edit_user',
                 Object.entries(credentials).filter(([_, value]) => value !== null)
             );
 
-            const request = axios.patch(`http://127.0.0.1:8000/users/${credentials.id}/`, filteredCredentials)
+            const request = api.patch(`/users/${credentials.id}/`, filteredCredentials)
             const response = await request.data
             if ((await request).status === 200) {
                 console.log("The user has been edited")
@@ -204,7 +204,7 @@ export const editUser = createAsyncThunk('edit_user',
 export const ProfileDetails = createAsyncThunk('profile_details',
     async (id) => {
         try {
-            const request = axios.get(`http://127.0.0.1:8000/users/${id}/`)
+            const request = api.get(`/users/${id}/`)
             const response = (await request).data
 
             if ((await request).status === 200) {
@@ -224,7 +224,7 @@ export const profileImage = createAsyncThunk('profile_image',
         try {
             console.log("This is from the userSlice: ", credentials)
             console.log("This is from the userSlice: ", credentials.image)
-            const request = await axios.patch(`http://127.0.0.1:8000/users/${credentials.id}/`, credentials?.image, {
+            const request = await api.patch(`/users/${credentials.id}/`, credentials?.image, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
@@ -245,7 +245,7 @@ export const profileImage = createAsyncThunk('profile_image',
 export const SideBarSlice = createAsyncThunk('side_bar_slice',
     async (id) => {
         try {
-            const request = axios.get(`http://127.0.0.1:8000/users/${id}/`)
+            const request = api.get(`/users/${id}/`)
             const response = (await request).data
 
             if ((await request).status === 200) {
@@ -266,7 +266,7 @@ export const SideBarSlice = createAsyncThunk('side_bar_slice',
 export const SideBarNotification = createAsyncThunk('sidebar_notificatoin',
     async (id) => {
         try {
-            const request = await axios.patch(`http://127.0.0.1:8000/users/${id}/`, { notification_count: 0 })
+            const request = await api.patch(`/users/${id}/`, { notification_count: 0 })
             const response = request.data
             if (request.status == 200) {
                 console.log("The notification count has been increased")

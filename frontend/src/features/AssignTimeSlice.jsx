@@ -1,12 +1,13 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import axios from 'axios'
+
+import api from '../services/Axios'
 
 
 //for the advisosr to get the assigned time 
 export const GetAssignedTime = createAsyncThunk('get_assigned_time',
     async (id) => {
         try {
-            const request = axios.get(`http://127.0.0.1:8000/timeslot/`)
+            const request = api.get(`/timeslot/`)
             const response = (await request).data
             if ((await request).status === 200) {
                 let time = await response.filter((item) => item.user == id && !item.booked)
@@ -23,7 +24,7 @@ export const GetAssignedTime = createAsyncThunk('get_assigned_time',
 export const AddTime = createAsyncThunk('add_time',
     async (credentials) => {
         try{
-            const request = axios.post(`http://127.0.0.1:8000/timeslot/`, credentials)
+            const request = api.post(`/timeslot/`, credentials)
             const response = (await request).status
             if ((await request).status === 201){
                 console.log("The new time is added")
@@ -40,7 +41,7 @@ export const AddTime = createAsyncThunk('add_time',
 export const deleteTime = createAsyncThunk('delete_time',
     async (id) => {
         try{
-            const request = axios.delete(`http://127.0.0.1:8000/timeslot/${id}/`)
+            const request = api.delete(`/timeslot/${id}/`)
             const response = (await request).status
             if ((await request).status === 204){
                 console.log("The new time is deleted")
