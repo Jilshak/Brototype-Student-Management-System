@@ -20,6 +20,7 @@ function Sidebar() {
     const dispatch = useDispatch()
     const user = useSelector((state) => (state.Users))
     const [socket, setSocket] = useState()
+    const [socket1, setSocket1] = useState()
     const [count, setCount] = useState(0)
     const [selected, setSelected] = useState(false)
 
@@ -57,18 +58,53 @@ function Sidebar() {
         createSocket()
     }, [])
 
+
+    useEffect(() => {
+        let credential = '36_123'
+        const createSocket = async () => {
+            console.log(decode)
+            try {
+                const request = await new WebSocket(`${base}/ws/notification/${credential}/`)
+                await setSocket1(request)
+                console.log("This connection is made from the sidebar1")
+
+            } catch (error) {
+                console.log("Error: ", error)
+            }
+        }
+        createSocket()
+    }, [])
+
+
     useEffect(() => {
         if (socket) {
 
             socket.onmessage = async (event) => {
                 const message = await JSON.parse(event.data);
                 console.log("This is the message: ", message)
-                if (!selected){
+                if (!selected) {
                     setCount(prevCount => prevCount + 1);
                 }
             };
         }
-    }, [socket, selected]);
+        if (socket1) {
+
+            socket.onmessage = async (event) => {
+                const message = await JSON.parse(event.data);
+                console.log("This is the message: ", message)
+                if (!selected) {
+                    setCount(prevCount => prevCount + 1);
+                }
+            };
+            socket1.onmessage = async (event) => {
+                const message = await JSON.parse(event.data);
+                console.log("This is the message: ", message)
+                if (!selected) {
+                    setCount(prevCount => prevCount + 1);
+                }
+            };
+        }
+    }, [socket, socket1, selected]);
 
 
     return (
@@ -226,7 +262,7 @@ function Sidebar() {
                                     {
                                         decode.is_superuser ? <span className="flex-1 ml-3 whitespace-nowrap">Send Notifications</span> : <span className="flex-1 ml-3 whitespace-nowrap">Notifications</span>
                                     }
-                                    {!decode.is_superuser ? <span className="inline-flex items-center justify-center w-3 h-3 p-3 ml-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full dark:bg-blue-900 dark:text-blue-300">{!decode.is_superuser ? (user.sidebar.notification_count >= count ? user.sidebar.notification_count : count ) : null}</span> : null}
+                                    {!decode.is_superuser ? <span className="inline-flex items-center justify-center w-3 h-3 p-3 ml-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full dark:bg-blue-900 dark:text-blue-300">{!decode.is_superuser ? (user.sidebar.notification_count >= count ? user.sidebar.notification_count : count) : null}</span> : null}
                                 </span>
                             </Link>
                         </li>
