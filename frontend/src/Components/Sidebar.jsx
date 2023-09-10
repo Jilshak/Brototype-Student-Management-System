@@ -5,6 +5,7 @@ import remove from '../icons/remove.png'
 import noprofile from '../icons/noprofile.png'
 import { useDispatch, useSelector } from 'react-redux';
 import { SideBarSlice } from '../features/UserSlice';
+import { base } from '../services/Axios';
 function Sidebar() {
 
     const [isSidebarOpen, setIsSidebarOpen] = useState(false); // New state for sidebar 
@@ -18,6 +19,9 @@ function Sidebar() {
 
     const dispatch = useDispatch()
     const user = useSelector((state) => (state.Users))
+    const [socket, setSocket] = useState()
+    const [count, setCount] = useState(0)
+    const [selected, setSelected] = useState(false)
 
 
     //for loggin out
@@ -36,9 +40,35 @@ function Sidebar() {
     useEffect(() => {
         dispatch(SideBarSlice(decode.user_id))
     }, [])
-    useEffect(() => {
 
-    }, [user.sidebar.notification_count, dispatch])
+    useEffect(() => {
+        let credential = decode.is_user && decode.is_advisor ? `36_2` : (decode.is_user && decode.is_reviewer ? `36_3` : `36_1`)
+        const createSocket = async () => {
+            console.log(decode)
+            try {
+                const request = await new WebSocket(`${base}/ws/notification/${credential}/`)
+                await setSocket(request)
+                console.log("This connection is made from the sidebar")
+
+            } catch (error) {
+                console.log("Error: ", error)
+            }
+        }
+        createSocket()
+    }, [])
+
+    useEffect(() => {
+        if (socket) {
+
+            socket.onmessage = async (event) => {
+                const message = await JSON.parse(event.data);
+                console.log("This is the message: ", message)
+                if (!selected){
+                    setCount(prevCount => prevCount + 1);
+                }
+            };
+        }
+    }, [socket, selected]);
 
 
     return (
@@ -88,7 +118,7 @@ function Sidebar() {
                                 </> : null
                         }
 
-                        <li>
+                        <li onClick={(e) => setSelected(false)}>
                             <Link to='/'>
                                 <span href="#" className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
                                     <svg className="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 21">
@@ -104,8 +134,8 @@ function Sidebar() {
                                 <li>
                                     <Link to='/dashboard'>
                                         <span href="#" className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-collection" viewBox="0 0 16 16"> 
-                                            <path d="M2.5 3.5a.5.5 0 0 1 0-1h11a.5.5 0 0 1 0
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-collection" viewBox="0 0 16 16">
+                                                <path d="M2.5 3.5a.5.5 0 0 1 0-1h11a.5.5 0 0 1 0
                                              1h-11zm2-2a.5.5 0 0 1 0-1h7a.5.5 0 0 1 0 1h-7zM0 13a1.5 1.5 0 0 0 1.5 1.5h13A1.5 1.5 0 0 0 16 13V6a1.5
                                              1.5 0 0 0-1.5-1.5h-13A1.5 1.5 0 0 0 0 6v7zm1.5.5A.5.5 0 0 1 1 13V6a.5.5 0 0 1 
                                             .5-.5h13a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-.5.5h-13z" /> </svg>
@@ -129,7 +159,7 @@ function Sidebar() {
                         }
                         {
                             decode.authenticated ?
-                                <li>
+                                <li onClick={(e) => setSelected(false)}>
                                     <Link to='/chat'>
                                         <span href="#" className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
                                             <svg className="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 18">
@@ -144,7 +174,7 @@ function Sidebar() {
                         }
                         {
                             decode.is_advisor && decode.authenticated ?
-                                <li>
+                                <li onClick={(e) => setSelected(false)}>
                                     <Link to='/schedule_time'>
                                         <span href="#" className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
                                             <svg className="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"> <path d="M8.5 5.5a.5.5 0 0 0-1 0v3.362l-1.429 2.38a.5.5 0 1 0 .858.515l1.5-2.5A.5.5 0 0 0 8.5 9V5.5z" />
@@ -157,7 +187,7 @@ function Sidebar() {
                         }
                         {
                             decode.is_reviewer && decode.authenticated ?
-                                <li>
+                                <li onClick={(e) => setSelected(false)}>
                                     <Link to='/assign_time'>
                                         <span href="#" className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
                                             <svg className="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"> <path d="M8.5 5.5a.5.5 0 0 0-1 0v3.362l-1.429 2.38a.5.5 0 1 0 .858.515l1.5-2.5A.5.5 0 0 0 8.5 9V5.5z" />
@@ -172,7 +202,7 @@ function Sidebar() {
 
                         {
                             decode.is_user && !decode.is_superuser && !decode.is_reviewer && !decode.is_advisor && decode.authenticated ?
-                                <li>
+                                <li onClick={(e) => setSelected(false)}>
                                     <Link to='/weeks'>
                                         <span className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white  dark:hover:bg-gray-700 group">
                                             <svg className="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 18 18">
@@ -184,7 +214,10 @@ function Sidebar() {
                                     </Link>
                                 </li> : null
                         }
-                        <li>
+                        <li onClick={(e) => {
+                            setSelected(true)
+                            setCount(0)
+                        }}>
                             <Link to='/notification'>
                                 <span href="#" className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
                                     <svg className="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
@@ -193,7 +226,7 @@ function Sidebar() {
                                     {
                                         decode.is_superuser ? <span className="flex-1 ml-3 whitespace-nowrap">Send Notifications</span> : <span className="flex-1 ml-3 whitespace-nowrap">Notifications</span>
                                     }
-                                    {!decode.is_superuser ? <span className="inline-flex items-center justify-center w-3 h-3 p-3 ml-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full dark:bg-blue-900 dark:text-blue-300">{!decode.is_superuser ? user.sidebar.notification_count : null}</span> : null}
+                                    {!decode.is_superuser ? <span className="inline-flex items-center justify-center w-3 h-3 p-3 ml-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full dark:bg-blue-900 dark:text-blue-300">{!decode.is_superuser ? (user.sidebar.notification_count >= count ? user.sidebar.notification_count : count ) : null}</span> : null}
                                 </span>
                             </Link>
                         </li>
