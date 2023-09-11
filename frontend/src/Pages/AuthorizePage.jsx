@@ -58,9 +58,9 @@ function AuthorizePage() {
                       <span className='mx-[15px]'>
                         {item.username}
                       </span>
-                      <span className='ms-4'>
-                        BCK112
-                      </span>
+                      <small className='ms-4'>
+                        Batch_id: {item.batch}
+                      </small>
                       <span className='ms-8 flex items-center'>
                         <img onClick={(e) => removeUser(item.id)} className='min-h-[24px] me-4 min-w-[20px] max-h-[20px] max-w-[20px] cursor-pointer' src={remove} alt="" />
                         <img onClick={(e) => authorizeUser(item.id)} className='min-h-[20] min-w-[20px] max-h-[20px] max-w-[20px] cursor-pointer' src={authenticated} alt="" />

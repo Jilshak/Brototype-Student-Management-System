@@ -154,7 +154,7 @@ function NotificationPage() {
           </> :
 
           <>
-            <div className="w-full h-[95vh] px-5 flex flex-col justify-between">
+              <div className="w-full h-[95vh] px-5 flex flex-col justify-between">
               <div className="flex flex-col relative top-5 mt-5 overflow-x-auto">
                 {
                   !noti?.isLoading && noti?.notification?.length >= 1 ?

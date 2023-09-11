@@ -1,15 +1,19 @@
 
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import header from '../images/header.webp'
 import { Link, useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { Register } from '../features/UserSlice'
+import { useSelector } from 'react-redux'
+import { Batches } from '../features/BatchSlice'
 
 function SignUpPage() {
 
   let dispatch = useDispatch()
   let navigate = useNavigate()
+
+  const batches = useSelector((state) => (state.Batches))
 
 
   const [username, setUserName] = useState('')
@@ -44,6 +48,10 @@ function SignUpPage() {
 
 
   }
+
+  useEffect(() => {
+    dispatch(Batches())
+  },[])
   return (
 
     <div className="flex flex-col items-center justify-center px-6 py-10 mx-auto bg-black md:h-screen lg:py-0">
@@ -68,7 +76,15 @@ function SignUpPage() {
               <input onChange={(e) => setLastName(e.target.value)} type="text" name="lastname" id="lastname" className="bg-black outline-none ms-2 py-4 text-white sm:text-sm rounded-md  block w-full p-2.5  dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Last Name" required="" />
             </div>
             <div>
-              <input onChange={(e) => setBatch(parseInt(e.target.value))} type="number" name="batch" id="batch" className="bg-black outline-none py-4 text-white sm:text-sm rounded-md  block w-full p-2.5  dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Batch" required="" />
+              <select onChange={(e) => setBatch(parseInt(e.target.value))} className="bg-black outline-none py-4 text-white sm:text-sm rounded-md  block w-full p-2.5  dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Batch" name="batch" id="batch">
+               {
+                batches.data.map((item) => {
+                  return (
+                    <option value={item.batch_number}>BCK{item.batch_number}</option>
+                  )
+                })
+               }
+              </select>
             </div>
             <div>
               <input onChange={(e) => setPassword(e.target.value)} type="password" name="password" id="password" className="bg-black outline-none py-4 text-white sm:text-sm rounded-md  block w-full p-2.5  dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Password" required="" />

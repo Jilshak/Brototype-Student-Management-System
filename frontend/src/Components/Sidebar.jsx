@@ -30,7 +30,6 @@ function Sidebar() {
 
     let logout = async (e) => {
         await localStorage.removeItem('authToken')
-        console.log("Removed the authtoken")
         navigate('/login')
     }
 
@@ -49,7 +48,6 @@ function Sidebar() {
             try {
                 const request = await new WebSocket(`${base}/ws/notification/${credential}/`)
                 await setSocket(request)
-                console.log("This connection is made from the sidebar")
 
             } catch (error) {
                 console.log("Error: ", error)
@@ -66,7 +64,6 @@ function Sidebar() {
             try {
                 const request = await new WebSocket(`${base}/ws/notification/${credential}/`)
                 await setSocket1(request)
-                console.log("This connection is made from the sidebar1")
 
             } catch (error) {
                 console.log("Error: ", error)
@@ -81,7 +78,6 @@ function Sidebar() {
 
             socket.onmessage = async (event) => {
                 const message = await JSON.parse(event.data);
-                console.log("This is the message: ", message)
                 if (!selected) {
                     setCount(prevCount => prevCount + 1);
                 }
@@ -91,14 +87,12 @@ function Sidebar() {
 
             socket.onmessage = async (event) => {
                 const message = await JSON.parse(event.data);
-                console.log("This is the message: ", message)
                 if (!selected) {
                     setCount(prevCount => prevCount + 1);
                 }
             };
             socket1.onmessage = async (event) => {
                 const message = await JSON.parse(event.data);
-                console.log("This is the message: ", message)
                 if (!selected) {
                     setCount(prevCount => prevCount + 1);
                 }
