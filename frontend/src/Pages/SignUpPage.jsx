@@ -7,6 +7,7 @@ import { useDispatch } from 'react-redux'
 import { Register } from '../features/UserSlice'
 import { useSelector } from 'react-redux'
 import { Batches } from '../features/BatchSlice'
+import Swal from 'sweetalert2'
 
 function SignUpPage() {
 
@@ -30,9 +31,23 @@ function SignUpPage() {
   const handleSubmit = async (e) => {
     e.preventDefault()
     if (password != password1) {
-      alert("The passwords doesn't match one another...please try again")
+      await Swal.fire(
+        {
+          background: '#191C24',
+          icon: 'error',
+          title: 'Wrong Passwords',
+          text: "Your Passwords doesn't match one another!",
+        }
+      )
     } else if (username.includes(' ')) {
-      alert("Username Contains white spaces!!!!")
+      await Swal.fire(
+        {
+          background: '#191C24',
+          icon: 'error',
+          title: 'Whitespaces',
+          text: "Your username contains white spaces please remove them and try again!",
+        }
+      )
     }
     else {
       let credentials = {
@@ -43,6 +58,14 @@ function SignUpPage() {
         "batch": batch
       }
       await dispatch(Register(credentials))
+      await Swal.fire(
+        {
+          background: '#191C24',
+          icon: 'success',
+          title: 'Account Created!',
+          text: "Your account has been created successfully!",
+        }
+      )
       navigate('/login')
     }
 
@@ -51,7 +74,7 @@ function SignUpPage() {
 
   useEffect(() => {
     dispatch(Batches())
-  },[])
+  }, [])
   return (
 
     <div className="flex flex-col items-center justify-center px-6 py-10 mx-auto bg-black md:h-screen lg:py-0">
@@ -77,13 +100,13 @@ function SignUpPage() {
             </div>
             <div>
               <select onChange={(e) => setBatch(parseInt(e.target.value))} className="bg-black outline-none py-4 text-white sm:text-sm rounded-md  block w-full p-2.5  dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Batch" name="batch" id="batch">
-               {
-                batches.data.map((item) => {
-                  return (
-                    <option value={item.batch_number}>BCK{item.batch_number}</option>
-                  )
-                })
-               }
+                {
+                  batches.data.map((item) => {
+                    return (
+                      <option value={item.batch_number}>BCK{item.batch_number}</option>
+                    )
+                  })
+                }
               </select>
             </div>
             <div>

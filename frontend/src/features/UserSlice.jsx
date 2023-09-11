@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 import api from "../services/Axios";
+import Swal from 'sweetalert2'
 
 
 //register functionality for the users based on the batch number they have given
@@ -55,6 +56,14 @@ export const Login = createAsyncThunk('login',
         const response = await request.data
         if (request.status === 200) {
             localStorage.setItem('authToken', JSON.stringify(response.access))
+            await Swal.fire(
+                {
+                    background: '#191C24',
+                    icon: 'success',
+                    title: 'LogIn Successful!',
+                    text: "Welcome!!",
+                }
+            )
             console.log("The user has been authenticated and can login")
         } else {
             console.log("The user is not authenticated and can't login")

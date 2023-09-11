@@ -66,7 +66,9 @@ function ThisWeeksTask() {
             {
                 task.isLoading ?
                     <>
-                        {null}
+                        <div className='relative flex items-center top-80 justify-center'>
+                            <div class="rounded-md h-12 w-12 border-4 border-t-4 border-blue-500 animate-spin absolute"></div>
+                        </div>
                     </>
                     : task && task.data && decode.is_superuser || task && task.data && decode.is_advisor ?
 

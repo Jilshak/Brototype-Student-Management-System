@@ -154,7 +154,7 @@ function NotificationPage() {
           </> :
 
           <>
-              <div className="w-full h-[95vh] px-5 flex flex-col justify-between">
+            <div className="w-full h-[95vh] px-5 flex flex-col justify-between">
               <div className="flex flex-col relative top-5 mt-5 overflow-x-auto">
                 {
                   !noti?.isLoading && noti?.notification?.length >= 1 ?
@@ -190,7 +190,10 @@ function NotificationPage() {
                           )
                         })
                       }
-                    </> : null
+                    </> :
+                    <div className='relative h-screen flex items-center top-[-60px] right-5 justify-center'>
+                      <div className="rounded-md h-12 w-12 border-4 border-t-4 animate-spin absolute transition-colors duration-2000 border-blue-500 hover:border-green-500"></div>
+                    </div>
                 }
               </div>
 

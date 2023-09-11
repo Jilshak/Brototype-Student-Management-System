@@ -22,7 +22,6 @@ function LoginPage() {
         }
         await dispatch(Login(credentials))
         navigate('/')
-        // window.location.reload()
     }
 
     useEffect(() => {
