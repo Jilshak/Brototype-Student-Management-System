@@ -33,10 +33,10 @@ function SceduleTime() {
   }, [dispatch])
 
   useEffect(() => {
-    if (reviewers.data) {
+    if (reviewers?.data) {
       setRev(reviewers.data)
     }
-    if (reviewers.Interns) {
+    if (reviewers?.Interns) {
       setIntern(reviewers.Interns)
     }
   }, [reviewers.data, reviewers.Interns])
@@ -69,7 +69,7 @@ function SceduleTime() {
 
 
   const unsheduleReview = async (booking_id, intern_id, slot_id) => {
-    if (item2.length > 0) {
+    if (item2?.length > 0) {
       await setItem(prevList => prevList.filter(item => item.id !== booking_id))
       await dispatch(unSchedule(intern_id))
       let data = {
@@ -81,7 +81,7 @@ function SceduleTime() {
   }
 
   useEffect(() => {
-    if (time.review) {
+    if (time?.review) {
       setItem(time.review.data)
       setItem2(time.review.desired)
     }
@@ -106,37 +106,46 @@ function SceduleTime() {
             </select>
           </div>
           {
-            intern ?
+            intern && intern.length >= 1 ?
               <>
                 {
+                  intern ?
+                    <>
+                      {
 
-                  intern.map((item) => {
+                        intern?.map((item) => {
 
-                    const scheduledDate = new Date(item?.weeks[0]?.weekdetails_set[0]?.scheduled_date);
-                    const currentDate = new Date();
-                    const timeDifference = scheduledDate - currentDate;
-                    const timeDifferenceInDays = Math.floor(timeDifference / (24 * 60 * 60 * 1000));
+                          const scheduledDate = new Date(item?.weeks[0]?.weekdetails_set[0]?.scheduled_date);
+                          const currentDate = new Date();
+                          const timeDifference = scheduledDate - currentDate;
+                          const timeDifferenceInDays = Math.floor(timeDifference / (24 * 60 * 60 * 1000));
 
-                    return (
-                      <div key={item.id} onClick={(e) => {
-                        setUser({
-                          id: item.id,
-                          username: item.username,
-                          batch: item.batch,
-                          week: item.current_week
-                        });
-                        setToggle(true);
-                      }} className='flex cursor-pointer items-center justify-around p-1.5 rounded-xl mb-3 mx-[40px] bg-[#141621]'>
-                        <div className='h-8 w-8 rounded-full bg-white'></div>
-                        <p>{item.username}</p>
-                        <p>{item.domain ? item.domain : "Unfixed"}</p>
-                        <p>{timeDifferenceInDays}d</p>
-                      </div>
-                    );
-                  })
+                          return (
+                            <div key={item.id} onClick={(e) => {
+                              setUser({
+                                id: item.id,
+                                username: item.username,
+                                batch: item.batch,
+                                week: item.current_week
+                              });
+                              setToggle(true);
+                            }} className='flex cursor-pointer items-center justify-around p-1.5 rounded-xl mb-3 mx-[40px] bg-[#141621]'>
+                              <div className='h-8 w-8 rounded-full bg-white'></div>
+                              <p>{item.username}</p>
+                              <p>{item.domain ? item.domain : "Unfixed"}</p>
+                              <p>{timeDifferenceInDays}d</p>
+                            </div>
+                          );
+                        })
 
+                      }
+                    </> : null
                 }
-              </> : null
+              </>
+              :
+              <div className='relative flex items-center top-[-10px] justify-center'>
+                <div class="rounded-md h-6 w-6 border-4 border-t-4 border-blue-500 animate-spin absolute"></div>
+              </div>
           }
           <br />
         </div>
@@ -165,7 +174,7 @@ function SceduleTime() {
                     rev ?
                       <>
                         {
-                          rev.map((item) => {
+                          rev?.map((item) => {
                             return (
                               <option key={item.id} value={item.id}>{item.username}</option>
                             )
@@ -184,7 +193,7 @@ function SceduleTime() {
                     times ?
                       <>
                         {
-                          times.map((item) => {
+                          times?.map((item) => {
                             return (
                               <option key={item.id} value={item.id}>{item.date} - {item.day} - {item.start_time} - {item.end_time}</option>
                             )
@@ -267,7 +276,7 @@ function SceduleTime() {
                       </span>
 
                       <div onClick={async (e) => {
-                        console.log("This is the val: ",val)
+                        console.log("This is the val: ", val)
                         console.log(val.slot)
                         await unsheduleReview(val.id, val.intern, val.slot)
                         await dispatch(InternsWithReview(week_numnber))

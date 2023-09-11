@@ -176,79 +176,79 @@ export const ScheduleTime = createSlice({
     },
     extraReducers: {
         [reviewersList.pending]: (state) => {
-            state.isLoading = true,
-                state.data = [],
-                state.msg = "It is still loading please wait"
+            state.isLoading = true
+            state.data = []
+            state.msg = "It is still loading please wait"
         },
         [reviewersList.fulfilled]: (state, action) => {
-            state.data = action.payload,
-                state.isLoading = false,
-                state.msg = "The time has been loaded"
+            state.data = action.payload
+            state.isLoading = false
+            state.msg = "The time has been loaded"
         },
         [reviewersList.rejected]: (state) => {
-            state.data = [],
-                state.isLoading = false,
-                state.msg = 'something went wrong while loading the state'
+            state.data = []
+            state.isLoading = false
+            state.msg = 'something went wrong while loading the state'
         },
         [ReviewerTimeAssigned.pending]: (state) => {
-            state.isLoading = true,
-                state.data1 = [],
-                state.msg = "It is still loading please wait"
+            state.isLoading = true
+            state.data1 = []
+            state.msg = "It is still loading please wait"
         },
         [ReviewerTimeAssigned.fulfilled]: (state, action) => {
-            state.data1 = action.payload,
-                state.isLoading = false,
-                state.msg = "The time has been loaded"
+            state.data1 = action.payload
+            state.isLoading = false
+            state.msg = "The time has been loaded"
         },
         [ReviewerTimeAssigned.rejected]: (state) => {
-            state.data1 = [],
-                state.isLoading = false,
-                state.msg = 'something went wrong while loading the state'
+            state.data1 = []
+            state.isLoading = false
+            state.msg = 'something went wrong while loading the state'
         },
         [InternsWithReview.pending]: (state) => {
-            state.isLoading = true,
-                state.data1 = [],
-                state.msg = "It is still loading please wait"
+            state.isLoading = true
+            state.Interns = []
+            state.msg = "It is still loading please wait"
         },
         [InternsWithReview.fulfilled]: (state, action) => {
-            state.Interns = action.payload,
-                state.isLoading = false,
-                state.msg = "The Interns has been loaded"
+            state.isLoading = false
+            state.Interns = action.payload
+            state.msg = "The list of all the Interns with review has been loaded"
         },
         [InternsWithReview.rejected]: (state) => {
-            state.data1 = [],
-                state.isLoading = false,
-                state.msg = 'something went wrong while loading the state'
+            state.isLoading = false
+            state.Interns = []
+            state.msg = 'something went wrong while loading the state'
         },
         [Scheduled.pending]: (state) => {
-            state.isLoading = true,
-                state.booked = [],
-                state.msg = "It is still loading please wait"
+            state.isLoading = true
+            state.booked = []
+            state.msg = "It is still loading please wait"
         },
         [Scheduled.fulfilled]: (state, action) => {
-            state.booked = action.payload,
-                state.isLoading = false,
-                state.msg = "The Interns has been loaded"
+            state.isLoading = false
+            state.booked = action.payload
+            state.msg = "The Interns has been loaded"
         },
         [Scheduled.rejected]: (state) => {
-            state.booked = [],
-                state.isLoading = false,
-                state.msg = 'something went wrong while loading the state'
+            state.isLoading = false
+            state.booked = []
+            state.msg = 'something went wrong while loading the state'
         },
         [ScheduledTimeforAdvisor.pending]: (state) => {
-            state.isLoading = true,
-                state.review = [],
-                state.msg = "It is still loading the scheduled data please wait"
+            state.isLoading = true
+            state.review = []
+            state.msg = "It is still loading the scheduled data please wait"
         },
         [ScheduledTimeforAdvisor.fulfilled]: (state, action) => {
-            state.review = action.payload,
-                state.isLoading = false,
-                state.msg = "The scheduled has been loaded"
+            state.review = action.payload
+            state.isLoading = false
+            state.msg = "The scheduled has been loaded"
         },
         [ScheduledTimeforAdvisor.rejected]: (state) => {
-            state.review = [],
-                state.isLoading = false,
-                state.msg = 'something went wrong while loading the scheduled data'
+            state.review = []
+            state.isLoading = false
+            state.msg = 'something went wrong while loading the scheduled data'
         },
     }
 })

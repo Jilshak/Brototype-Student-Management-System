@@ -138,7 +138,7 @@ function AdvisorsPage() {
 
 
             {
-                 !advisor.isLoading && advisors ?
+                !advisor.isLoading && advisors ?
 
                     <div className='overflow-y-auto'>
                         <div className='grid items-start mx-5 justify-center mt-10'>
@@ -170,7 +170,9 @@ function AdvisorsPage() {
                         </div>
                     </div>
                     :
-                    null
+                    <div className='relative flex items-center top-60 justify-center'>
+                        <div class="rounded-md h-12 w-12 border-4 border-t-4 border-blue-500 animate-spin absolute"></div>
+                    </div>
             }
         </div>
     )

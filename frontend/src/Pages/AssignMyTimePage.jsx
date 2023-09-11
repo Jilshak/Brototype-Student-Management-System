@@ -54,33 +54,40 @@ function AssignMyTimePage() {
       end_time: end,
       user: decode.user_id
     }
-  
+
     let local = {
       day: day,
       date: date,
       start_time: start + ':00',
       end_time: end + ':00',
     }
-  
+
     if (day && date && start && end) {
       let shouldSchedule = true;
-  
-      for (let i of time) {
-        if (
-          i.day === day &&
-          i.date === date &&
-          i.start_time === (start + ':00') &&
-          i.end_time === (end + ':00')
-        ) {
-          shouldSchedule = false;
-          break; // No need to check further, we found an overlap
+
+      if (time) {
+        for (let i of time) {
+          if (
+            i.day === day &&
+            i.date === date &&
+            i.start_time === (start + ':00') &&
+            i.end_time === (end + ':00')
+          ) {
+            shouldSchedule = false;
+            break; // No need to check further, we found an overlap
+          }
         }
       }
-  
+
       if (shouldSchedule) {
         // Only schedule if there's no overlap
-        await setTime(prevTime => [...prevTime, local]);
-        dispatch(AddTime(credentials));
+        if (time) {
+          await setTime(prevTime => [...prevTime, local]);
+          dispatch(AddTime(credentials));
+        }else{
+          setTime([local])
+          dispatch(AddTime(credentials));
+        }
       } else {
         console.log("Time slot overlaps with an existing slot.");
       }
@@ -88,10 +95,10 @@ function AssignMyTimePage() {
       console.log("Complete the whole fields");
     }
   }
-  
+
 
   const handleDelete = async (id) => {
-    if (time.length > 0) {
+    if (time?.length > 0) {
       await setTime(prevList => prevList.filter(item => item.id !== id))
       await dispatch(deleteTime(id))
     }
@@ -104,11 +111,6 @@ function AssignMyTimePage() {
       await dispatch(unSchedule(intern))
       await dispatch(deleteTime(id))
     }
-  }
-
-  //function that appears after 15 mins of the review scheduled and handles the review completion
-  const handleReviewCompleted = async () => {
-
   }
 
   function getCurrentDate() {
@@ -171,7 +173,7 @@ function AssignMyTimePage() {
               time ?
                 <>
                   {
-                    time.map((item, index) => {
+                    time?.map((item, index) => {
                       return (
                         <div key={item.id} className='mx-[30px] relative flex items-center py-3 opacity-60 mb-5 bg-[#303443] rounded-lg'>
                           <span className='mx-3'>
@@ -214,11 +216,11 @@ function AssignMyTimePage() {
           <div className='grid'>
             {item2 ? (
               <>
-                {item2.map((val, index) => {
+                {item2?.map((val, index) => {
                   let data = null;
 
                   // Using forEach to iterate through the timeslots and find the matching one
-                  item.forEach((test) => {
+                  item?.forEach((test) => {
                     if (test.id === val.slot) {
                       data = test;
                     }
@@ -252,13 +254,13 @@ function AssignMyTimePage() {
                       </span>
                       <span className='me-3'>
                         <div className='grid'>
-                          <span>{val.intern_username}</span>
-                          <span className='text-xs'>Intern BCK{val.intern_batch.batch_number}</span>
+                          <span>{val?.intern_username}</span>
+                          <span className='text-xs'>Intern BCK{val?.intern_batch?.batch_number}</span>
                         </div>
                       </span>
                       <span className='me-3'>
                         <div className='grid'>
-                          <span>{val.advisor_username}</span>
+                          <span>{val?.advisor_username}</span>
                           <span className='text-xs'>Advisor</span>
                         </div>
                       </span>
