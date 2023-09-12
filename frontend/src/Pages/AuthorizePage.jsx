@@ -27,10 +27,10 @@ function AuthorizePage() {
     await dispatch(authorize(id))
     setAuthIntern(prevList => prevList.filter(intern => intern.id !== id))
   }
-  
+
   const removeUser = async (id) => {
     await dispatch(unauthorized(id))
-    setAuthIntern(prevList => prevList.filter(intern => intern.id !== id ))
+    setAuthIntern(prevList => prevList.filter(intern => intern.id !== id))
   }
 
   return (
@@ -72,7 +72,11 @@ function AuthorizePage() {
                 }
 
               })}
-            </div> : null
+            </div>
+            :
+            <div className='relative flex items-center top-56 justify-center'>
+              <div class="rounded-md h-10 w-10 border-4 border-t-4 border-blue-500 animate-spin absolute"></div>
+            </div>
         }
       </div>
       <div className='bg-[#131620] mx-4 mb-8 lg:min-h-[650px] md:min-h-[450px] sm:min-h-[300px] xs:min-h-[150px] min-w-[280px] rounded-2xl'>
@@ -103,7 +107,11 @@ function AuthorizePage() {
                   }
                 })
               }
-            </div> : null
+            </div>
+            :
+            <div className='relative flex items-center top-56 justify-center'>
+              <div class="rounded-md h-10 w-10 border-4 border-t-4 border-blue-500 animate-spin absolute"></div>
+            </div>
         }
       </div>
       <div className='bg-[#131620] mb-8 mx-4 lg:min-h-[650px] md:min-h-[450px] sm:min-h-[300px] xs:min-h-[150px] min-w-[280px] rounded-2xl'>
@@ -124,7 +132,7 @@ function AuthorizePage() {
                         <span className='mx-[15px]'>
                           {item.username}
                         </span>
-                        
+
                         <span className='ms-8'>
                           <img onClick={(e) => authorizeUser(item.id)} className='min-h-[20] min-w-[20px] max-h-[20px] max-w-[20px] cursor-pointer' src={authenticated} alt="" />
                         </span>
@@ -133,7 +141,11 @@ function AuthorizePage() {
                   }
                 })
               }
-            </div> : null
+            </div>
+            :
+            <div className='relative flex items-center top-56 justify-center'>
+              <div class="rounded-md h-10 w-10 border-4 border-t-4 border-blue-500 animate-spin absolute"></div>
+            </div>
         }
       </div>
 

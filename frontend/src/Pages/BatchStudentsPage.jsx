@@ -171,15 +171,15 @@ function BatchStudentsPage() {
                                             list?.map((intern) => {
                                                 return (
                                                     <Link key={intern.id} to={`/weeks/${intern.id}`}>
-                                                        <div className='flex bg-[#23283B]  my-5 p-2 rounded-3xl opacity-80 lg:min-w-[900px] md:min-w-[500px] sm:min-w-[350px] xs:min-w-[350px]'>
+                                                        <div className='flex bg-[#23283B]  my-5 p-2 rounded-3xl opacity-80 lg:max-w-[900px] md:max-w-[500px] sm:max-w-[450px] xs:max-w-[350px]'>
                                                             <span className='rounded-full flex items-center justify-center min-w-[33px] h-8 bg-[#2E313D] '>
                                                                 {intern.id}
                                                             </span>
                                                             <span className='rounded-lg flex items-center justify-start mx-5 min-w-[150px] h-8 bg-[#2E313D] '>
                                                                 <p className='ms-5'>{intern.username}</p>
                                                             </span>
-                                                            <span className='rounded-lg xs:hidden sm:block flex items-center justify-start mx-5 w-[150px] h-8 bg-[#2E313D] '>
-                                                                <p className='ms-5 mt-1 flex items-center'>{intern.phone ? intern.phone : <p className='text-xs mt-1'>Mobile number</p>}</p>
+                                                            <span className='rounded-lg xs:hidden sm:block flex items-center justify-start mx-5 min-w-[100px] h-8 bg-[#2E313D] '>
+                                                                <p className='ms-3 mt-1 min-w-[100px] flex items-center'>{intern.phone ? intern.phone : <p className='text-xs mt-1'>Mobile number</p>}</p>
                                                             </span>
                                                             <span className='flex items-center justify-end w-[500px]'>
                                                                 <img onClick={(e) => {
